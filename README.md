@@ -40,7 +40,7 @@ Various analyses contribute to assigning biological interpretation to a DNA sequ
 To extend the value of these efforts to the broader scientific community, annotation should be made available to the public in widely accessible biological databases. Upon successful submission, [GenBank](https://www.ncbi.nlm.nih.gov/genbank/) will assign accession numbers to submitted data to act as unique identifiers.  To achieve this, careful adherence to [NCBI guidelines for genome submission](https://www.ncbi.nlm.nih.gov/genbank/genomesubmit/) is essential. This pipeline is equipped with a series of checks to assess the quality of annotations and minimize errors.
 
 The A2GB pipeline will:
-1)	Reformat the annotations from [Apollo](https://genomearchitect.readthedocs.io/en/latest/) for deposition into the [NCBI]https://www.ncbi.nlm.nih.gov/ databases. 
+1)	Reformat the annotations from [Apollo](https://genomearchitect.readthedocs.io/en/latest/) for deposition into the [NCBI](https://www.ncbi.nlm.nih.gov/) databases. 
 2)	Run sequence searches against [UniProt](https://www.uniprot.org/)'s SwissProt/TrEMBL and [InterPro](https://www.ebi.ac.uk/interpro/) databases for protein function prediction. 
 3)	Run intermittent checks to assess the quality of annotations.
 
