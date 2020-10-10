@@ -84,6 +84,7 @@ Third , let's predict transfer RNAs with tRNAscan-SE using [run_tRNAscan.pl](htt
 
 ```Bash
 mkdir $ANNOT/RNAmmer/tRNAscan
+run_tRNAscan.pl -f *.fasta -t E -d $ANNOT/tRNA/
 
 ```
 
