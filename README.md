@@ -12,7 +12,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 * [A2GB workflow](#A2GB-workflow)
    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
    *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
-   *	[Converting the GFF3 files to EMBL format]
+   *	[Converting GFF3 files to EMBL format](Converting-GFF3-files-to-EMBL-format)
    *	[Function prediction]
         *	[Predicting functions with InterProScan 5]
         *	[Downloading the SwissProt/UniProt databases]
@@ -101,3 +101,17 @@ Because debugging issues with annotations is easier when working with single fil
 ```Bash
 splitGFF3.pl -g $ANNOT/all_annotations.gff3 -d $ANNOT/splitGFF3
 ```
+
+##### Converting GFF3 files to EMBL format
+This step requires a locus_tag prefix. If a locus_tag prefix has not been created, visit the BioProject and BioSample databases to submit all relevant sample metadata and project details. Once the sample has been accepted, the submitter will receive a BioSample accession number and a unique locus_tag prefix to be referenced during submission of corresponding experimental data to the NCBI, EBI and DDBJ databases.
+
+Let's convert the Apollo GFF3 files to EMBL format with [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl). This script will generate locus tags automatically based on the provided prefix from NCBI. Alternatively, to proceed without the locus_tag prefix, generate a temporary prefix to be replaced later. 
+
+```Bash
+cd $ANNOT/splitGFF3/;
+
+```
+
+
+which will also write the proteins and RNAs to separate FASTA files with .prot and .RNA extensions.  
+
