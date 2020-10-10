@@ -96,7 +96,7 @@ cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 Annotations.gff3 > $ANNOT/all_a
 ```
 
 ##### Splitting Apollo GFF3 files
-Because debugging issues with annotations is easier when working with single files, let's split the concatenated Apollo GFF3 file into distinct GFF3 (.gff3) and FASTA (.fsa) files, one per contig/chromosome with .
+Because debugging issues with annotations is easier when working with single files, let's split the concatenated Apollo GFF3 file into distinct GFF3 (.gff3) and FASTA (.fsa) files, one per contig/chromosome with [splitGFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/splitGFF3.pl).
 
 ```Bash
 
