@@ -71,7 +71,7 @@ mkdir $ANNOT; mv Annotations.gff3.gz $ANNOT/ ## Create directory; then move Anno
 cd $ANNOT/; gunzip Annotations.gff3.gz       ## Decompress the GZIP file
 ```
 
-Second, let's predict ribosomal RNAs with RNAmmer; then convert the annotations to GFF3 format:
+Second, let's predict ribosomal RNAs with RNAmmer using [run_RNAmmer.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_RNAmmer.pl); then convert the annotations to GFF3 format with [RNAmmer_to_GFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/RNAmmer_to_GFF3.pl):
 
 ```Bash
 mkdir $ANNOT/RNAmmer/
@@ -80,7 +80,7 @@ RNAmmer_to_GFF3.pl -g RNAmmer/*.gff2 -d RNAmmer/
 ```
 
 
-Third , let's predict transfer RNAs with tRNAscan-SE; then convert the annotations to GFF3 format:
+Third , let's predict transfer RNAs with tRNAscan-SE using [run_tRNAscan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_tRNAscan.pl); then convert the annotations to GFF3 format with [tRNAscan_to_GFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/tRNAscan_to_GFF3.pl):
 
 ```Bash
 mkdir $ANNOT/RNAmmer/tRNAscan
