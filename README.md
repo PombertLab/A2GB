@@ -76,7 +76,7 @@ Second, let's predict ribosomal RNAs with RNAmmer; then convert the annotations 
 ```Bash
 mkdir $ANNOT/RNAmmer/
 run_RNAmmer.pl -f *.fasta -d $ANNOT/RNAmmer/
-
+RNAmmer_to_GFF3.pl -g RNAmmer/*.gff2 -d RNAmmer/
 ```
 
 
