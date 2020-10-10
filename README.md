@@ -71,17 +71,25 @@ mkdir $ANNOT; mv Annotations.gff3.gz $ANNOT/ ## Create directory; then move Anno
 cd $ANNOT/; gunzip Annotations.gff3.gz       ## Decompress the GZIP file
 ```
 
-Second, let's predict ribosomal RNAs with RNAmmer:
+Second, let's predict ribosomal RNAs with RNAmmer; then convert the annotations to GFF3 format:
 
 ```Bash
+mkdir $ANNOT/RNAmmer/
 
 ```
 
 
-Third , let's predict transfer RNAs with tRNAscan-SE:
+Third , let's predict transfer RNAs with tRNAscan-SE; then convert the annotations to GFF3 format:
 
 ```Bash
+mkdir $ANNOT/RNAmmer/tRNAscan
 
+```
+
+Fourth, let's concatenate the tRNA, rRNA and CDS GFF3 annotations from RNAmmer, tRNAscan-SE, and Apollo:
+
+```Bash
+cat RCC* Annotations.gff3 > all_genes.gff3  ## We concatenate Apollo's GFF3 file last as it includes sequence data
 ```
 
 ##### Splitting Apollo GFF3 files
