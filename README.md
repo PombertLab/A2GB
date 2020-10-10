@@ -170,6 +170,15 @@ FT   CDS             complement(join(7814..8530,8615..11050)
 FT                   /locus_tag="HOP50_01g00040"
 ```
 
+If created properly, the files should be easy to open with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/):
 
-[ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also write the proteins and RNAs to separate FASTA files with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
+```Bash
+art $ANNOT/splitGFF3/chromosome_01.embl
+```
+
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis.png" alt="Artemis opening en EMBl file generated with ApolloGFF3toEMBL.pl" width="1000"></p>
+
+
+
+Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also create FASTA files of proteins and RNAs with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
 
