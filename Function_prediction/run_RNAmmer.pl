@@ -32,7 +32,7 @@ GetOptions(
 ## Checking output directory
 unless (defined $odir){$odir = './';}
 unless (-d $odir){system "mkdir $odir";}
-print "Output files will be located in directory $odir\n";
+print "\nOutput files will be located in directory $odir\n";
 
 ## Iterating through files
 while (my $file = shift@fasta){
