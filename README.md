@@ -33,7 +33,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 
 ## Introduction
 
-Various analyses contribute to assigning biological interpretation to a DNA sequence. The goal of genome annotation is to identify the location and function of a genome's encoded features, particularly of protein-coding and RNA-coding genes. Thus, generating the best descriptions of encoded features (i.e. annotations) is paramount for any genomic sequencing project that intends to identify these encoded features and attribute biological meaning to them.
+Various analyses contribute to assigning biological interpretation to a DNA sequence. The goal of genome annotation is to identify the location and function of a genome's encoded features, particularly of protein-coding and RNA-coding genes. Thus, generating the best descriptions of encoded features (*i.e.* annotations) is paramount for any genomic sequencing project that intends to identify these encoded features and attribute biological meaning to them.
 
 [Apollo](https://genomearchitect.readthedocs.io/en/latest/) provides sequencing projects with the tools for gene prediction via evidence-based annotation. This is accomplished with the automatic generation of sequence features which can be refined through expert user curation. Exporting and utilizing these  annotations is the preliminary step to assigning user-curated biological function to predictions.
 
