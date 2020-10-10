@@ -56,10 +56,10 @@ The A2GB pipeline will:
 #### A2GB workflow
 ##### Exporting annotations from Apollo
 After genomic annotations are completed in Apollo, export the curated annotations.  Begin by selecting the 'Ref Sequence' tab. 
-<p align="left"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo.png" alt="How to export Apollo annotations" width="600"></p>
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo.png" alt="How to export Apollo annotations" width="1000"></p>
 
 Then, select Export -> select GFF3; select ALL; select GFF3 with FASTA; click Export. The file created will be called Annotations.gff3.gz.
-<p align="left"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo2.png" alt="How to export Apollo annotations" width="400"></p>
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo2.png" alt="How to export Apollo annotations" width="600"></p>
 
 We recommend exporting only protein features (CDS) from Apollo. Altough rRNAs and tRNAs inferences (*e.g.* from [RNAmmer](https://services.healthtech.dtu.dk/software.php) and [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/), respectively) can be added to [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the process of exporting those back is finicky and prone to errors (some rRNAs/tRNAs appear to be missing when exporting features from Apollo 2.5.0).
 
