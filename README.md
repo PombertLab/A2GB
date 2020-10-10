@@ -91,7 +91,7 @@ tRNAscan_to_GFF3.pl -t $ANNOT/tRNAscan/*.tRNAs -d $ANNOT/tRNAscan/
 Fourth, let's concatenate the tRNA, rRNA and CDS GFF3 annotations from RNAmmer, tRNAscan-SE, and Apollo:
 
 ```Bash
-cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 Annotations.gff3 > $ANNOT/all_annotations.gff3
+cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 $ANNOT/Annotations.gff3 > $ANNOT/all_annotations.gff3
 ## We concatenate Apollo's GFF3 file last as it includes sequence data
 ```
 
@@ -99,5 +99,5 @@ cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 Annotations.gff3 > $ANNOT/all_a
 Because debugging issues with annotations is easier when working with single files, let's split the concatenated Apollo GFF3 file into distinct GFF3 (.gff3) and FASTA (.fsa) files, one per contig/chromosome with [splitGFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/splitGFF3.pl).
 
 ```Bash
-
+splitGFF3.pl -g $ANNOT/all_annotations.gff3 -d splitGFF3
 ```
