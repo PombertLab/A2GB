@@ -45,7 +45,7 @@ The A2GB pipeline will:
 3)	Run intermittent checks to assess the quality of annotations.
 
 ## Requirements
-- Unix/Linux, MacOS X, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions)
+- A UNIX-like environment (UNIX/Linux, MacOS X, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions))
 -	[Perl](https://www.perl.org/) 5
 -	[InterProScan](https://github.com/ebi-pf-team/interproscan) (latest version)
 -	[Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
