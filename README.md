@@ -85,13 +85,13 @@ Third , let's predict transfer RNAs with tRNAscan-SE using [run_tRNAscan.pl](htt
 ```Bash
 mkdir $ANNOT/tRNAscan/
 run_tRNAscan.pl -f *.fasta -t E -d $ANNOT/tRNAscan/
-tRNAscan_to_GFF3.pl -t  $ANNOT/tRNAscan/*.tRNAs -d $ANNOT/tRNAscan/
+tRNAscan_to_GFF3.pl -t $ANNOT/tRNAscan/*.tRNAs -d $ANNOT/tRNAscan/
 ```
 
 Fourth, let's concatenate the tRNA, rRNA and CDS GFF3 annotations from RNAmmer, tRNAscan-SE, and Apollo:
 
 ```Bash
-cat  $ANNOT/RNAmmer/*.gff3  $ANNOT/tRNAscan/*.gff3 Annotations.gff3 > all_annotations.gff3
+cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 Annotations.gff3 > all_annotations.gff3
 ## We concatenate Apollo's GFF3 file last as it includes sequence data
 ```
 
