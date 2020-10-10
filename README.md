@@ -14,7 +14,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
    *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
    *	[Converting GFF3 files to EMBL format](#Converting-GFF3-files-to-EMBL-format)
    *	[Function prediction](#Function-prediction)
-        *	[Predicting functions with InterProScan 5]
+        *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
         *	[Downloading the SwissProt/UniProt databases]
         *	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases]
         *	[Running BLAST searches against SwissProt/UniProt]
@@ -185,3 +185,9 @@ Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/A
 
 ##### Function prediction
 In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UnitProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
+
+###### Predicting functions with InterProScan 5
+[InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction. 
+
+...
+
