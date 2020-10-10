@@ -13,7 +13,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
    *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
    *	[Converting GFF3 files to EMBL format](#Converting-GFF3-files-to-EMBL-format)
-   *	[Function prediction]
+   *	[Function prediction](#Function-prediction)
         *	[Predicting functions with InterProScan 5]
         *	[Downloading the SwissProt/UniProt databases]
         *	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases]
@@ -52,6 +52,8 @@ The A2GB pipeline will:
 - [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
+- [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
+- [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+)
 
 #### A2GB workflow
 ##### Exporting annotations from Apollo
@@ -179,6 +181,7 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis.png" alt="Artemis opening en EMBl file generated with ApolloGFF3toEMBL.pl" width="1000"></p>
 
 
-
 Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also create FASTA files of proteins and RNAs with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
 
+##### Function prediction
+In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UnitProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
