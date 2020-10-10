@@ -83,9 +83,9 @@ RNAmmer_to_GFF3.pl -g RNAmmer/*.gff2 -d RNAmmer/
 Third , let's predict transfer RNAs with tRNAscan-SE using [run_tRNAscan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_tRNAscan.pl); then convert the annotations to GFF3 format with [tRNAscan_to_GFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/tRNAscan_to_GFF3.pl):
 
 ```Bash
-mkdir $ANNOT/tRNAscan
+mkdir $ANNOT/tRNAscan/
 run_tRNAscan.pl -f *.fasta -t E -d $ANNOT/tRNAscan/
-tRNAscan_to_GFF3.pl -t  $ANNOT/tRNAscan//*.tRNAs -d $ANNOT/tRNAscan/
+tRNAscan_to_GFF3.pl -t  $ANNOT/tRNAscan/*.tRNAs -d $ANNOT/tRNAscan/
 ```
 
 Fourth, let's concatenate the tRNA, rRNA and CDS GFF3 annotations from RNAmmer, tRNAscan-SE, and Apollo:
