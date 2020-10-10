@@ -4,30 +4,30 @@
 
 In a stepwise approach, the A2GB pipeline converts annotation files from GFF3 -> EMBL -> TBL -. ASN. Each format will be useful for diagnostic quality checks of the annotations or become the springboard for other analyses, such as protein function prediction.  
 
-Furthermore, A2GB acts as a guide to prepare your sequence submission according to NCBI’s guidelines, including registration of your project with [BioSample](https://www.ncbi.nlm.nih.gov/biosample) and [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) for the generation of locus_tag prefixes. Upon acceptance from NCBI, these essential steps will ensure that your sequence data will be made publicly available through GenBank and other member databases within the [International Nucleotide Sequence Database Collaboration](http://www.insdc.org/).
+Furthermore, A2GB acts as a guide to prepare sequence submissions according to NCBI’s guidelines, including project registration with [BioSample](https://www.ncbi.nlm.nih.gov/biosample) and [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) for the generation of locus_tag prefixes. Upon acceptance from NCBI, these essential steps will ensure that sequence data will be made publicly available through GenBank and other member databases within the [International Nucleotide Sequence Database Collaboration](http://www.insdc.org/).
 
 ## Table of contents
 * [Introduction](#introduction)
 * [Requirements](#requirements)
-  * [A2GB workflow](#A2GB-workflow)
-    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
-    *	[Splitting Apollo GFF3 files]
-    *	[Converting the GFF3 files to EMBL format]
-    *	[Function prediction]
-          *	[Predicting functions with InterProScan 5]
-          *	[Downloading the SwissProt/UniProt databases]
-          *	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases]
-          *	[Running BLAST searches against SwissProt/UniProt]
-          *	[Generating a list of all proteins queried]
-          *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
-          *	[Curating the annotations]
-    *	[Adding taxonomic info to FASTA files]
-    *	[Converting EMBL files to TBL format]
-    *	[Generating a template.sbt file per genome]
-    *	[Creating a structure comments file (genome.cmt)]
-    *	[Converting TBL files to ASN format]
-    *	[Checking for errors]
-    *	[Submitting ASN file to GenBank]
+* [A2GB workflow](#A2GB-workflow)
+   * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
+   *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
+   *	[Converting the GFF3 files to EMBL format]
+   *	[Function prediction]
+        *	[Predicting functions with InterProScan 5]
+        *	[Downloading the SwissProt/UniProt databases]
+        *	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases]
+        *	[Running BLAST searches against SwissProt/UniProt]
+        *	[Generating a list of all proteins queried]
+        *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
+        *	[Curating the annotations]
+   *	[Adding taxonomic info to FASTA files]
+   *	[Converting EMBL files to TBL format]
+   *	[Generating a template.sbt file per genome]
+   *	[Creating a structure comments file (genome.cmt)]
+   *	[Converting TBL files to ASN format]
+   *	[Checking for errors]
+   *	[Submitting ASN file to GenBank]
 *	[Miscellaneous] 
 *	[References]
 
@@ -48,11 +48,40 @@ The A2GB pipeline will:
 - Unix/Linux, MacOS X, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions)
 -	[Perl](https://www.perl.org/) 5
 -	[InterProScan](https://github.com/ebi-pf-team/interproscan) (latest version)
--	[Artemis](https://www.sanger.ac.uk/tool/artemis/) (latest version)
+-	[Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
+- [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
+- [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
+- [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
 
 #### A2GB workflow
 ##### Exporting annotations from Apollo
-After genomic annotations are completed in Apollo, export the curated annotations.  Begin by selecting the 'Ref Sequence' tab.
+After genomic annotations are completed in Apollo, export the curated annotations.  Begin by selecting the 'Ref Sequence' tab. 
 <p align="left"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo.png" alt="How to export Apollo annotations" width="600"></p>
 
+Then, select Export -> select GFF3; select ALL; select GFF3 with FASTA; click Export. The file created will be called Annotations.gff3.gz.
+<p align="left"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo2.png" alt="How to export Apollo annotations" width="400"></p>
 
+We recommend exporting only protein features (CDS) from Apollo. Altough rRNAs and tRNAs inferences (e.g. from RNAmmer and tRNAscan-SE, respectively) can be added to Apollo, the process of exporting those back is finicky and prone to errors (some rRNAs/tRNAs appear to be missing when exporting features from Apollo 2.5.0).
+
+First, let's create a directory to store annotations:
+
+```Bash
+export ANNOT=/media/FatCat/user/raw_data     ## Replace /media/FatCat/user/raw_data by desired annotation directory
+mkdir $ANNOT; mv Annotations.gff3.gz $ANNOT/ ## Create directory; then move Annotations.gff3.gz into it
+cd $ANNOT/; gunzip Annotations.gff3.gz       ## Decompress the GZIP file
+```
+
+Second, let's predict ribosomal RNAs with RNAmmer:
+
+```Bash
+
+```
+
+
+Third , let's predict transfer RNAs with tRNAscan-SE:
+
+```Bash
+
+```
+
+##### Splitting Apollo GFF3 files
