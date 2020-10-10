@@ -37,7 +37,7 @@ Various analyses contribute to assigning biological interpretation to a DNA sequ
 
 [Apollo](https://genomearchitect.readthedocs.io/en/latest/) provides sequencing projects with the tools for gene prediction via evidence-based annotation. This is accomplished with the automatic generation of sequence features which can be refined through expert user curation. Exporting and utilizing these  annotations is the preliminary step to assigning user-curated biological function to predictions.
 
-To extend the value of these efforts to the broader scientific community, annotation should be made available to the public in widely accessible biological databases. Upon successful submission, GenBank will assign accession numbers to submitted data to act as unique identifiers.  To achieve this, careful adherence to NCBI guidelines for genome submission is essential. This pipeline is equipped with a series of checks to assess the quality of annotations and minimize errors.
+To extend the value of these efforts to the broader scientific community, annotation should be made available to the public in widely accessible biological databases. Upon successful submission, [GenBank](https://www.ncbi.nlm.nih.gov/genbank/) will assign accession numbers to submitted data to act as unique identifiers.  To achieve this, careful adherence to [NCBI guidelines for genome submission](https://www.ncbi.nlm.nih.gov/genbank/genomesubmit/) is essential. This pipeline is equipped with a series of checks to assess the quality of annotations and minimize errors.
 
 The A2GB pipeline will:
 1)	Reformat the annotations from [Apollo](https://genomearchitect.readthedocs.io/en/latest/) for deposition into the [NCBI]https://www.ncbi.nlm.nih.gov/ databases. 
