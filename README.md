@@ -103,7 +103,7 @@ splitGFF3.pl -g $ANNOT/all_annotations.gff3 -d $ANNOT/splitGFF3
 ```
 
 ##### Converting GFF3 files to EMBL format
-This step requires a locus_tag prefix. If a locus_tag prefix has not been created, visit the BioProject and BioSample databases to submit all relevant sample metadata and project details. Once the sample has been accepted, the submitter will receive a BioSample accession number and a unique locus_tag prefix to be referenced during submission of corresponding experimental data to the NCBI, EBI and DDBJ databases.
+This step requires a [locus_tag prefix](https://www.ncbi.nlm.nih.gov/genomes/locustag/Proposal.pdf). If a locus_tag prefix has not been created, visit the BioProject and BioSample databases to submit all relevant sample metadata and project details. Once the sample has been accepted, the submitter will receive a BioSample accession number and a unique locus_tag prefix to be referenced during submission of corresponding experimental data to the NCBI, EBI and DDBJ databases.
 
 Let's convert the Apollo GFF3 files to EMBL format with [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl). This script will generate locus tags automatically based on the provided prefix from NCBI. Alternatively, to proceed without the locus_tag prefix, generate a temporary prefix to be replaced later. 
 
