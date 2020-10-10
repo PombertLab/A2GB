@@ -12,7 +12,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 * [A2GB workflow](#A2GB-workflow)
    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
    *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
-   *	[Converting GFF3 files to EMBL format](Converting-GFF3-files-to-EMBL-format)
+   *	[Converting GFF3 files to EMBL format](#Converting-GFF3-files-to-EMBL-format)
    *	[Function prediction]
         *	[Predicting functions with InterProScan 5]
         *	[Downloading the SwissProt/UniProt databases]
