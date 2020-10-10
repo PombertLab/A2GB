@@ -147,7 +147,29 @@ ls -la $ANNOT/splitGFF3/*
 ...
 ```
 
-[ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also write the proteins and RNAs to separate FASTA files with .prot and .RNA extensions, which can be used for debugging issues with the corresponding annotations.
+The EMBL files should resemble this:
+
+```Bash
+head -n 16 $ANNOT/splitGFF3/chromosome_01.embl
+
+FT   gene             2..148
+FT                   /locus_tag="HOP50_01g00010"
+FT   CDS             2..148
+FT                   /locus_tag="HOP50_01g00010"
+FT   gene             complement(239..3043)
+FT                   /locus_tag="HOP50_01g00020"
+FT   CDS             complement(239..3043)
+FT                   /locus_tag="HOP50_01g00020"
+FT   gene             3823..7741
+FT                   /locus_tag="HOP50_01g00030"
+FT   CDS             join(3823..4103,4213..7741)
+FT                   /locus_tag="HOP50_01g00030"
+FT   gene             complement(7814..11050)
+FT                   /locus_tag="HOP50_01g00040"
+FT   CDS             complement(join(7814..8530,8615..11050)
+FT                   /locus_tag="HOP50_01g00040"
+```
 
 
+[ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also write the proteins and RNAs to separate FASTA files with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
 
