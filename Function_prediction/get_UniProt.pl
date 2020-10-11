@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2020
 my $name = 'get_UniProt.pl';
-my $version = 0.2;
+my $version = '0.2a';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -39,7 +39,7 @@ GetOptions(
 );
 
 ## Creating logs
-if ($log){open LOG, ">$log";}
+if ($log){open LOG, ">", "${folder}/${log}";}
 
 ## Downloading SwissProt
 if ($swiss){
