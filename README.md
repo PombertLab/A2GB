@@ -258,6 +258,7 @@ Important, if any stop codon is present in the queries, InterProScan will throw 
 ERROR: uk.ac.ebi.interpro.scan.jms.worker.LocalJobQueueListener - 2. The exception is :java.lang.IllegalArgumentException: You have submitted a protein sequence which contains an asterix (*). This may be from an ORF prediction program. '*' is not a valid IUPAC amino acid character and amino acid sequences which go through our pipeline should not contain it. Please strip out all asterix characters from your sequence and resubmit your search.
 ```
 
+If this happens, you can fix the issues with the stop codons by following the step described in this [section](https://github.com/PombertLab/A2GB/blob/master/README.md#checking-for-internal-stop-codons-and-missing-start-methionines).
 
 ...
 
