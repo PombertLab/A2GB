@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'check_problems.pl';
-my $version = '0.1';
+my $version = '0.2';
 
-use strict; use warnings; use Getopt::Long qw(GetOptions);
+use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 
@@ -28,10 +28,12 @@ GetOptions(
 	'm|meth' => \$meth,
 	'f|fasta=s@{1,}' => \@fasta
 );
-
+my $count = 0;
 if ($stop){ ## Stop codons
-	print "\nChecking for stop codons:\n";
 	foreach my $file (@fasta){
+		$count = 0;
+		my ($fasta, $dir) = fileparse($file);
+		print "\nChecking for internal stop codons in $fasta located in $dir\n";
 		my $locus; my %prot;
 		open IN, "<$file";
 		while (my $line = <IN>){
@@ -44,14 +46,19 @@ if ($stop){ ## Stop codons
 			my $seq = $prot{$_};
 			if ($seq =~ /\*/){
 				print "Protein $key contains one or more stop codon(s) in $file\n";
+				$count++;
 			}
 		}
+	if ($count == 0){print "No internal stop codon found\n"}
 	}
 	print "\n";
 }
 if ($meth){ ## Start methionines
-	print "\nChecking for missing start methionines:\n";
+	print "\nChecking for missing start methionines:";
 	foreach my $file (@fasta){
+		$count = 0;
+		my ($fasta, $dir) = fileparse($file);
+		print "\nChecking for missing start methionines in $fasta located in $dir\n";
 		my $locus; my %prot;
 		open IN, "<$file";
 		while (my $line = <IN>){
@@ -64,8 +71,10 @@ if ($meth){ ## Start methionines
 			my $seq = $prot{$_};
 			if ($seq =~ /^([^M])/){
 				print "Protein $key starts with $1 in $file\n";
+				$count++;
 			}
 		}
+	if ($count == 0){print "All proteins start with methionines...\n"}
 	}
 	print "\n";
 }
