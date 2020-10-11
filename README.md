@@ -185,7 +185,7 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 ###### Checking for internal stop codons and missing start methionines
 Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also create FASTA files of proteins and RNAs with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
 
-For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to check for missing start methionines and for internal stop codons:
+For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to check for missing start methionines and for internal stop codons in proteins:
 
 ```Bash
 check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
