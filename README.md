@@ -17,9 +17,9 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
    *	[Function prediction](#Function-prediction)
         *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
         *	[Performing homology searches against UniProt databases](#Performing-homology-searches-against-UniProt-databases)
-	        *	[Downloading the SwissProt/TrEMBL databases](#Downloading-the-SwissProt-and-TrEMBL-databases)
+	        *	[Downloading the SwissProt and TrEMBL databases](#Downloading-the-SwissProt-and-TrEMBL-databases)
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
-        *	[Running BLAST searches against SwissProt/UniProt]
+      		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Generating a list of all proteins queried]
         *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
         *	[Curating the annotations]
@@ -267,7 +267,7 @@ The [UniProt](https://www.uniprot.org/) Knowledgebase (UniProtKB) is a wide-rang
 
 Homology searches against the SwissProt and TrEMBL databases can be performed with [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) or [DIAMOND](https://github.com/bbuchfink/diamond). We recommend using [DIAMOND](https://github.com/bbuchfink/diamond) due to its significantly decreased computation time.
 
-######  Downloading the SwissProt and UniProt databases
+######  Downloading the SwissProt and TrEMBL databases
 We can use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) to [download](https://www.uniprot.org/downloads) the SwissProt and/or TrEMBL databases from UniProt:
 
 ```Bash
