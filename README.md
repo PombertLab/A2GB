@@ -13,7 +13,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
    *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
    *	[Converting GFF3 files to EMBL format](#Converting-GFF3-files-to-EMBL-format)
-   	*	[Checking for internal stop codons and missing start methionines](#Checking-for-internal-stop-codons-and-missing-start-methionines)
+        *	[Checking for internal stop codons and missing start methionines](#Checking-for-internal-stop-codons-and-missing-start-methionines)
    *	[Function prediction](#Function-prediction)
         *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
         *	[Downloading the SwissProt/UniProt databases]
