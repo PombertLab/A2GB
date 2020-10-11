@@ -261,7 +261,6 @@ ERROR: uk.ac.ebi.interpro.scan.jms.worker.LocalJobQueueListener - 2. The excepti
 
 If this happens, you can fix the issues with the stop codons by following the steps described in this [section](https://github.com/PombertLab/A2GB/blob/master/README.md#checking-for-internal-stop-codons-and-missing-start-methionines).
 
-...
 ##### Performing homology searches against UniProt databases
 The [UniProt](https://www.uniprot.org/) Knowledgebase (UniProtKB) is a wide-ranging database of extensively curated information of protein sequence and functional information. UniProtKB is comprised of UniProtKB/Swiss-Prot and UniProtKB/TrEMBL. Each of these offer a varying level of reliability and quality. The Swiss-Prot database contains proteins that have been tested experimentally and are manually annotated and reviewed. The TrEMBL database utilizes semi-automatic annotation, which is computationally analyzed and typically not reviewed.  Together, these databases provide a substantial collection of functional information on proteins.
 
