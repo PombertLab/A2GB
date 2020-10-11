@@ -254,7 +254,7 @@ cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 run_InterProScan.pl -c 10 -ip -go -pa -f $ANNOT/proteins.fasta -d $ANNOT/Interproscan/ -l interproscan.log
 ```
 
-Options [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) for are:
+Options for [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) are:
 
 ```
 -c (--cpu)		Number of CPU cores to use [Default: 10]
