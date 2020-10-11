@@ -54,7 +54,6 @@ if ($stop){ ## Stop codons
 	print STDOUT "\n";
 }
 if ($meth){ ## Start methionines
-	print STDOUT "\nChecking for missing start methionines:";
 	foreach my $file (@fasta){
 		$count = 0;
 		my ($fasta, $dir) = fileparse($file);
