@@ -299,7 +299,7 @@ Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Func
 Lists of products from TrEMBL and SwissProt FASTA files can be created using [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
 
 ```Bash
-get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_sprot.fasta.gz $ANNOT/UNIPROT/uniprot_trembl.fasta.gz
+get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_*.fasta.gz
 ```
 
 ###### Running DIAMOND or BLAST searches against UniProt databases
