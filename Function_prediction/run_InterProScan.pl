@@ -16,7 +16,7 @@ USAGE		$name -c 10 -f *.fasta -ip -go -pa -d Interproscan/ -l interproscan.log
 OPTIONS:
 -c (--cpu)		Number of CPU cores to use [Default: 10]
 -f (--fasta)		FASTA file(s) to query
--ip (--iprlookup)	InterPro annotations
+-ip (--iprlookup)	Use InterPro's pre-calculated match lookup service
 -go (--goterms)		Gene ontology search (requires --iprlookup)
 -pa (--pathways)	KEGG pathways (requires --iprlookup)
 -d (--dir)		Output directory (Optional)
