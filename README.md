@@ -283,3 +283,10 @@ Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Func
 -l (--log)		Print download information to log file
 -d (--decompress)	Decompresss downloaded files with gunzip ## trEMBL files will be huge, off by default
 ```
+
+###### Creating tab-delimited lists of products from the TrEMBL and SwissProt FASTA files
+Lists of products from TrEMBL and SwissProt FASTA files can be created using [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
+
+```Bash
+get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_sprot.fasta.gz $ANNOT/UNIPROT/uniprot_trembl.fasta.gz
+```
