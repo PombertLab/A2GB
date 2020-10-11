@@ -224,7 +224,7 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis_2.png" alt="Fixing an internal stop codon with Artemis" width="1000"></p>
 
-Regenerating .prot files with [EMBLtoPROT.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoPROT.pl), then checking with [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to ensure that the issues have been fixed:
+We can check if the issues have been fixed by regenerating the .prot files with [EMBLtoPROT.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoPROT.pl), then by running [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again:
 ```Bash
 EMBLtoPROT.pl -e $ANNOT/splitGFF3/*.embl -c 1
 check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
