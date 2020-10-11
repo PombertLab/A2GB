@@ -49,11 +49,11 @@ The A2GB pipeline will:
 ## Requirements
 - A UNIX-like environment (UNIX/Linux, MacOS X, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions))
 - [Perl 5](https://www.perl.org/)
-- [InterProScan 5](https://github.com/ebi-pf-team/interproscan) (latest version)
-- [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
 - [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
+- [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
+- [InterProScan 5](https://github.com/ebi-pf-team/interproscan) (latest version)
 - [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+) or [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
 - [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)
 
