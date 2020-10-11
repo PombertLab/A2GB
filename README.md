@@ -245,7 +245,19 @@ cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 ```
 
 ###### Predicting functions with InterProScan 5
-[InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction. 
+[InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction.
+
+InterProScan 5 can be run using the interproscan.sh script provided with its distribution or with the [run_InterProScan.pl]() Perl wrapper. To run InterProScan 5 using [run_InterProScan.pl]():
+
+```Bash
+run_InterProScan.pl -c 10 -ip -go -pa -f $ANNOT/proteins.fasta -d $ANNOT/Interproscan/ -l interproscan.log
+```
+
+Important, if any stop codon is present in the queries, InterProScan will throw an error message looking like this:
+```
+ERROR: uk.ac.ebi.interpro.scan.jms.worker.LocalJobQueueListener - 2. The exception is :java.lang.IllegalArgumentException: You have submitted a protein sequence which contains an asterix (*). This may be from an ORF prediction program. '*' is not a valid IUPAC amino acid character and amino acid sequences which go through our pipeline should not contain it. Please strip out all asterix characters from your sequence and resubmit your search.
+```
+
 
 ...
 
