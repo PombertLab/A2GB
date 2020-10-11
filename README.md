@@ -18,7 +18,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
         *	[Performing homology searches against UniProt databases](#Performing-homology-searches-against-UniProt-databases)
 	        *	[Downloading the SwissProt/TrEMBL databases]
-       		*	[Creating tab-delimited lists of products from the UniProt databases](#Creating-tab-delimited-lists-of-prodiucts-from-the-UniProt-databases)
+       		*	[Creating tab-delimited product listss from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
         *	[Running BLAST searches against SwissProt/UniProt]
         *	[Generating a list of all proteins queried]
         *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
@@ -284,7 +284,7 @@ Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Func
 -d (--decompress)	Decompresss downloaded files with gunzip ## trEMBL files will be huge, off by default
 ```
 
-###### Creating tab-delimited lists of products from the UniProt databases
+###### Creating tab-delimited product lists from UniProt databases
 Lists of products from TrEMBL and SwissProt FASTA files can be created using [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
 
 ```Bash
