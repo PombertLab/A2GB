@@ -18,7 +18,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
         *	[Performing homology searches against UniProt databases](#Performing-homology-searches-against-UniProt-databases)
 	        *	[Downloading the SwissProt/TrEMBL databases]
-        *	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases]
+       		*	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases](#Creating-tab-delimited-lists-of-sequences-in-the-SwissProt/UniProt-databases)
         *	[Running BLAST searches against SwissProt/UniProt]
         *	[Generating a list of all proteins queried]
         *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
