@@ -192,26 +192,26 @@ check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
 
 If present, we should see error messages like this:
 ```
-Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
-ERROR: Protein HOP50_01g07580 contains one or more stop codon(s) in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
+Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
+ERROR: Protein HOP50_01g07580 contains one or more stop codon(s) in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
 
-Checking for internal stop codons in chromosome_02.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
-ERROR: Protein HOP50_02g14900 contains one or more stop codon(s) in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_02.prot
+Checking for internal stop codons in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
+ERROR: Protein HOP50_02g14900 contains one or more stop codon(s) in /media/FatCat/user/raw_data/splitGFF3/chromosome_02.prot
 
-Checking for internal stop codons in chromosome_03.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+Checking for internal stop codons in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
 OK: No internal stop codon found
 
 ...
 
-Checking for missing start methionines in chromosome_01.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
-ERROR: Protein HOP50_01g07580 starts with V in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
-ERROR: Protein HOP50_01g00140 starts with V in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
-ERROR: Protein HOP50_01g00010 starts with K in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
+Checking for missing start methionines in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
+ERROR: Protein HOP50_01g07580 starts with V in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
+ERROR: Protein HOP50_01g00140 starts with V in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
+ERROR: Protein HOP50_01g00010 starts with K in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
 
-Checking for missing start methionines in chromosome_02.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
-ERROR: Protein HOP50_02g18530 starts with V in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_02.prot
+Checking for missing start methionines in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
+ERROR: Protein HOP50_02g18530 starts with V in /media/FatCat/user/raw_data/splitGFF3/chromosome_02.prot
 
-Checking for missing start methionines in chromosome_03.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+Checking for missing start methionines in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
 OK: All proteins start with methionines...
 ```
 
