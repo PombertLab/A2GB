@@ -54,6 +54,7 @@ The A2GB pipeline will:
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
 - [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
 - [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+)
+- [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)
 
 #### A2GB workflow
 ##### Exporting annotations from Apollo
