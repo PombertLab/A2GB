@@ -13,6 +13,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
    *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
    *	[Converting GFF3 files to EMBL format](#Converting-GFF3-files-to-EMBL-format)
+   	*	[Checking for internal stop codons and missing start methionines](#Checking-for-internal-stop-codons-and-missing-start-methionines)
    *	[Function prediction](#Function-prediction)
         *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
         *	[Downloading the SwissProt/UniProt databases]
@@ -181,7 +182,7 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis.png" alt="Artemis opening en EMBl file generated with ApolloGFF3toEMBL.pl" width="1000"></p>
 
-
+###### Checking for internal stop codons and missing start methionines
 Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also create FASTA files of proteins and RNAs with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
 
 For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to check for missing start methionines and for internal stop codons:
