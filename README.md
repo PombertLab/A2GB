@@ -16,7 +16,8 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Checking for internal stop codons and missing start methionines](#Checking-for-internal-stop-codons-and-missing-start-methionines)
    *	[Function prediction](#Function-prediction)
         *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
-        *	[Downloading the SwissProt/UniProt databases]
+        *	[Performing homology searches against UniProt databases](#Performing-homology-searches-against-UniProt-databases)
+	        *	[Downloading the SwissProt/TrEMBL databases]
         *	[Creating tab-delimited lists of sequences in the SwissProt/UniProt databases]
         *	[Running BLAST searches against SwissProt/UniProt]
         *	[Generating a list of all proteins queried]
@@ -261,11 +262,13 @@ ERROR: uk.ac.ebi.interpro.scan.jms.worker.LocalJobQueueListener - 2. The excepti
 If this happens, you can fix the issues with the stop codons by following the steps described in this [section](https://github.com/PombertLab/A2GB/blob/master/README.md#checking-for-internal-stop-codons-and-missing-start-methionines).
 
 ...
+##### Performing homology searches against UniProt databases
+The [UniProt](https://www.uniprot.org/) Knowledgebase (UniProtKB) is a wide-ranging database of extensively curated information of protein sequence and functional information. UniProtKB is comprised of UniProtKB/Swiss-Prot and UniProtKB/TrEMBL. Each of these offer a varying level of reliability and quality. The Swiss-Prot database contains proteins that have been tested experimentally and are manually annotated and reviewed. The TrEMBL database utilizes semi-automatic annotation, which is computationally analyzed and typically not reviewed.  Together, these databases provide a substantial collection of functional information on proteins.
 
-#####  Downloading the SwissProt/UniProt databases
-The [UnitProt](https://www.uniprot.org/) Knowledgebase (UniProtKB) is a wide-ranging database of extensively curated information of protein sequence and functional information. UniProtKB is comprised of UniProtKB/Swiss-Prot and UniProtKB/TrEMBL. Each of these offer a varying level of reliability and quality. The Swiss-Prot database contains proteins that have been tested experimentally and are manually annotated and reviewed. The TrEMBL database utilizes semi-automatic annotation, which is computationally analyzed and typically not reviewed.  Together, these databases provide a substantial collection of functional information on proteins. 
+Homology searches against the SwissProt and TrEMBL databases can be performed with [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) or [DIAMOND](https://github.com/bbuchfink/diamond). We recommend using [DIAMOND](https://github.com/bbuchfink/diamond) due to its significantly decreased computation time.
 
-To download the SwissProt and/or TrEMBL databases from UniProt, use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl):
+######  Downloading the SwissProt/UniProt databases
+We can use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) to [download](https://www.uniprot.org/downloads) the SwissProt and/or TrEMBL databases from UniProt:
 
 ```Bash
 get_UniProt.pl -s -t -f $ANNOT/UNIPROT/ -n 20 -l download.log
