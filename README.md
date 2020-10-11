@@ -46,9 +46,9 @@ The A2GB pipeline will:
 
 ## Requirements
 - A UNIX-like environment (UNIX/Linux, MacOS X, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions))
--	[Perl 5](https://www.perl.org/)
--	[InterProScan](https://github.com/ebi-pf-team/interproscan) (latest version)
--	[Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
+- [Perl 5](https://www.perl.org/)
+- [InterProScan](https://github.com/ebi-pf-team/interproscan) (latest version)
+- [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
 - [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
@@ -183,6 +183,55 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 
 Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also create FASTA files of proteins and RNAs with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
+
+For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to check for missing start methionines and for internal stop codons:
+
+```Bash
+check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
+```
+
+If present, we should see error messages like this:
+```
+Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+ERROR: Protein HOP50_01g07580 contains one or more stop codon(s) in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
+
+Checking for internal stop codons in chromosome_02.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+ERROR: Protein HOP50_02g14900 contains one or more stop codon(s) in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_02.prot
+
+Checking for internal stop codons in chromosome_03.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+OK: No internal stop codon found
+
+...
+
+Checking for missing start methionines in chromosome_01.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+ERROR: Protein HOP50_01g07580 starts with V in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
+ERROR: Protein HOP50_01g00140 starts with V in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
+ERROR: Protein HOP50_01g00010 starts with K in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_01.prot
+
+Checking for missing start methionines in chromosome_02.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+ERROR: Protein HOP50_02g18530 starts with V in /media/FatCat/ckosanovic/JF/splitGFF3/chromosome_02.prot
+
+Checking for missing start methionines in chromosome_03.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+OK: All proteins start with methionines...
+```
+
+If present, missing start methionines and internal stop codons can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the following performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), then the .prot files regenerated with EMBLtoPROT.pl:
+
+```Bash
+art $ANNOT/splitGFF3/chromosome_01.embl
+```
+
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis_2.png" alt="Fixing an internal stop codon with Artemis" width="1000"></p>
+
+If fixed:
+```Bash
+EMBLtoPROT.pl -e $ANNOT/splitGFF3/*.embl -c 1
+check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
+```
+```
+Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+OK: No internal stop codon found
+```
 
 ##### Function prediction
 In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UnitProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
