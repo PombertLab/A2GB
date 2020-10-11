@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoPROT.pl';
-my $version = '1.4'; ## codon usage tables
+my $version = '1.4a';
 
-use strict; use warnings; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
+use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
 
 ### Defining options
 my $usage = <<"OPTIONS";
@@ -46,10 +46,12 @@ my %gcodes; gcodes();
 
 while (my $file = shift@embl){
 	open IN, "<$file";
+	my ($embl, $dir) = fileparse($file);
+	print "Working on file $embl located in $dir\n";
 	$file =~ s/.embl$//;
-	open DNA, "<$file.fsa";
-	open PROT, ">$file.prot";
-	open MRNA, ">$file.mRNA";
+	open DNA, "<", "$file.fsa";
+	open PROT, ">", "$file.prot";
+	open MRNA, ">", "$file.mRNA";
 	
 	### Creating a single DNA string for protein translation
 	my $DNAseq= undef;
