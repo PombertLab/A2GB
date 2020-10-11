@@ -238,6 +238,12 @@ OK: No internal stop codon found
 ##### Function prediction
 In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UnitProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
 
+First, let's generate a single multifasta file containing all of the predicted protein sequences. Ideally, internal stop codons and missing methionines should have been corrected prior to this point:
+
+```Bash
+cat $ANNOT/splitGFF3/*.prot > proteins.fasta
+```
+
 ###### Predicting functions with InterProScan 5
 [InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction. 
 
