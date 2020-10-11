@@ -262,3 +262,21 @@ If this happens, you can fix the issues with the stop codons by following the st
 
 ...
 
+#####  Downloading the SwissProt/UniProt databases
+The [UnitProt](https://www.uniprot.org/) Knowledgebase (UniProtKB) is a wide-ranging database of extensively curated information of protein sequence and functional information. UniProtKB is comprised of UniProtKB/Swiss-Prot and UniProtKB/TrEMBL. Each of these offer a varying level of reliability and quality. The Swiss-Prot database contains proteins that have been tested experimentally and are manually annotated and reviewed. The TrEMBL database utilizes semi-automatic annotation, which is computationally analyzed and typically not reviewed.  Together, these databases provide a substantial collection of functional information on proteins. 
+
+To download the SwissProt and/or TrEMBL databases from UniProt, use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl):
+
+```Bash
+get_UniProt.pl -s -t -f $ANNOT/UNIPROT/ -n 20 -l download.log
+```
+Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) are:
+
+```
+-s (--swiss)		Download Swiss-Prot
+-t (--trembl)		Download trEMBL
+-f (--folder)		Download folder [Default: ./]
+-n (--nice)		Linux Process Priority [Default: 20] ## Runs downloads in the background
+-l (--log)		Print download information to log file
+-d (--decompress)	Decompresss downloaded files with gunzip ## trEMBL files will be huge, off by default
+```
