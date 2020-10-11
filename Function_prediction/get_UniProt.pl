@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2020
 my $name = 'get_UniProt.pl';
-my $version = '0.2a';
+my $version = '0.2b';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -26,7 +26,7 @@ die $usage unless @ARGV;
 my $nice = 20;
 my $swiss;
 my $trembl;
-my $folder = './';
+my $folder;
 my $log;
 my $decomp;
 GetOptions(
@@ -38,7 +38,10 @@ GetOptions(
 	'd|decompress' => \$decomp
 );
 
-## Creating logs
+## Checking output directory + creating download log
+unless (defined $folder){$folder = './';}
+unless (-d $folder){system "mkdir $folder";}
+print "\nOutput files will be located in directory $folder\n";
 if ($log){open LOG, ">", "${folder}/${log}";}
 
 ## Downloading SwissProt
