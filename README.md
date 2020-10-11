@@ -254,6 +254,18 @@ cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 run_InterProScan.pl -c 10 -ip -go -pa -f $ANNOT/proteins.fasta -d $ANNOT/Interproscan/ -l interproscan.log
 ```
 
+Options [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) for are:
+
+```
+-c (--cpu)		Number of CPU cores to use [Default: 10]
+-f (--fasta)		FASTA file(s) to query
+-ip (--iprlookup)	Use InterPro's pre-calculated match lookup service
+-go (--goterms)		Gene ontology search (requires --iprlookup)
+-pa (--pathways)	KEGG pathways (requires --iprlookup)
+-d (--dir)		Output directory (Optional)
+-l (--log)		Log name [Default: interproscan.log]
+```
+
 Important, if any stop codon is present in the queries, InterProScan will throw an error message looking like this:
 ```
 ERROR: uk.ac.ebi.interpro.scan.jms.worker.LocalJobQueueListener - 2. The exception is :java.lang.IllegalArgumentException: You have submitted a protein sequence which contains an asterix (*). This may be from an ORF prediction program. '*' is not a valid IUPAC amino acid character and amino acid sequences which go through our pipeline should not contain it. Please strip out all asterix characters from your sequence and resubmit your search.
