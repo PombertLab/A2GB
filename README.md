@@ -247,7 +247,7 @@ cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 ###### Predicting functions with InterProScan 5
 [InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction.
 
-InterProScan 5 can be run using the interproscan.sh script provided with its distribution or with the [run_InterProScan.pl]() Perl wrapper. To run InterProScan 5 using [run_InterProScan.pl]():
+InterProScan 5 can be run using the interproscan.sh script provided with its distribution or with the [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) Perl wrapper. To run InterProScan 5 using [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl):
 
 ```Bash
 run_InterProScan.pl -c 10 -ip -go -pa -f $ANNOT/proteins.fasta -d $ANNOT/Interproscan/ -l interproscan.log
