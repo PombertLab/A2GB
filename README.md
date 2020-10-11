@@ -54,8 +54,7 @@ The A2GB pipeline will:
 - [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
-- [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
-- [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+)
+- [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+) or [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
 - [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)
 
 ### A2GB workflow
