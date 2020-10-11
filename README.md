@@ -57,8 +57,8 @@ The A2GB pipeline will:
 - [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+)
 - [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)
 
-#### A2GB workflow
-##### Exporting annotations from Apollo
+### A2GB workflow
+#### Exporting annotations from Apollo
 After genomic annotations are completed in Apollo, export the curated annotations.  Begin by selecting the 'Ref Sequence' tab. 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Apollo.png" alt="How to export Apollo annotations" width="1000"></p>
 
@@ -99,14 +99,14 @@ cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 $ANNOT/Annotations.gff3 > $ANNO
 ## We concatenate Apollo's GFF3 file last as it includes sequence data
 ```
 
-##### Splitting Apollo GFF3 files
+#### Splitting Apollo GFF3 files
 Because debugging issues with annotations is easier when working with single files, let's split the concatenated Apollo GFF3 file into distinct GFF3 (.gff3) and FASTA (.fsa) files, one per contig/chromosome with [splitGFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/splitGFF3.pl).
 
 ```Bash
 splitGFF3.pl -g $ANNOT/all_annotations.gff3 -d $ANNOT/splitGFF3
 ```
 
-##### Converting GFF3 files to EMBL format
+#### Converting GFF3 files to EMBL format
 This step requires a [locus_tag prefix](https://www.ncbi.nlm.nih.gov/genomes/locustag/Proposal.pdf). If a locus_tag prefix has not been created, visit the [BioSample](https://www.ncbi.nlm.nih.gov/biosample) and [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) databases to submit all relevant sample metadata and project details. Once the sample has been accepted, the submitter will receive a BioSample accession number and a unique locus_tag prefix to be referenced during submission of corresponding experimental data to the NCBI, EBI and DDBJ databases.
 
 Let's convert the GFF3 files to EMBL format with [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl). This script will generate locus tags automatically based on the provided prefix from NCBI. Alternatively, to proceed without the locus_tag prefix, generate a temporary prefix to be replaced later. 
@@ -182,7 +182,7 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis.png" alt="Artemis opening en EMBl file generated with ApolloGFF3toEMBL.pl" width="1000"></p>
 
-###### Checking for internal stop codons and missing start methionines
+##### Checking for internal stop codons and missing start methionines
 Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) will also create FASTA files of proteins and RNAs with the .prot and .RNA extensions, respectively, and which can be used for debugging issues with the corresponding annotations.
 
 For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to check for missing start methionines and for internal stop codons in proteins:
@@ -235,7 +235,7 @@ Checking for internal stop codons in chromosome_01.prot located in /media/FatCat
 OK: No internal stop codon found
 ```
 
-##### Function prediction
+#### Function prediction
 In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UnitProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
 
 First, let's generate a single multifasta file containing all of the predicted protein sequences. Ideally, internal stop codons and missing methionines should have been corrected prior to this point:
@@ -244,7 +244,7 @@ First, let's generate a single multifasta file containing all of the predicted p
 cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 ```
 
-###### Predicting functions with InterProScan 5
+##### Predicting functions with InterProScan 5
 [InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction.
 
 InterProScan 5 can be run using the interproscan.sh script provided with its distribution or with the [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) Perl wrapper. To run InterProScan 5 using [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl):
