@@ -232,7 +232,7 @@ check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
 ```
 If fixed, the error message(s) should be gone:
 ```
-Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/ckosanovic/JF/splitGFF3/
+Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
 OK: No internal stop codon found
 ```
 
