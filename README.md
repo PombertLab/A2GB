@@ -290,3 +290,6 @@ Lists of products from TrEMBL and SwissProt FASTA files can be created using [ge
 ```Bash
 get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_sprot.fasta.gz $ANNOT/UNIPROT/uniprot_trembl.fasta.gz
 ```
+
+###### Running DIAMOND or BLAST searches against UniProt databases
+...
