@@ -215,7 +215,7 @@ Checking for missing start methionines in chromosome_03.prot located in /media/F
 OK: All proteins start with methionines...
 ```
 
-If present, missing start methionines and internal stop codons can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the following performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), then the .prot files regenerated with EMBLtoPROT.pl:
+If present, missing start methionines and internal stop codons can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the subsequent steps performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), then the .prot files regenerated with EMBLtoPROT.pl:
 
 ```Bash
 art $ANNOT/splitGFF3/chromosome_01.embl
