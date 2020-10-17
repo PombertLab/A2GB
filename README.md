@@ -381,7 +381,7 @@ HOP50_01g00030
 HOP50_01g00040
 ```
 
-Then, let's parse the output of the DIAMOND homology searches using the list produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl), the lists of accession numbers/products from the corresponding databases created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl), and [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl):
+Then, let's parse the output of the InterProScan 5 and DIAMOND searches using the list of queries produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) and the lists of accession numbers/products created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl). We will use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) to do this (Note that the uniprot_trembl.list file will be large and will eat up at least 5 Gb of RAM):
 
 ```Bash
 parse_annotators.pl \
