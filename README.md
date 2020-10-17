@@ -378,9 +378,7 @@ HOP50_01g00030
 HOP50_01g00040
 ```
 
-Then, let's parse the output of the homology searhes using that list combined with the lists of accession numbers/products from the corresponding databases
-
-to add the products attached to the accession numbers with [parse_UniProt_BLASTs.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_UniProt_BLASTs.pl):
+Then, let's parse the output of the DIAMOND homology searches using the list produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl), the lists of accession numbers/products from the corresponding databases created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl), and [parse_UniProt_BLASTs.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_UniProt_BLASTs.pl):
 
 ```Bash
 
