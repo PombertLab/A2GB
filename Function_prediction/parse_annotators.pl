@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
-my $version = '1.1';
+my $version = '1.1a';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -16,6 +16,7 @@ SYNOPSIS	This script parses the output of annotators to help assign putative fun
 		- BLASTP/DIAMOND searches against reference organism (optional)
 
 USAGE	parse_annotators.pl -q BEOM2.proteins.queries \\
+		-o BEOM2.annotations \\
 		-sl sprot.list -sb BEOM2.sprot.blastp.6 \\	## Searches against SwissProt
 		-tl trembl.list -tb BEOM2.trembl.blastp.6 \\	## Searches against trEMBL
 		-ip BEOM2.interpro.tsv \\			## InterProScan5 searches
@@ -23,6 +24,7 @@ USAGE	parse_annotators.pl -q BEOM2.proteins.queries \\
 
 OPTIONS:
 -q	List of proteins queried against annotators
+-o	Output file
 
 ## BLAST/DIAMOND searches
 -sl	List of proteins and their products in SwissProt
@@ -39,13 +41,14 @@ NOTE: The trembl.list file is large and will eat up at least 5 Gb of RAM
 OPTIONS
 die "$usage\n" unless @ARGV;
 
-my $queries;
+my $queries; my $output;
 my $splist; my $spblast;
 my $tblist; my $tbblast;
 my $rblist; my $rbblast;
 my $ipro;
 GetOptions(
 	'q=s' => \$queries,
+	'o=s' => \$output,
 	'sl=s' => \$splist,
 	'sb=s' => \$spblast,
 	'tl=s' => \$tblist,
@@ -169,11 +172,10 @@ if ($rblist){
 }
 
 ## Creating the parsed annotations file
-open QUE, "<$queries";
-$queries =~ s/.proteins.queries$//;
+open QUE, "<", "$queries";
 $time = localtime(); 
-print "$time: Writing annotations to $queries.annotations...\n"; $tstart = time;
-open OUT, ">$queries.annotations";
+print "$time: Writing annotations to $output...\n"; $tstart = time;
+open OUT, ">", "$output";
 print OUT '#'."Locus_tag"."\tEvalue\tSwissProt"."\tEvalue\ttrEMBL"."\tEvalue\tPFAM"."\tEvalue\tTIGR"."\tScore\tHAMAP"."\tEvalue\tCDD";
 if ($rblist){print OUT "\tEvalue\tRef_organism";}
 print OUT "\n";
