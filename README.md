@@ -362,8 +362,10 @@ HOP50_01g00020  sp|Q7MD16|LUXQ_VIBVY    33.3    381     234     6       542     
 HOP50_01g00020  sp|Q5A599|NIK1_CANAL    29.2    520     224     9       543     925     494     1006    2.4e-48 195.7
 
 ==> /media/FatCat/user/raw_data/DIAMOND/diamond.trembl.6 <==
-
-
+HOP50_01g00010  tr|A0A5B8MBL8|A0A5B8MBL8_9CHLO  100.0   48      0       0       1       48      244     291     3.2e-19 102.8
+HOP50_01g00010  tr|A0A5B8MD09|A0A5B8MD09_9CHLO  93.3    45      3       0       1       45      231     275     3.3e-16 92.8
+HOP50_01g00020  tr|A0A5B8MDW7|A0A5B8MDW7_9CHLO  100.0   890     0       0       45      934     1       890     0.0e+00 1426.8
+HOP50_01g00020  tr|A0A5B8MTR1|A0A5B8MTR1_9CHLO  65.7    895     299     3       42      932     26      916     2.5e-277        964.5
 ```
 
 Third, let's parse the output of the DIAMOND homology searches. Let's start by creating a simple list of all proteins queries, even those that returned no homology in DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
