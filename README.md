@@ -295,7 +295,7 @@ Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Func
 ```
 
 ###### Creating tab-delimited product lists from UniProt databases
-Homology searches against the [UniProt](https://www.uniprot.org/) databases will return positive matches against the corresponding accession numbers. However, these matches will not include product names. To facilitate downstream analyses, we can create tab-delimited lists of SwissProt/TrEMBL accession numbers and their products with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
+Homology searches against the [UniProt](https://www.uniprot.org/) databases will return positive matches against the corresponding accession numbers. However, these matches will not include product names. To facilitate downstream analyses, we can create tab-delimited lists of accession numbers and their products with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
 
 ```Bash
 get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_*.fasta.gz
