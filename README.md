@@ -334,3 +334,54 @@ diamond makedb \
    --in $ANNOT/UNIPROT/uniprot_trembl.fasta.gz \
    -d $ANNOT/DIAMOND/DB/trembl
 ```
+
+Second, let's perform protein-protein homology searches against the UniProt databases with a tabular output format (same as [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)'s -outfmt 6 format). Note that these searches will likely take a while depending the total number of proteins queried and the size of these databases:
+
+```Bash
+diamond blastp \
+   -d $ANNOT/DIAMOND/DB/sprot \
+   -q $ANNOT/proteins.fasta \
+   -o $ANNOT/DIAMOND/diamond.sprot.6 \
+   -f 6
+   
+diamond blastp \
+   -d $ANNOT/DIAMOND/DB/trembl \
+   -q $ANNOT/proteins.fasta \
+   -o $ANNOT/DIAMOND/diamond.trembl.6 \
+   -f 6
+```
+
+The result of the DIAMOND homology searches should look like this:
+
+```Bash
+head -n 4 $ANNOT/DIAMOND/diamond.*.6
+
+==> /media/FatCat/user/raw_data/DIAMOND/diamond.sprot.6 <==
+HOP50_01g00020  sp|Q54YZ9|DHKJ_DICDI    29.8    514     224     6       543     924     1340    1848    2.5e-50 202.2
+HOP50_01g00020  sp|Q8D5Z6|LUXQ_VIBVU    33.3    381     234     6       542     916     476     842     6.3e-49 197.6
+HOP50_01g00020  sp|Q7MD16|LUXQ_VIBVY    33.3    381     234     6       542     916     476     842     8.2e-49 197.2
+HOP50_01g00020  sp|Q5A599|NIK1_CANAL    29.2    520     224     9       543     925     494     1006    2.4e-48 195.7
+
+==> /media/FatCat/user/raw_data/DIAMOND/diamond.trembl.6 <==
+
+
+```
+
+Third, let's parse the output of the DIAMOND homology searches. Let's start by creating a simple list of all proteins queries, even those that returned no homology in DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
+```Bash
+get_queries.pl $ANNOT/proteins.fasta
+
+head -n 4 $ANNOT/proteins.queries ## Looking at the list produced by get_queries.pl; a simple list with one entry per line
+HOP50_01g00010
+HOP50_01g00020
+HOP50_01g00030
+HOP50_01g00040
+```
+
+Then, let's parse the output of the homology searhes using that list combined with the lists of accession numbers/products from the corresponding databases
+
+to add the products attached to the accession numbers with [parse_UniProt_BLASTs.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_UniProt_BLASTs.pl):
+
+```Bash
+
+```
