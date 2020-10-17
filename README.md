@@ -381,5 +381,24 @@ HOP50_01g00040
 Then, let's parse the output of the DIAMOND homology searches using the list produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl), the lists of accession numbers/products from the corresponding databases created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl), and [parse_UniProt_BLASTs.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_UniProt_BLASTs.pl):
 
 ```Bash
+parse_UniProt_BLASTs.pl \
+   -q $ANNOT/proteins.queries \
+   -b $ANNOT/DIAMOND/diamond.sprot.6 \
+   -e 1e-10 \
+   -u $ANNOT/UNIPROT/uniprot_sprot.list \
+   -o $ANNOT/DIAMOND/proteins.parsed_sprot.1e-10.tsv
+
+parse_UniProt_BLASTs.pl \
+   -q $ANNOT/proteins.queries \
+   -b $ANNOT/DIAMOND/diamond.trembl.6 \
+   -e 1e-10 \
+   -u $ANNOT/UNIPROT/uniprot_trembl.list \
+   -o $ANNOT/DIAMOND/proteins.parsed_trembl.1e-10.tsv
+```
+
+The output of the parsed homology searches should look like this:
+```Bash
+head -n 5 $ANNOT/DIAMOND/proteins.parsed_*.1e-10.tsv
+
 
 ```
