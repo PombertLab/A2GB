@@ -20,7 +20,6 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 	        *	[Downloading the SwissProt and TrEMBL databases](#Downloading-the-SwissProt-and-TrEMBL-databases)
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
-        *	[Generating a list of all proteins queried]
         *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
         *	[Curating the annotations]
    *	[Adding taxonomic info to FASTA files]
