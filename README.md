@@ -11,7 +11,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 * [Requirements](#requirements)
 * [A2GB workflow](#A2GB-workflow)
    * [Exporting annotations from Apollo](#Exporting-annotations-from-Apollo)
-   *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
+        *	[Splitting Apollo GFF3 files](#Splitting-Apollo-GFF3-files)
    *	[Converting GFF3 files to EMBL format](#Converting-GFF3-files-to-EMBL-format)
         *	[Checking for internal stop codons and missing start methionines](#Checking-for-internal-stop-codons-and-missing-start-methionines)
    *	[Function prediction](#Function-prediction)
@@ -98,7 +98,7 @@ cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 $ANNOT/Annotations.gff3 > $ANNO
 ## We concatenate Apollo's GFF3 file last as it includes sequence data
 ```
 
-#### Splitting Apollo GFF3 files
+##### Splitting Apollo GFF3 files
 Because debugging issues with annotations is easier when working with single files, let's split the concatenated Apollo GFF3 file into distinct GFF3 (.gff3) and FASTA (.fsa) files, one per contig/chromosome with [splitGFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/splitGFF3.pl).
 
 ```Bash
