@@ -22,14 +22,15 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
         *	[Curating the annotations](#Curating-the-annotations)
-   *	[Adding taxonomic info to FASTA files]
-   *	[Converting EMBL files to TBL format]
-   *	[Generating a template.sbt file per genome]
-   *	[Creating a structure comments file (genome.cmt)]
-   *	[Converting TBL files to ASN format]
-   *	[Checking for errors]
+   *	[Converting EMBL files to ASN format]
+        *	[Adding taxonomic info to FASTA files]
+        *	[Converting EMBL files to TBL format]
+        *	[Generating a template.sbt file per genome]
+        *	[[Creating a structure comments file (genome.cmt)]
+        *	[Converting TBL files to ASN format]
+        *	[[Checking for errors]
    *	[Submitting ASN file to GenBank]
-*	[Miscellaneous] 
+   *	[Miscellaneous] 
 *	[References]
 
 ## Introduction
