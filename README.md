@@ -21,7 +21,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
-        *	[Curating the annotations]
+        *	[Curating the annotations](#Curating-the-annotations)
    *	[Adding taxonomic info to FASTA files]
    *	[Converting EMBL files to TBL format]
    *	[Generating a template.sbt file per genome]
@@ -394,3 +394,5 @@ parse_annotators.pl \
    -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv
 ```
 
+##### Curating the annotations
+...
