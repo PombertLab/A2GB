@@ -394,5 +394,17 @@ parse_annotators.pl \
    -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv
 ```
 
+The parsed output should look like this:
+
+```Bash
+head -n 4 $ANNOT/proteins.annotations
+
+#Locus_tag      Evalue  SwissProt       Evalue  trEMBL  Evalue  PFAM    Evalue  TIGR    Score   HAMAP   Evalue  CDD
+HOP50_01g00010  NA      hypothetical protein    NA      hypothetical protein    NA      hypothetical protein    NA      hypothetical protein    NA      hypothetical protein    NA      no motif found
+HOP50_01g00020  2.5e-50 Hybrid signal transduction histidine kinase J   0.0e+00 Signal transduction histidine kinase    5.5E-30 Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase NA      hypothetical protein    NA      hypothetical protein    1.8907E-11      HisKA
+HOP50_01g00030  NA      hypothetical protein    1.0e-07 Insulin-like growth factor binding, N-terminal  1.0E-6  Putative ephrin-receptor like   NA      hypothetical protein    NA      hypothetical protein    6.31891E-8      TNFRSF
+
+```
+
 ##### Curating the annotations
 ...
