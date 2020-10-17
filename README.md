@@ -386,6 +386,7 @@ Then, let's parse the output of the InterProScan 5 and DIAMOND searches using th
 ```Bash
 parse_annotators.pl \
    -q $ANNOT/proteins.queries \
+   -o $ANNOT/proteins.annotations \
    -sl $ANNOT/UNIPROT/uniprot_sprot.list \
    -tl $ANNOT/UNIPROT/uniprot_trembl.list \
    -sb $ANNOT/DIAMOND/diamond.sprot.6 \
