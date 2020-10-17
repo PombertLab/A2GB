@@ -301,5 +301,36 @@ Homology searches against the [UniProt](https://www.uniprot.org/) databases will
 get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_*.fasta.gz
 ```
 
+These lists should be regenerated everytime the local UniProt databases are updated. Note that creating a product list from the TrEMBL database will take time due to its size. The tab-delimited lists should look like this:
+
+```Bash
+head -n 4 $ANNOT/UNIPROT/*.list
+==> /media/FatCat/user/raw_data/UNIPROT/uniprot_sprot.list <==
+sp|Q6GZX4|001R_FRG3G    Putative transcription factor 001R
+sp|Q6GZX3|002L_FRG3G    Uncharacterized protein 002L
+sp|Q197F8|002R_IIV3     Uncharacterized protein 002R
+sp|Q197F7|003L_IIV3     Uncharacterized protein 003L
+
+==> /media/FatCat/user/raw_data/UNIPROT/uniprot_trembl.list <==
+tr|Q51723|Q51723_9EURY  Beta-galactosidase
+tr|A2TI13|A2TI13_9EURY  Methyl-coenzyme M reductase (Fragment)
+tr|A8USH6|A8USH6_9EURY  Methyl-coenzyme M reductase alpha (Fragment)
+tr|C0LL04|C0LL04_9EURY  Methyl-coenzyme M reductase I alpha subunit (Fragment)
+```
+
 ###### Running DIAMOND or BLAST searches against UniProt databases
-...
+We can use [DIAMOND](https://github.com/bbuchfink/diamond) to perform homology searches against the [UniProt](https://www.uniprot.org/) databases. Documentation on how to use DIAMOND can be found [here](http://www.diamondsearch.org/index.php).
+
+First, let's create DIAMOND-formatted databases:
+
+```Bash
+mkdir $ANNOT/DIAMOND/; mkdir $ANNOT/DIAMOND/DB/; 
+
+diamond makedb \
+   --in $ANNOT/UNIPROT/uniprot_sprot.fasta.gz \
+   -d $ANNOT/DIAMOND/DB/sprot
+
+diamond makedb \
+   --in $ANNOT/UNIPROT/uniprot_trembl.fasta.gz \
+   -d $ANNOT/DIAMOND/DB/trembl
+```
