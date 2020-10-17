@@ -20,7 +20,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 	        *	[Downloading the SwissProt and TrEMBL databases](#Downloading-the-SwissProt-and-TrEMBL-databases)
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
-        *	[Parsing the result of InterProScan 5 and SwissProt/UniProt searches]
+        *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
         *	[Curating the annotations]
    *	[Adding taxonomic info to FASTA files]
    *	[Converting EMBL files to TBL format]
@@ -368,7 +368,9 @@ HOP50_01g00020  tr|A0A5B8MDW7|A0A5B8MDW7_9CHLO  100.0   890     0       0       
 HOP50_01g00020  tr|A0A5B8MTR1|A0A5B8MTR1_9CHLO  65.7    895     299     3       42      932     26      916     2.5e-277        964.5
 ```
 
-Third, let's parse the output of the DIAMOND homology searches. Let's start by creating a simple list of all proteins queries, even those that returned no homology in DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
+##### Parsing the result of InterProScan 5 and DIAMOND searches
+
+First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5 and/or DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
 ```Bash
 get_queries.pl $ANNOT/proteins.fasta
 
@@ -379,27 +381,15 @@ HOP50_01g00030
 HOP50_01g00040
 ```
 
-Then, let's parse the output of the DIAMOND homology searches using the list produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl), the lists of accession numbers/products from the corresponding databases created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl), and [parse_UniProt_BLASTs.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_UniProt_BLASTs.pl):
+Then, let's parse the output of the DIAMOND homology searches using the list produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl), the lists of accession numbers/products from the corresponding databases created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl), and [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl):
 
 ```Bash
-parse_UniProt_BLASTs.pl \
+parse_annotators.pl \
    -q $ANNOT/proteins.queries \
-   -b $ANNOT/DIAMOND/diamond.sprot.6 \
-   -e 1e-10 \
-   -u $ANNOT/UNIPROT/uniprot_sprot.list \
-   -o $ANNOT/DIAMOND/proteins.parsed_sprot.1e-10.tsv
-
-parse_UniProt_BLASTs.pl \
-   -q $ANNOT/proteins.queries \
-   -b $ANNOT/DIAMOND/diamond.trembl.6 \
-   -e 1e-10 \
-   -u $ANNOT/UNIPROT/uniprot_trembl.list \
-   -o $ANNOT/DIAMOND/proteins.parsed_trembl.1e-10.tsv
+   -sl $ANNOT/UNIPROT/uniprot_sprot.list \
+   -tl $ANNOT/UNIPROT/uniprot_trembl.list \
+   -sb $ANNOT/DIAMOND/diamond.sprot.6 \
+   -tb $ANNOT/DIAMOND/diamond.trembl.6 \
+   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv
 ```
 
-The output of the parsed homology searches should look like this:
-```Bash
-head -n 5 $ANNOT/DIAMOND/proteins.parsed_*.1e-10.tsv
-
-
-```
