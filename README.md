@@ -23,7 +23,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
         *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
         *	[Curating the annotations](#Curating-the-annotations)
-   *	[Converting EMBL files to ASN format]
+   *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
         *	[Adding taxonomic info to FASTA files]
         *	[Converting EMBL files to TBL format]
         *	[Generating a template.sbt file per genome]
@@ -540,3 +540,5 @@ Putative annotation(s) found for protein #0002: HOP50_01g00020:
 
 Please enter selection [1-7] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
 ```
+
+#### Converting EMBL files to ASN format
