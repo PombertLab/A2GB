@@ -525,3 +525,18 @@ HOP50_01g00040  hypothetical protein
 HOP50_01g00050  glutamine-dependent NAD(+) synthetase
 ```
 
+If a reference dataset was used, the menu from [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) will include another option (7.) and should look like this:
+```
+curate_annotations.pl -i $ANNOT/proteins.annotations
+
+Putative annotation(s) found for protein #0002: HOP50_01g00020:
+1.      SWISSPROT:      2.5e-50         Hybrid signal transduction histidine kinase J
+2.      TREMBL:         0.0e+00         Signal transduction histidine kinase
+3.      Pfam:           5.5E-30         Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
+4.      TIGRFAM:        NA              hypothetical protein
+5.      HAMAP:          NA              hypothetical protein
+6.      CDD:            1.8907E-11      HisKA
+7.      Reference:      0.0e+00         signal transduction histidine kinase
+
+Please enter selection [1-7] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
+```
