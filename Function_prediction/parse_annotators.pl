@@ -20,7 +20,7 @@ USAGE	parse_annotators.pl -q BEOM2.proteins.queries \\
 		-sl sprot.list -sb BEOM2.sprot.blastp.6 \\	## Searches against SwissProt
 		-tl trembl.list -tb BEOM2.trembl.blastp.6 \\	## Searches against trEMBL
 		-ip BEOM2.interpro.tsv \\			## InterProScan5 searches
-		-rl reference.list -rb reference.blastp.6	## Searches agasint reference organism (Optional)
+		-rl reference.list -rb reference.blastp.6	## Searches against reference organism (Optional)
 
 OPTIONS:
 -q	List of proteins queried against annotators
