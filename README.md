@@ -404,7 +404,32 @@ head -n 4 $ANNOT/proteins.annotations
 HOP50_01g00010  NA      hypothetical protein    NA      hypothetical protein    NA      hypothetical protein    NA      hypothetical protein    NA      hypothetical protein    NA      no motif found
 HOP50_01g00020  2.5e-50 Hybrid signal transduction histidine kinase J   0.0e+00 Signal transduction histidine kinase    5.5E-30 Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase NA      hypothetical protein    NA      hypothetical protein    1.8907E-11      HisKA
 HOP50_01g00030  NA      hypothetical protein    1.0e-07 Insulin-like growth factor binding, N-terminal  1.0E-6  Putative ephrin-receptor like   NA      hypothetical protein    NA      hypothetical protein    6.31891E-8      TNFRSF
+```
 
+If desired, homology searches against a reference dataset (in output format 6) can also be used with [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl). A tab-delimited list of locus_tags and associated products from the reference will also be required:
+```Bash
+head -n 5 $ANNOT/reference.list
+
+QDZ17483.1      hypothetical protein
+QDZ17484.1      cytochrome P450
+QDZ17485.1      hypothetical protein
+QDZ17486.1      coiled-coil domain-containing protein
+QDZ17487.1      putative transmembrane protein
+```
+
+To use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) with a reference dataset, type:
+
+```Bash
+parse_annotators.pl \
+   -q $ANNOT/proteins.queries \
+   -o $ANNOT/proteins.annotations \
+   -sl $ANNOT/UNIPROT/uniprot_sprot.list \
+   -tl $ANNOT/UNIPROT/uniprot_trembl.list \
+   -sb $ANNOT/DIAMOND/diamond.sprot.6 \
+   -tb $ANNOT/DIAMOND/diamond.trembl.6 \
+   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv \
+   -rl $ANNOT/reference.list \
+   -rb $ANNOT/DIAMOND/diamond.reference.6
 ```
 
 ##### Curating the annotations
