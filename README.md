@@ -399,6 +399,17 @@ To create a tab-delimited list of accession numbers and their associated protein
 get_reference_products.pl -f $ANNOT/REFERENCES/*.gz -l $ANNOT/REFERENCES/reference.list
 ```
 
+The list created should look like this:
+```
+head -n 5 $ANNOT/REFERENCES/reference.list
+
+QDZ17483.1      hypothetical protein A3770_01p00010
+QDZ17484.1      cytochrome P450
+QDZ17485.1      hypothetical protein A3770_01p00030
+QDZ17486.1      coiled-coil domain-containing protein
+QDZ17487.1      putative transmembrane protein
+```
+
 ##### Parsing the result of InterProScan 5 and DIAMOND searches
 
 First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5 and/or DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
