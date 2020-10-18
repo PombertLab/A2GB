@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'tRNAscan_to_GFF3.pl';
-my $version = '0.8';
+my $version = '0.8a';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
@@ -62,15 +62,15 @@ while (my $file = shift@tRNA){
 		if ($line =~ /^(Sequence|Name|--------)/){next;}
 		else{
 			my @cols = split("\t", $line);
-			my $location = $cols[0];
-			my $tnum = $cols[1];
-			my $start = $cols[2];
-			my $end = $cols[3];
-			my $aa = $cols[4];
-			my $ac = $cols[5];
-			my $int1 = $cols[6]; ## intron boundaries, if any
-			my $int2 = $cols[7]; ## intron boundaries, if any
-			my $cove = $cols[8];
+			my $location = $cols[0]; $location =~ s/\s+$//; ## Removing padding spaces, if any
+			my $tnum = $cols[1]; $tnum =~ s/\s+$//;
+			my $start = $cols[2]; $start =~ s/\s+$//;
+			my $end = $cols[3]; $end =~ s/\s+$//;
+			my $aa = $cols[4]; $aa =~ s/\s+$//;
+			my $ac = $cols[5]; $ac =~ s/\s+$//;
+			my $int1 = $cols[6]; $int1 =~ s/\s+$//; ## intron boundaries, if any
+			my $int2 = $cols[7]; $int2 =~ s/\s+$//;## intron boundaries, if any
+			my $cove = $cols[8]; $cove =~ s/\s+$//;
 			my $codon = $ac;
 			$codon =~ tr/Tt/Uu/;
 			$tRNA++;
