@@ -525,7 +525,7 @@ HOP50_01g00040  hypothetical protein
 HOP50_01g00050  glutamine-dependent NAD(+) synthetase
 ```
 
-If a reference dataset was used, the menu from [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) will include another option (7.) and should look like this:
+If a reference dataset was used, the menu from [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) should look like this:
 ```
 curate_annotations.pl -i $ANNOT/proteins.annotations
 
