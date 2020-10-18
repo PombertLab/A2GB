@@ -439,7 +439,7 @@ Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypotheti
 x
 ```
 
-To speed up the manual annotation process, proteins without any homology/significant hit in any of the predictors used will be automatically be annotated as 'hypothetical protein'. Proteins with one or more matches identified by the predictors will show a menu like the one above. Users can enter desired selection from the menu to annotate the corresponding proteins accordingly. The option [m] for manual annotation will likely be very useful to fix typos and/or lower/uppercase character issues in the corresponding matches. To option [x] will enable the user to quit and resume at a later stage. If the option entered is not recognized, the script will exit automatically to prevent potential problems.
+To speed up the manual annotation process, proteins without any homology/significant hit in any of the predictors used will be automatically be annotated as 'hypothetical protein'. Proteins with one or more matches identified by the predictors will show a menu like the one above. Users can enter the desired selection from the menu to annotate the  proteins accordingly. The option [m] for manual annotation will likely be useful to fix typos and/or lower/uppercase character issues in the corresponding matches. To option [x] will enable the user to quit and resume at a later stage. If the option entered is not recognized, the script will exit automatically to prevent potential problems.
 
 To resume annotations from the last step, simply add -r (resume) to the command line:
 
