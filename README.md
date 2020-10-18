@@ -408,4 +408,52 @@ HOP50_01g00030  NA      hypothetical protein    1.0e-07 Insulin-like growth fact
 ```
 
 ##### Curating the annotations
-...
+The script [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) was designed to faciliate comparisons between function prediction tools. It requires as input the file generated with [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl). At minimum, this file should include the result of DIAMOND or BLASTP homology searches against the SwissProt/TrEMBL databases and the result of InterProScan 5 searches.
+
+To start curating annotations with [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl), simply type:
+
+```
+curate_annotations.pl -i $ANNOT/proteins.annotations
+
+Putative annotation(s) found for protein #0002: HOP50_01g00020:
+1.      SWISSPROT:      2.5e-50         Hybrid signal transduction histidine kinase J
+2.      TREMBL:         0.0e+00         Signal transduction histidine kinase
+3.      Pfam:           5.5E-30         Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
+4.      TIGRFAM:        NA              hypothetical protein
+5.      HAMAP:          NA              hypothetical protein
+6.      CDD:            1.8907E-11      HisKA
+
+Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
+m
+Enter desired annotation: signal transduction histidine kinase
+
+Putative annotation(s) found for protein #0003: HOP50_01g00030:
+1.      SWISSPROT:      NA              hypothetical protein
+2.      TREMBL:         1.0e-07         Insulin-like growth factor binding, N-terminal
+3.      Pfam:           1.0E-6          Putative ephrin-receptor like
+4.      TIGRFAM:        NA              hypothetical protein
+5.      HAMAP:          NA              hypothetical protein
+6.      CDD:            6.31891E-8      TNFRSF
+
+Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
+x
+```
+
+To speed up the manual annotation process, proteins without any homology/significant hit in any of the predictors used will be automatically be annotated as 'hypothetical protein'. Proteins with one or more matches identified by the predictors will show a menu like the one above. Users can enter desired selection from the menu to annotate the corresponding proteins accordingly. The option [m] for manual annotation will likely be very useful to fix typos and/or lower/uppercase character issues in the corresponding matches. To option [x] will enable the user to quit and resume at a later stage. If the option entered is not recognized, the script will exit automatically to prevent potential problems.
+
+To resume annotations from the last step, simply add -r (resume) to the command line:
+
+```
+curate_annotations.pl -r -i $ANNOT/proteins.annotations
+
+Putative annotation(s) found for protein #0003: HOP50_01g00030:
+1.      SWISSPROT:      NA              hypothetical protein
+2.      TREMBL:         1.0e-07         Insulin-like growth factor binding, N-terminal
+3.      Pfam:           1.0E-6          Putative ephrin-receptor like
+4.      TIGRFAM:        NA              hypothetical protein
+5.      HAMAP:          NA              hypothetical protein
+6.      CDD:            6.31891E-8      TNFRSF
+
+Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
+```
+
