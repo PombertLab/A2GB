@@ -20,6 +20,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 	        *	[Downloading the SwissProt and TrEMBL databases](#Downloading-the-SwissProt-and-TrEMBL-databases)
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
+        *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
         *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
         *	[Curating the annotations](#Curating-the-annotations)
    *	[Converting EMBL files to ASN format]
@@ -367,6 +368,29 @@ HOP50_01g00010  tr|A0A5B8MBL8|A0A5B8MBL8_9CHLO  100.0   48      0       0       
 HOP50_01g00010  tr|A0A5B8MD09|A0A5B8MD09_9CHLO  93.3    45      3       0       1       45      231     275     3.3e-16 92.8
 HOP50_01g00020  tr|A0A5B8MDW7|A0A5B8MDW7_9CHLO  100.0   890     0       0       45      934     1       890     0.0e+00 1426.8
 HOP50_01g00020  tr|A0A5B8MTR1|A0A5B8MTR1_9CHLO  65.7    895     299     3       42      932     26      916     2.5e-277        964.5
+```
+
+##### Performing homology searches against reference datasets
+
+If desired reference datasets can also be used to help with annotations. Homology searches against custom datasets or downloaded from NCBI can be performed in as described above. NCBI datasets can be accessed from the [NCBI genome](https://www.ncbi.nlm.nih.gov/genome) database. They can also be access directly from their new [dataset](https://www.ncbi.nlm.nih.gov/datasets/genomes/) repository.
+
+For example, using two datasets downloaded from NCBI:
+
+```Bash
+## Downloading data from NCBI
+mkdir $ANNOT/REFERENCES/;
+wget -O $ANNOT/REFERENCES/ref1.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/007/859/695/GCA_007859695.1_ASM785969v1/GCA_007859695.1_ASM785969v1_protein.faa.gz
+wget -O $ANNOT/REFERENCES/ref2.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/214/015/GCF_000214015.3_version_140606/GCF_000214015.3_version_140606_protein.faa.gz
+
+## Creating DIAMOND database; using zcat to concatenate the output to STDOUT, then feed it to diamond as input
+zcat $ANNOT/REFERENCES/*.gz | diamond makedb -d $ANNOT/DIAMOND/DB/reference
+
+## Running DIAMOND 
+diamond blastp \
+   -d $ANNOT/DIAMOND/DB/reference \
+   -q $ANNOT/proteins.fasta \
+   -o $ANNOT/DIAMOND/diamond.reference.6 \
+   -f 6
 ```
 
 ##### Parsing the result of InterProScan 5 and DIAMOND searches
