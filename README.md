@@ -393,6 +393,12 @@ diamond blastp \
    -f 6
 ```
 
+To create a tab-delimited list of accession numbers and their associated proteins from the downloaded NCBI .faa.gz files, we can use [get_reference_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_reference_products.pl).
+
+```Bash
+get_reference_products.pl -f $ANNOT/REFERENCES/*.gz -l $ANNOT/REFERENCES/reference.list
+```
+
 ##### Parsing the result of InterProScan 5 and DIAMOND searches
 
 First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5 and/or DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
