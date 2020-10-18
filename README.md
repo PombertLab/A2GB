@@ -372,7 +372,7 @@ HOP50_01g00020  tr|A0A5B8MTR1|A0A5B8MTR1_9CHLO  65.7    895     299     3       
 
 ##### Performing homology searches against reference datasets
 
-If desired, reference datasets can also be used to help with annotations. Homology searches against custom datasets or downloaded from NCBI can be performed in as described above. NCBI datasets can be accessed from the [NCBI genome](https://www.ncbi.nlm.nih.gov/genome) database. They can also be access directly from their new [dataset](https://www.ncbi.nlm.nih.gov/datasets/genomes/) repository.
+If desired, reference datasets (custom or downloaded from NCBI) can also be used as databases in homology searches to help with annotations. NCBI datasets can be accessed from the [NCBI genome](https://www.ncbi.nlm.nih.gov/genome) database or directly from their new [dataset](https://www.ncbi.nlm.nih.gov/datasets/genomes/) repository.
 
 For example, using two datasets downloaded from NCBI:
 
