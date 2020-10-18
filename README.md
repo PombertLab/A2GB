@@ -379,8 +379,8 @@ For example, using two datasets downloaded from NCBI:
 ```Bash
 ## Downloading data from NCBI
 mkdir $ANNOT/REFERENCES/;
-wget -O $ANNOT/REFERENCES/ref1.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/007/859/695/GCA_007859695.1_ASM785969v1/GCA_007859695.1_ASM785969v1_protein.faa.gz
-wget -O $ANNOT/REFERENCES/ref2.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/214/015/GCF_000214015.3_version_140606/GCF_000214015.3_version_140606_protein.faa.gz
+wget -O $ANNOT/REFERENCES/ref1.faa.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/007/859/695/GCA_007859695.1_ASM785969v1/GCA_007859695.1_ASM785969v1_protein.faa.gz
+wget -O $ANNOT/REFERENCES/ref2.faa.gz https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/214/015/GCF_000214015.3_version_140606/GCF_000214015.3_version_140606_protein.faa.gz
 
 ## Creating DIAMOND database; using zcat to concatenate the output to STDOUT, then feed it to diamond as input
 zcat $ANNOT/REFERENCES/*.gz | diamond makedb -d $ANNOT/DIAMOND/DB/reference
