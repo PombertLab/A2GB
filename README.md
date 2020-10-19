@@ -578,7 +578,7 @@ Please enter selection [1-7] to assign annotation, [0] to annotate as 'hypotheti
 The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertLab/A2GB) is a two step process. EMBL files are first converted to TBL format with [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl), then NCBI's [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) converts the later format to ASN.
 
 ##### Converting EMBL files to TBL format
-[EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) converts EMBL files to TBL format. This script requires a single tab-limited list of the locus tags and their predicted annotations. We can create this list by concatenating the tRNAs.annotations and rRNAs.annotations files generated [previously](https://github.com/PombertLab/A2GB#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products) together with the curated list of proteins annoations (see [above](https://github.com/PombertLab/A2GB#curating-the-protein-annotations)).
+[EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) converts EMBL files to TBL format. This script requires a single tab-limited list of the locus tags and their predicted annotations. We can create this list by concatenating the tRNAs.annotations and rRNAs.annotations files generated [previously](https://github.com/PombertLab/A2GB#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products) together with the curated list of proteins annoations (see [above](https://github.com/PombertLab/A2GB#curating-the-protein-annotations)). Alternatively, any tab-delimited list of locus_tags and their products can be used. 
 
 Concatenating the annotations can be quickly performed with:
 ```
@@ -594,9 +594,22 @@ EMBLtoTBL.pl \
    1> $ANNOT/STD.log \
    2> $ANNOT/ERROR.log
 ```
+
 Options for [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) are:
 ```
 -id		Desired institute ID [default: IITBIO]
 -p		Tab-delimited list of locus_tags and their products
 -embl		EMBL files to convert
+```
+
+Locus tag entries missing from the tab-delimited list of annotations will be reported in the $ANNOT/ERROR.log file. Missing entries will be annotated automaically as 'hypothetical protein', 'hypothetical tRNA' or as 'hypothetical RNA' for CDS, tRNA and rRNA features, respectively. If any entry is missing, the $ANNOT/ERROR.log file will look like this:
+```
+head -n 6 $ANNOT/ERROR.log
+
+Cannot find database entry for locus_tag: HOP50_01g00020
+Cannot find database entry for locus_tag: HOP50_01g00020
+Cannot find database entry for locus_tag: HOP50_01g00030
+Cannot find database entry for locus_tag: HOP50_01g00030
+Cannot find database entry for locus_tag: HOP50_01g00040
+Cannot find database entry for locus_tag: HOP50_01g00040
 ```
