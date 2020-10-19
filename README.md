@@ -581,7 +581,22 @@ The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertL
 [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) converts EMBL files to TBL format. This script requires a single tab-limited list of the locus tags and their predicted annotations. We can create this list by concatenating the tRNAs.annotations and rRNAs.annotations files generated [previously](https://github.com/PombertLab/A2GB#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products) together with the curated list of proteins annoations (see [above](https://github.com/PombertLab/A2GB#curating-the-protein-annotations)).
 
 Concatenating the annotations can be quickly performed with:
-
 ```
-cat $ANNOT/tRNA.annotations $ANNOT/rRNA.annotations $ANNOT/proteins.annotations.curated > verified_annotations.tsv
+cat $ANNOT/tRNA.annotations $ANNOT/rRNA.annotations $ANNOT/proteins.annotations.curated > $ANNOT/verified_annotations.tsv
+```
+
+The conversion from EMBL to TBL can then be performed with:
+```
+EMBLtoTBL.pl \
+   -id ITTBIO \
+   -p $ANNOT/verified_annotations.tsv \
+   -embl $ANNOT/splitGFF3/*.embl \
+   1> $ANNOT/STD.log \
+   2> $ANNOT/ERROR.log
+```
+Options for [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) are:
+```
+-id		Desired institute ID [default: IITBIO]
+-p		Tab-delimited list of locus_tags and their products
+-embl		EMBL files to convert
 ```
