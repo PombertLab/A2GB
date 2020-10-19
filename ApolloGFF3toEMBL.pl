@@ -45,11 +45,12 @@ my $locus_id = 10; my $contig_number = 0;
 my $protein = undef; my $mRNA =undef;
 my %gcodes; gcodes();
 
-my $gff; my $dir;
+my $gff; my $dir; my $loc;
 open FEAT, ">", "$featlist" or die "Can't create feature list $featlist\n";
-print FEAT '#Locus_tag'."\t"."Type"."\t"."Strand"."\t"."Start"."End"."\n";
+print FEAT '#Locus_tag'."\t"."location"."\t"."Type"."\t"."Strand"."\t"."Start"."End"."\n";
 while (my $file = shift@gff3){
 	($gff, $dir) = fileparse($file);
+	$loc = $gff; $loc =~ s/.gff3$//;
 	print "Working on file $gff located in $dir\n";
 	open IN, "<", "$file";
 	$file =~ s/.gff3$//;
@@ -117,7 +118,7 @@ while (my $file = shift@gff3){
 			### Working on gene features
 			my $locus_number = sprintf("%05d", $locus_id);
 			my $contig = sprintf("%02d", $contig_number);
-			print FEAT "$locus_tag_prefix".'_'."$contig".'g'."$locus_number"."\t"."$feature{$list}"."\t".'+'."\t"."$gene{$list}[0]"."\t"."$gene{$list}[1]"."\n";
+			print FEAT "$locus_tag_prefix".'_'."$contig".'g'."$locus_number"."\t"."$loc"."\t"."$feature{$list}"."\t".'+'."\t"."$gene{$list}[0]"."\t"."$gene{$list}[1]"."\n";
 			print OUT 'FT   gene             '."$gene{$list}[0]".'..'."$gene{$list}[1]"."\n";
 			print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
 			$locus_id += 10;
@@ -185,7 +186,7 @@ while (my $file = shift@gff3){
 			### Working on gene features
 			my $locus_number = sprintf("%05d", $locus_id);
 			my $contig = sprintf("%02d", $contig_number);
-			print FEAT "$locus_tag_prefix".'_'."$contig".'g'."$locus_number"."\t"."$feature{$list}"."\t".'-'."\t"."$gene{$list}[0]"."\t"."$gene{$list}[1]"."\n";
+			print FEAT "$locus_tag_prefix".'_'."$contig".'g'."$locus_number"."\t"."$loc"."\t"."$feature{$list}"."\t".'-'."\t"."$gene{$list}[0]"."\t"."$gene{$list}[1]"."\n";
 			print OUT 'FT   gene             complement('."$gene{$list}[0]".'..'."$gene{$list}[1]".')'."\n";
 			print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
 			$locus_id += 10;
