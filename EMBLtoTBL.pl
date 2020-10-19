@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoTBL.pl';
-my $version = '1.5';
+my $version = '1.5a';
 
-use strict; use warnings; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
+use strict; use warnings; use Bio::SeqIO; use File::Basename; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 NAME		$name
@@ -41,11 +41,12 @@ while(my $dbkey = <HASH>){chomp $dbkey;if($dbkey =~ /^(\S+)\t(.*)$/){my $prot = 
 ### Working on EMBL files
 my $locus_tag;
 while(my $file = shift@embl){
-	open IN, "<$file" or die "Can't open EMBL file file: $file\n";
+	open IN, "<", "$file" or die "Can't open EMBL file file: $file\n";
 	$file =~ s/.embl$//;
-	open DNA, "<$file.fsa" or die "Can't open FASTA file file: $file.fsa\n";
-	open TBL, ">$file.tbl" or die "Can't create TBL output file: $file.tbl\n";
-	print TBL ">Feature $file\n"; ## Generate TBL header
+	my ($head, $dir) = fileparse($file);
+	open DNA, "<", "$file.fsa" or die "Can't open FASTA file file: $file.fsa\n";
+	open TBL, ">", "$file.tbl" or die "Can't create TBL output file: $file.tbl\n";
+	print TBL ">Feature $head\n"; ## Generate TBL header
 	
 	### Creating a single DNA string for codon verification
 	my $DNAseq = undef;
