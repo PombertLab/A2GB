@@ -25,7 +25,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
-        *	[Converting EMBL files to TBL format]
+        *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
         *	[Converting TBL files to ASN format]
 	        *	[Adding metadata to FASTA files]
       		*	[Generating a template.sbt file]
@@ -575,3 +575,7 @@ Please enter selection [1-7] to assign annotation, [0] to annotate as 'hypotheti
 ```
 
 #### Converting EMBL files to ASN format
+The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertLab/A2GB) is a two step process. EMBL files are first converted to TBL format with [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl), then NBCI's [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) converts the later format to ASN.
+
+##### Converting EMBL files to TBL format
+[EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) converts EMBL files to TBL format. This script requires a single tab-limited list of the locus tags and their predicted annotations. We can create this list by concatenating the tRNAs.annotations and rRNAs.annotations files generated [previously](https://github.com/PombertLab/A2GB#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products).
