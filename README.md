@@ -580,7 +580,7 @@ The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertL
 ##### Converting EMBL files to TBL format
 [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) converts EMBL files to TBL format. This script requires a single tab-limited list of the locus tags and their predicted annotations. We can create this list by concatenating the tRNAs.annotations and rRNAs.annotations files generated [previously](https://github.com/PombertLab/A2GB#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products) together with the curated list of proteins annoations (see [above](https://github.com/PombertLab/A2GB#curating-the-protein-annotations)).
 
-Concatenating the annotations can be quickly performed with cat:
+Concatenating the annotations can be quickly performed with:
 
 ```
 cat $ANNOT/tRNA.annotations $ANNOT/rRNA.annotations $ANNOT/proteins.annotations.curated > verified_annotations.tsv
