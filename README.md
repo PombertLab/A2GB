@@ -113,7 +113,7 @@ This step requires a [locus_tag prefix](https://www.ncbi.nlm.nih.gov/genomes/loc
 Let's convert the GFF3 files to EMBL format with [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl). This script will generate locus tags automatically based on the provided prefix from NCBI. 
 
 ```Bash
-ApolloGFF3toEMBL.pl -p LOCUS_TAG_PREFIX -g *.gff3 -f features.list -c 1
+ApolloGFF3toEMBL.pl -p LOCUS_TAG_PREFIX -g $ANNOT/splitGFF3/*.gff3 -f features.list -c 1
 ```
 Options for [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) are:
 
