@@ -613,3 +613,34 @@ Cannot find database entry for locus_tag: HOP50_01g00030
 Cannot find database entry for locus_tag: HOP50_01g00040
 Cannot find database entry for locus_tag: HOP50_01g00040
 ```
+
+The TBL files created should look like this:
+```
+head -n 25 `ls $ANNOT/splitGFF3/*.tbl | head -n 1`
+
+>Feature chromosome_01
+<2      >148    gene
+                        locus_tag       HOP50_01g00010
+<2      >148    mRNA
+                        locus_tag       HOP50_01g00010
+                        product hypothetical protein
+                        protein_id      gnl|ITTBIO|HOP50_01g00010
+                        transcript_id   gnl|ITTBIO|HOP50_01g00010_mRNA
+<2      148     CDS
+                        locus_tag       HOP50_01g00010
+                        product hypothetical protein
+                        protein_id      gnl|ITTBIO|HOP50_01g00010
+                        transcript_id   gnl|ITTBIO|HOP50_01g00010_mRNA
+<3043   >239    gene
+                        locus_tag       HOP50_01g00020
+<3043   >239    mRNA
+                        locus_tag       HOP50_01g00020
+                        product signal transduction histidine kinase
+                        protein_id      gnl|ITTBIO|HOP50_01g00020
+                        transcript_id   gnl|ITTBIO|HOP50_01g00020_mRNA
+3043    239     CDS
+                        locus_tag       HOP50_01g00020
+                        product signal transduction histidine kinase
+                        protein_id      gnl|ITTBIO|HOP50_01g00020
+                        transcript_id   gnl|ITTBIO|HOP50_01g00020_mRNA
+```
