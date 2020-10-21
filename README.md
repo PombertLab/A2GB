@@ -649,7 +649,28 @@ head -n 25 `ls $ANNOT/splitGFF3/*.tbl | head -n 1`
 Metadata must be included together with genome sequences during the submission process to NCBI. Although some of this metadata can be entered from the online submission form(s), it is often easier to add it beforehand while generating the ASN files. Metadata for genome submission includes taxonomic information about the source of the data being submitted, details about the sequencing experiments/computational analyses performed, and general information about the author(s) and institution(s) submitting the genomes.
 
 ###### Adding metadata to FASTA files
-Taxonomic metadata can be added directly to the FASTA files. The list of modifiers that can be added directly to the FASTA definition line can be found [here](https://www.ncbi.nlm.nih.gov/Sequin/modifiers.html). Mandatory modifiers include the organism name [organism=XXX] and its taxonomic lineage [lineage=XXX]. The latter can be found from the NCBI taxonomy database (see figure below).
+Taxonomic metadata can be added directly to the FASTA files. The list of modifiers that can be added directly to the FASTA definition lines can be found [here](https://www.ncbi.nlm.nih.gov/Sequin/modifiers.html). Mandatory modifiers include the organism name [organism=XXX] and its taxonomic lineage [lineage=XXX]. The latter can be found from the NCBI taxonomy database (see figure below).
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/lineage.png" alt="Lineage information from the NCBI Taxonomy database" width="1000"></p>
 
+The script [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) can be used to add some of the most common modifiers to the FASTA definition lines. To add metadata with it, type:
+
+```Bash
+add_metadata_to_fasta.pl \
+   -o 'Chloropicon primus RCC138' \
+   -s RCC138 \
+   -c \
+   -g 1 \
+   -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
+   -f $ANNOT/splitGFF3/*.fsa
+```
+
+Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) are:
+```
+-o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
+-s (--strain)		Strain definition; e.g. RCC138
+-l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
+-g (--gcode)		NCBI genetic code [Default: 1]
+-m (--moltype)		NCBI moltype descriptor [Default: genomic]
+-c (--chromosome)	Annotate contigs as chromosomes
+```
