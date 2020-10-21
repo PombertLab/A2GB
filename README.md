@@ -26,8 +26,8 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
-        *	[Converting TBL files to ASN format]
-	        *	[Adding metadata to FASTA files]
+        *	[Converting TBL files to ASN format](#Converting-TBL-files-to-ASN-format)
+	        *	[Adding metadata to FASTA files](#Adding-metadata-to-FASTA-files)
       		*	[Generating a template.sbt file]
         	*	[Creating structured comments]	
         *	[Checking for errors]
@@ -644,3 +644,12 @@ head -n 25 `ls $ANNOT/splitGFF3/*.tbl | head -n 1`
                         protein_id      gnl|ITTBIO|HOP50_01g00020
                         transcript_id   gnl|ITTBIO|HOP50_01g00020_mRNA
 ```
+
+##### Converting TBL files to ASN format
+Metadata must be included together with genome sequences during the submission process to NCBI. Although some of this metadata can be entered from the online submission form(s), it is often easier to add it beforehand while generating the ASN files. Metadata for genome submission includes taxonomic information about the source of the data being submitted, details about the sequencing experiments/computational analyses performed, and general information about the author(s) and institution(s) submitting the genomes.
+
+###### Adding metadata to FASTA files
+Taxonomic metadata can be added directly to the FASTA files. The list of modifiers that can be added directly to the FASTA definition line can be found [here](https://www.ncbi.nlm.nih.gov/Sequin/modifiers.html). Mandatory modifiers include the organism name [organism=XXX] and its taxonomic lineage [lineage=XXX]. The latter can be found from the NCBI taxonomy database (see figure below).
+
+
+
