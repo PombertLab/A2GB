@@ -28,7 +28,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
         *	[Converting TBL files to ASN format](#Converting-TBL-files-to-ASN-format)
 	        *	[Adding metadata to FASTA files](#Adding-metadata-to-FASTA-files)
-      		*	[Generating a template.sbt file](#Generating-a-template.sbt-file)
+      		*	[Generating a template.sbt file](#Generating-a-template\.sbt-file)
         	*	[Creating structured comments](#Creating-structured-comments)
         *	[Checking for errors]
    *	[Submitting ASN file to GenBank]
