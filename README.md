@@ -660,6 +660,7 @@ add_metadata_to_fasta.pl \
    -o 'Chloropicon primus RCC138' \
    -s RCC138 \
    -c \
+   -w 4 \
    -g 1 \
    -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
    -f $ANNOT/splitGFF3/*.fsa
