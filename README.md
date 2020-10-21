@@ -28,7 +28,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
         *	[Converting TBL files to ASN format](#Converting-TBL-files-to-ASN-format)
 	        *	[Adding metadata to FASTA files](#Adding-metadata-to-FASTA-files)
-      		*	[Generating a template.sbt file](#Generating-a-template-file)
+      		*	[Generating a GenBank submission template](#Generating-a-GenBank-submission-template)
         	*	[Creating structured comments](#Creating-structured-comments)
         *	[Checking for errors]
    *	[Submitting ASN file to GenBank]
@@ -690,8 +690,8 @@ head -n 1 $ANNOT/splitGFF3/*.fsa
 >chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_0003]
 ```
 
-###### Generating a template file
-NCBI provides a simple web-based tool to generate the template.sbt file required by TBL2ASN. To generate a template.sbt file, visit: https://submit.ncbi.nlm.nih.gov/genbank/template/submission/.
+###### Generating a GenBank submission template
+NCBI provides a simple web-based tool to generate the GenBank submission template file (template.sbt) required by TBL2ASN. To generate a template.sbt file, visit: https://submit.ncbi.nlm.nih.gov/genbank/template/submission/.
 
 ###### Creating structured comments
 More information about NCBI's stuctured comments can be found [here](https://www.ncbi.nlm.nih.gov/genbank/structuredcomment/). These files are tab-delimited. A typical assembly-data structured comments file for genome assemblies usually looks like this:
