@@ -651,5 +651,5 @@ Metadata must be included together with genome sequences during the submission p
 ###### Adding metadata to FASTA files
 Taxonomic metadata can be added directly to the FASTA files. The list of modifiers that can be added directly to the FASTA definition line can be found [here](https://www.ncbi.nlm.nih.gov/Sequin/modifiers.html). Mandatory modifiers include the organism name [organism=XXX] and its taxonomic lineage [lineage=XXX]. The latter can be found from the NCBI taxonomy database (see figure below).
 
-
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/lineage.png" alt="Lineage information from the NCBI Taxonomy database" width="1000"></p>
 
