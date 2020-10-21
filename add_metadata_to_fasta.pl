@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'add_metadata_to_fasta.pl';
-my $version = '0.2';
+my $version = '0.2a';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -42,7 +42,8 @@ GetOptions(
 	'l|lineage=s' => \$lineage,
 	'g|gcode=i' => \$gcode,
 	'm|moltype=s' => \$moltype,
-	'c|chromosome' => \$chromosome
+	'c|chromosome' => \$chromosome,
+	'w|width=i' => \$cw
 );
 
 my $chr; my $chrname = '';
