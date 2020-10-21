@@ -30,6 +30,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 	        *	[Adding metadata to FASTA files](#Adding-metadata-to-FASTA-files)
       		*	[Generating a GenBank submission template](#Generating-a-GenBank-submission-template)
         	*	[Creating structured comments](#Creating-structured-comments)
+        	*	[Using TBL2ASN](#Using-TBL2ASN)
         *	[Checking for errors]
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
@@ -703,3 +704,5 @@ Long Assembly Name	RCC138 version 1
 Genome Coverage	345x
 Sequencing Technology	Illumina MiSeq; Oxford Nanopore
 ```
+
+###### Using TBL2ASN
