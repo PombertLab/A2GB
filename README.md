@@ -706,3 +706,4 @@ Sequencing Technology	Illumina MiSeq; Oxford Nanopore
 ```
 
 ###### Using TBL2ASN
+[TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) is a command-line program created by NCBI to automate the creation of sequence records for submission to [GenBank](https://www.ncbi.nlm.nih.gov/genbank/). TBL2ASN will generate .sqn files to be used for the submission. More information about the structure and content of the TBL files required as input for TBL2ASN can be found in NCBI's [Eukaryotic Genome Annotation Guide](https://www.ncbi.nlm.nih.gov/genbank/eukaryotic_genome_submission_annotation/).
