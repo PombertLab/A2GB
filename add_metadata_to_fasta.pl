@@ -11,14 +11,14 @@ NAME		$name
 VERSION		$version
 SYNOPSIS	This script adds metadata to fasta headers. This metadata is required for submission to NCBI GenBank.
 		
-USAGE		$NAME -o 'Chloropicon primus RCC138' -s RCC138 -g 1 -f *.fasta
+USAGE		$name -o 'Chloropicon primus RCC138' -s RCC138 -g 1 -f *.fasta
 
 OPTIONS:
--o (--organism)	Full organism name; e.g. 'Chloropicon primus RCC138'
--s (--strain)	Strain definition; e.g. RCC138
--l (--lineage)	NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
--g (--gcode)	NCBI genetic code [Default: 1]
--m (--moltype)	NCBI moltype descriptor [Default: genomic]
+-o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
+-s (--strain)		Strain definition; e.g. RCC138
+-l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
+-g (--gcode)		NCBI genetic code [Default: 1]
+-m (--moltype)		NCBI moltype descriptor [Default: genomic]
 -c (--chromosome)	Annotate contigs as chromosomes
 
 OPTIONS
@@ -40,7 +40,7 @@ GetOptions(
 	'l|lineage=s' => \$lineage,
 	'g|gcode=i' => \$gcode,
 	'm|moltype=s' => \$moltype,
-	'c|chromosome=i' => \$chromosome
+	'c|chromosome' => \$chromosome
 );
 
 while (my $file = shift@fasta){
