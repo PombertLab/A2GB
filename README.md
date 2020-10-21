@@ -694,7 +694,7 @@ head -n 1 $ANNOT/splitGFF3/*.fsa
 NCBI provides a simple web-based tool to generate the GenBank submission template file (template.sbt) required by TBL2ASN. To generate a template.sbt file, visit: https://submit.ncbi.nlm.nih.gov/genbank/template/submission/.
 
 ###### Creating structured comments
-More information about NCBI's stuctured comments can be found [here](https://www.ncbi.nlm.nih.gov/genbank/structuredcomment/). These files are tab-delimited. A typical assembly-data structured comments file for genome assemblies usually looks like this:
+More information about NCBI's stuctured comments can be found [here](https://www.ncbi.nlm.nih.gov/genbank/structuredcomment/). Files containing stuctured comments are tab-delimited; a typical assembly-data structured comments file for genome assemblies usually looks like this:
 ```
 StructuredCommentPrefix	##Genome-Assembly-Data-START##
 Assembly Method	SPAdes v. 3.13.0; Canu v. 1.8
