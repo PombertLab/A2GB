@@ -8,7 +8,7 @@ use strict; use warnings;
 my $usage = <<"OPTIONS";
 NAME		$name
 VERSION		$version
-SYNOPSIS	Splits the Augustus, GeneMark and Repeatmasker entries into ones; useful for loading them as separate tracks in Apollo.
+SYNOPSIS	Splits the Augustus, GeneMark and Repeatmasker entries into distinct ones; useful for loading them as separate tracks in Apollo.
 USAGE		splitMakerGFF.pl *.gff
 OPTIONS
 die "$usage\n" unless @ARGV;
