@@ -32,6 +32,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         	*	[Creating structured comments](#Creating-structured-comments)
         	*	[Using TBL2ASN](#Using-TBL2ASN)
         *	[Checking for errors](#Checking-for-errors)
+        	*	[Partial genes](#Partial-genes)
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
 *	[References]
@@ -794,6 +795,7 @@ WARNING: valid [SEQ_FEAT.NotSpliceConsensusAcceptor] Splice acceptor consensus (
 ERROR: valid [SEQ_INST.StopInProtein] [1] termination symbols in protein sequence (HOP50_01g07580 - hypothetical protein) BIOSEQ: gnl|ITTBIO|HOP50_01g07580: raw, aa len= 870
 ```
 
+###### Partial genes
 A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognized these tags automatically, and ajust the TBL files accrodingly.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_1.png" alt="Issue with partial gene at the start of a contig" width="1000"></p>
