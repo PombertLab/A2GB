@@ -804,6 +804,9 @@ A common issue, especially with fragmented assemblies, is the presence of partia
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
 ###### Missing stop codons
+Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with Artemis by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the right stop codon.
 
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Missing_sc_1.png" alt="Missing stop codon in a protein gene" width="1000"></p>
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/MIssing_sc_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
 ###### GT-AG splice sites
