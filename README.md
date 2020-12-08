@@ -664,17 +664,18 @@ To add metadata with [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2
 
 ```Bash
 add_metadata_to_fasta.pl \
+   -f $ANNOT/splitGFF3/*.fsa
    -o 'Chloropicon primus RCC138' \
    -s RCC138 \
+   -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
+   -g 1 \
    -c \
    -w 4 \
-   -g 1 \
-   -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
-   -f $ANNOT/splitGFF3/*.fsa
 ```
 
 Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) are:
 ```
+-f (--fasta)		Specifies which FASTA files to add metadata to
 -o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
 -s (--strain)		Strain definition; e.g. RCC138
 -l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
