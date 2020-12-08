@@ -689,13 +689,13 @@ Once modified, the FASTA definition lines should look like this:
 ```
 head -n 1 $ANNOT/splitGFF3/*.fsa
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_01.fsa <==
->chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_01]
+>chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=01]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_02.fsa <==
->chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_02]
+>chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=02]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_03.fsa <==
->chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_03]
+>chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=03]
 ```
 
 ###### Generating a GenBank submission template
