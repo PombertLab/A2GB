@@ -814,7 +814,8 @@ Another issue with gene predictors is that they sometimes do not include proper 
 Insert text...
 
 ###### Fixing errors
-Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option. Then, we can simply rerun [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) followed by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/).
+Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option. Then, we can simply rerun [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) followed by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/). As the errors are getting fixed, the .val files will gradually become empty.
+
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Saveas_artemis.png" alt="Missing stop codon in a protein gene" width="1000"></p>
 
 ```Bash
@@ -835,7 +836,7 @@ tbl2asn \
    -Z $ANNOT/discrepancy.report \
    -H 12/31/2021
 
-## Looking at the .val files again
+## Looking at the .val files again; empty files should take no disk space.
 ls -lh $ANNOT/splitGFF3/*.val
 
 -rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
