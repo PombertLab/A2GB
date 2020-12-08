@@ -732,7 +732,7 @@ Options for [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) used above
 -t	Template file (.sbt).
 -w	File (.cmt) containing Genome Assembly structured comments.
 -p	Path to the directory. If files are in the current directory -p ./ should be used.
--g
+-g	Genomic Product Set [T/F] ## Should be used for eukaryote genomes
 -M n 	Master Genome Flags: n: Normal. Combines flags for genomes submissions (invokes FATAL calls when -Z discrep is included).
 -Z	Runs the Discrepancy Report. Must supply an output file name. Only for annotated genome submissions.
 -H	Desired date for data release
