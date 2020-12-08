@@ -53,7 +53,7 @@ while (my $file = shift@fasta){
 	open OUT, ">$file.headers";
 	$chr++;
 	$chr = sprintf("%0${cw}d", $chr);
-	if ($chromosome){$chrname = '[chromosome=chromosome_'."$chr".']';}
+	if ($chromosome){$chrname = '[chromosome='."$chr".']';}
 	while (my $line = <IN>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
