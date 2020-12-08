@@ -31,10 +31,11 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
       		*	[Generating a GenBank submission template](#Generating-a-GenBank-submission-template)
         	*	[Creating structured comments](#Creating-structured-comments)
         	*	[Using TBL2ASN](#Using-TBL2ASN)
-        *	[Checking for errors](#Checking-for-errors)
+        *	[Checking for errors and fixing them](#Checking-for-errors-and-fixing-them)
         	*	[Partial genes](#Partial-genes)
         	*	[Missing stop codons](#Missing-stop-codons)
-        	*	[GT-AG splice sites](#GT-AG-splice-sites)		
+        	*	[GT-AG splice sites](#GT-AG-splice-sites)
+        	*	[Fixing errors](#Fixing-errors)	
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
 *	[References]
@@ -741,7 +742,7 @@ Options for [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) used above
 -H	Desired date for data release
 ```
 
-##### Checking for errors
+##### Checking for errors and fixing them
 [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) generates two distinct types of error reports. The first consists of validation files with the file extension .val; one per FASTA file plus a summary titled errorsummary.val. The second report generated with -Z will be stored in the corresponding filename (discrepancy.report in the above command line).
 
 Ideally, the .val files should be empty, indicating that no error has been found. We can check the size of our files easily with:
@@ -810,3 +811,8 @@ Another issue with gene predictors is that they sometimes do not include proper 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/MIssing_sc_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
 ###### GT-AG splice sites
+Insert text...
+
+###### Fixing errors
+Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the grapihcal interface by selecting the Save all entries option.
+<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Saveas_artemis.png" alt="Missing stop codon in a protein gene" width="1000"></p>
