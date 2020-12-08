@@ -31,7 +31,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
       		*	[Generating a GenBank submission template](#Generating-a-GenBank-submission-template)
         	*	[Creating structured comments](#Creating-structured-comments)
         	*	[Using TBL2ASN](#Using-TBL2ASN)
-        *	[Checking for errors]
+        *	[Checking for errors](#Checking-for-errors)
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
 *	[References]
@@ -737,3 +737,5 @@ Options for [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) used above
 -Z	Runs the Discrepancy Report. Must supply an output file name. Only for annotated genome submissions.
 -H	Desired date for data release
 ```
+
+##### Checking for errors
