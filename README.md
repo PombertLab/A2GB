@@ -723,7 +723,7 @@ tbl2asn \
    -p $ANNOT/splitGFF3/ \
    -g \
    -M n \
-   -Z discrep \
+   -Z $ANNOT/discrepancy.report \
    -H 12/31/2021
 ```
 
@@ -739,3 +739,18 @@ Options for [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) used above
 ```
 
 ##### Checking for errors
+[TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) generates two distinct types of error reports. The first consists of validation files with the file extension .val; one per FASTA file plus a summary titled errorsummary.val. The second report generated with -Z will be stored in the corresponding filename (discrepancy.report in the above command lines).
+
+Ideally, the .val files should be empty, indicating that no error has been found. We can check the size of our .files easily with:
+```Bash
+ls -lh $ANNOT/splitGFF3/*.val
+
+-rw-rw-r--. 1 jpombert jpombert 172K Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
+-rw-rw-r--. 1 jpombert jpombert 162K Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
+-rw-rw-r--. 1 jpombert jpombert 131K Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
+...
+-rw-rw-r--. 1 jpombert jpombert  497 Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
+
+```
+
+
