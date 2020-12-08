@@ -814,5 +814,34 @@ Another issue with gene predictors is that they sometimes do not include proper 
 Insert text...
 
 ###### Fixing errors
-Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option.
+Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option. Then, we can simply rerun [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) followed by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/).
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Saveas_artemis.png" alt="Missing stop codon in a protein gene" width="1000"></p>
+
+```Bash
+## Running EMBLtoTBL.pl and TBL2ASN again on the updated EMBL files
+EMBLtoTBL.pl \
+   -id ITTBIO \
+   -p $ANNOT/verified_annotations.tsv \
+   -embl $ANNOT/splitGFF3/*.embl \
+   1> $ANNOT/STD.log \
+   2> $ANNOT/ERROR.log
+
+tbl2asn \
+   -t $ANNOT/template.sbt \
+   -w $ANNOT/genome.cmt \
+   -p $ANNOT/splitGFF3/ \
+   -g \
+   -M n \
+   -Z $ANNOT/discrepancy.report \
+   -H 12/31/2021
+
+## Looking at the .val files again
+ls -lh $ANNOT/splitGFF3/*.val
+
+-rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
+-rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
+-rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
+...
+-rw-rw-r--. 1 jpombert jpombert  0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
+
+```
