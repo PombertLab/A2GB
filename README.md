@@ -745,11 +745,11 @@ Ideally, the .val files should be empty, indicating that no error has been found
 ```Bash
 ls -lh $ANNOT/splitGFF3/*.val
 
--rw-rw-r--. 1 jpombert jpombert 172K Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
--rw-rw-r--. 1 jpombert jpombert 162K Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
--rw-rw-r--. 1 jpombert jpombert 131K Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
+-rw-rw-r--. 1 jpombert jpombert 6.7K Dec  8 12:39 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
+-rw-rw-r--. 1 jpombert jpombert 5.7K Dec  8 12:39 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
+-rw-rw-r--. 1 jpombert jpombert 2.1K Dec  8 12:39 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
 ...
--rw-rw-r--. 1 jpombert jpombert  497 Dec  8 11:03 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
+-rw-rw-r--. 1 jpombert jpombert  448 Dec  8 12:39 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
 
 ```
 
@@ -757,7 +757,6 @@ In the above example, the file sizes are not zero, which means that errors have 
 ```Bash
 cat $ANNOT/splitGFF3/errorsummary.val
 
-  8626 ERROR:   SEQ_DESCR.BioSourceInconsistency
     34 ERROR:   SEQ_FEAT.GeneXrefStrandProblem
     35 ERROR:   SEQ_FEAT.InternalStop
     37 ERROR:   SEQ_FEAT.MissingTrnaAA
