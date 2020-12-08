@@ -798,7 +798,7 @@ ERROR: valid [SEQ_INST.StopInProtein] [1] termination symbols in protein sequenc
 ```
 
 ###### Partial genes
-A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognized these tags automatically, and ajust the TBL files accordingly.
+A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognize these tags automatically, and ajust the TBL files accordingly.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_1.png" alt="Issue with partial gene at the start of a contig" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
