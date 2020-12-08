@@ -59,7 +59,7 @@ if (@ri){
 			chomp $line;
 			my @cols = split("\t", $line);
 			my ($rrna) = $cols[8] =~ /Note=(.*)$/;
-			$rrna =~ s/\b8s_rRNA/5.8s_rRNA/; ## Converting 8S to 5.8S naming scheme
+			$rrna =~ s/\b8s_rRNA/5.8s_rRNA/; ## Converting 8S to 5S naming scheme; otherwize TBL2ASN throws a FATAL error
 			$rrna =~ s/_/ /g; $rrna =~ s/rRNA/ribosomal RNA/g;
 			if (exists $features{$cols[2]}{$cols[0]}{$cols[3]}){
 				print ROUT "$features{$cols[2]}{$cols[0]}{$cols[3]}"."\t"."$rrna"."\n";
