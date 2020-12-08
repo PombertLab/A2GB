@@ -583,7 +583,11 @@ The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertL
 
 Concatenating the annotations can be quickly performed with:
 ```
-cat $ANNOT/tRNA.annotations $ANNOT/rRNA.annotations $ANNOT/proteins.annotations.curated > $ANNOT/verified_annotations.tsv
+cat \
+$ANNOT/tRNA.annotations \
+$ANNOT/rRNA.annotations \
+$ANNOT/proteins.annotations.curated \
+> $ANNOT/verified_annotations.tsv
 ```
 
 The conversion from EMBL to TBL can then be performed with:
