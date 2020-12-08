@@ -753,4 +753,21 @@ ls -lh $ANNOT/splitGFF3/*.val
 
 ```
 
+In the above example, the file sizes are not zero, which means that errors have been detected. In similar situations, the errorsummary.val file should look like this:
+```Bash
+cat $ANNOT/splitGFF3/errorsummary.val
+
+  8626 ERROR:   SEQ_DESCR.BioSourceInconsistency
+    34 ERROR:   SEQ_FEAT.GeneXrefStrandProblem
+    35 ERROR:   SEQ_FEAT.InternalStop
+    37 ERROR:   SEQ_FEAT.MissingTrnaAA
+     1 ERROR:   SEQ_FEAT.NoStop
+    40 ERROR:   SEQ_FEAT.SeqLocOrder
+    35 ERROR:   SEQ_INST.StopInProtein
+    70 WARNING: SEQ_FEAT.NotSpliceConsensusAcceptor
+    74 WARNING: SEQ_FEAT.NotSpliceConsensusDonor
+    54 WARNING: SEQ_FEAT.PartialProblem
+    15 WARNING: SEQ_FEAT.ShortExon
+     2 INFO:    SEQ_FEAT.PartialProblem
+```
 
