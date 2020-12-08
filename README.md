@@ -798,13 +798,13 @@ ERROR: valid [SEQ_INST.StopInProtein] [1] termination symbols in protein sequenc
 ```
 
 ###### Partial genes
-A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognized these tags automatically, and ajust the TBL files accrodingly.
+A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognized these tags automatically, and ajust the TBL files accordingly.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_1.png" alt="Issue with partial gene at the start of a contig" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
 ###### Missing stop codons
-Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with Artemis by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the proper stop codon.
+Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with Artemis by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the proper stop codon. Note that this error is often mislabelled as a GT-AG rule issue by TBL2ASN.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Missing_sc_1.png" alt="Missing stop codon in a protein gene" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/MIssing_sc_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
