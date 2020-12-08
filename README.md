@@ -814,5 +814,5 @@ Another issue with gene predictors is that they sometimes do not include proper 
 Insert text...
 
 ###### Fixing errors
-Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the grapihcal interface by selecting the Save all entries option.
+Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option.
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Saveas_artemis.png" alt="Missing stop codon in a protein gene" width="1000"></p>
