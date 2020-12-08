@@ -739,7 +739,7 @@ Options for [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) used above
 ```
 
 ##### Checking for errors
-[TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) generates two distinct types of error reports. The first consists of validation files with the file extension .val; one per FASTA file plus a summary titled errorsummary.val. The second report generated with -Z will be stored in the corresponding filename (discrepancy.report in the above command lines).
+[TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) generates two distinct types of error reports. The first consists of validation files with the file extension .val; one per FASTA file plus a summary titled errorsummary.val. The second report generated with -Z will be stored in the corresponding filename (discrepancy.report in the above command line).
 
 Ideally, the .val files should be empty, indicating that no error has been found. We can check the size of our .files easily with:
 ```Bash
