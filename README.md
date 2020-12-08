@@ -50,7 +50,7 @@ The A2GB pipeline will:
 3)	Run intermittent checks to assess the quality of annotations.
 
 ## Requirements
-- A UNIX-like environment (UNIX/Linux, MacOS X, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions))
+- A UNIX-like environment (UNIX/Linux, MacOS X/11, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions))
 - [Perl 5](https://www.perl.org/)
 - [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
