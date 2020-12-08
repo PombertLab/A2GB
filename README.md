@@ -33,7 +33,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         	*	[Using TBL2ASN](#Using-TBL2ASN)
         *	[Checking for errors](#Checking-for-errors)
         	*	[Partial genes](#Partial-genes)
-		*	[Missing stop codons](#Missing-stop-codons)
+        	*	[Missing stop codons](#Missing-stop-codons)
         	*	[GT-AG splice sites](#GT-AG-splice-sites)		
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
