@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'get_RNA_locus_tags.pl';
-my $version = '0.1'; 
+my $version = '0.2'; 
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -59,7 +59,7 @@ if (@ri){
 			chomp $line;
 			my @cols = split("\t", $line);
 			my ($rrna) = $cols[8] =~ /Note=(.*)$/;
-			$rna =~ s/\b8s_rRNA/5.8s_rRNA/; ## Converting 8S to 5.8S naming scheme
+			$rrna =~ s/\b8s_rRNA/5.8s_rRNA/; ## Converting 8S to 5.8S naming scheme
 			$rrna =~ s/_/ /g; $rrna =~ s/rRNA/ribosomal RNA/g;
 			if (exists $features{$cols[2]}{$cols[0]}{$cols[3]}){
 				print ROUT "$features{$cols[2]}{$cols[0]}{$cols[3]}"."\t"."$rrna"."\n";
