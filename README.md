@@ -33,6 +33,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         	*	[Using TBL2ASN](#Using-TBL2ASN)
         *	[Checking for errors](#Checking-for-errors)
         	*	[Partial genes](#Partial-genes)
+		*	[Missing stop codons](#Missing-stop-codons)
         	*	[GT-AG splice sites](#GT-AG-splice-sites)		
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
@@ -801,5 +802,8 @@ A common issue, especially with fragmented assemblies, is the presence of partia
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_1.png" alt="Issue with partial gene at the start of a contig" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
+
+###### Missing stop codons
+
 
 ###### GT-AG splice sites
