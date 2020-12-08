@@ -670,7 +670,7 @@ add_metadata_to_fasta.pl \
    -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
    -g 1 \
    -c \
-   -w 4 \
+   -w 2 \
 ```
 
 Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) are:
@@ -689,13 +689,13 @@ Once modified, the FASTA definition lines should look like this:
 ```
 head -n 1 $ANNOT/splitGFF3/*.fsa
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_01.fsa <==
->chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_0001]
+>chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_01]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_02.fsa <==
->chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_0002]
+>chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_02]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_03.fsa <==
->chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_0003]
+>chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=chromosome_03]
 ```
 
 ###### Generating a GenBank submission template
