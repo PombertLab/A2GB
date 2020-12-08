@@ -842,6 +842,6 @@ ls -lh $ANNOT/splitGFF3/*.val
 -rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
 -rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
 ...
--rw-rw-r--. 1 jpombert jpombert  0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
+-rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
 
 ```
