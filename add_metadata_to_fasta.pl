@@ -14,6 +14,7 @@ SYNOPSIS	This script adds metadata to fasta headers. This metadata is required f
 USAGE		$name -o 'Chloropicon primus RCC138' -s RCC138 -g 1 -f *.fasta
 
 OPTIONS:
+-f (--fasta)		Specifies which FASTA files to add metadata to
 -o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
 -s (--strain)		Strain definition; e.g. RCC138
 -l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
