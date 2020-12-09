@@ -595,7 +595,7 @@ $ANNOT/proteins.annotations.curated \
 > $ANNOT/verified_annotations.tsv
 ```
 
-The conversion from EMBL to TBL can then be performed with:
+The conversion from EMBL to TBL can then be performed with [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl):
 ```
 EMBLtoTBL.pl \
    -id ITTBIO \
