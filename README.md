@@ -35,7 +35,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         	*	[Partial genes](#Partial-genes)
         	*	[Missing stop codons and GT-AG splice sites](#Missing-stop-codons-and-GT-AG-splice-sites)
         	*	[Fixing errors](#Fixing-errors)	
-   *	[Submitting ASN file to GenBank](#Submitting-ASN-file-to-GenBank)
+   *	[Submitting ASN files to GenBank](#Submitting-ASN-files-to-GenBank)
    *	[Miscellaneous] 
 *	[References]
 
@@ -891,8 +891,8 @@ ls -lh $ANNOT/splitGFF3/*.val
 
 ```
 
-#### Submitting ASN file to GenBank
-Once the errors have been corrected, we must create a single SQN file (in ASN format) for data deposition in NCBI. Again we can use [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) to do this, this time by specifying an output with the -o command line switch:
+#### Submitting ASN files to GenBank
+Once the errors have been corrected, we must create a single SQN file (in ASN format) per genome for data deposition in NCBI. Again we can use [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) to do this, this time by specifying an output with the -o command line switch:
 
 ```Bash
 tbl2asn \
@@ -906,4 +906,4 @@ tbl2asn \
    -o $ANNOT/final_annotations.sqn
 ```
 
-The file should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
+The file(s) should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
