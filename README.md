@@ -56,6 +56,7 @@ The A2GB pipeline will:
 ## Requirements
 - A UNIX-like environment (UNIX/Linux, MacOS X/11, or Miscrosoft's [WSL2](https://docs.microsoft.com/en-us/windows/wsl/compare-versions))
 - [Perl 5](https://www.perl.org/)
+- [BioPerl](https://bioperl.org) ## Bio::SeqIO
 - [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (2.5.0+)
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
