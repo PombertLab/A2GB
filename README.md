@@ -906,3 +906,18 @@ tbl2asn \
 ```
 
 The file(s) should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
+
+## References
+Buchfink B, Xie C, Huson DH. **Fast and sensitive protein alignment using DIAMOND.** *Nat Methods.* 2015 Jan;12(1):59-60. doi: [10.1038/nmeth.3176](https://doi.org/10.1038/nmeth.3176). Epub 2014 Nov 17. PMID: 25402007.
+
+Barrett T, Clark K, Gevorgyan R, Gorelenkov V, Gribov E, Karsch-Mizrachi I, Kimelman M, Pruitt KD, Resenchuk S, Tatusova T, Yaschenko E, Ostell J. **BioProject and BioSample databases at NCBI: facilitating capture and organization of metadata.** *Nucleic Acids Res.* 2012 Jan;40(Database issue):D57-63. doi: [10.1093/nar/gkr1163](https://doi.org/10.1093/nar/gkr1163). Epub 2011 Dec 1. PMID: 22139929; PMCID: PMC3245069.
+
+Dunn NA, Unni DR, Diesh C, Munoz-Torres M, Harris NL, Yao E, Rasche H, Holmes IH, Elsik CG, Lewis SE. **Apollo: Democratizing genome annotation.** *PLoS Comput Biol.* 2019 Feb 6;15(2):e1006790. doi: [10.1371/journal.pcbi.1006790](https://doi.org/10.1371/journal.pcbi.1006790). PMID: 30726205; PMCID: PMC6380598.
+
+Carver T, Harris SR, Berriman M, Parkhill J, McQuillan JA. **Artemis: an integrated platform for visualization and analysis of high-throughput sequence-based experimental data.** *Bioinformatics.* 2012 Feb 15;28(4):464-9. doi: [10.1093/bioinformatics/btr703](https://doi.org/10.1093/bioinformatics/btr703). Epub 2011 Dec 22. PMID: 22199388; PMCID: PMC3278759.
+
+Mitchell AL, Attwood TK, Babbitt PC, Blum M, Bork P, Bridge A, Brown SD, Chang HY, El-Gebali S, Fraser MI, Gough J, Haft DR, Huang H, Letunic I, Lopez R, Luciani A, Madeira F, Marchler-Bauer A, Mi H, Natale DA, Necci M, Nuka G, Orengo C, Pandurangan AP, Paysan-Lafosse T, Pesseat S, Potter SC, Qureshi MA, Rawlings ND, Redaschi N, Richardson LJ, Rivoire C, Salazar GA, Sangrador-Vegas A, Sigrist CJA, Sillitoe I, Sutton GG, Thanki N, Thomas PD, Tosatto SCE, Yong SY, Finn RD. **InterPro in 2019: improving coverage, classification and access to protein sequence annotations.** *Nucleic Acids Res.* 2019 Jan 8;47(D1):D351-D360. doi: [10.1093/nar/gky1100](https://doi.org/10.1093/nar/gky1100). PMID: 30398656; PMCID: PMC6323941.
+
+UniProt Consortium. **UniProt: a worldwide hub of protein knowledge.** Nucleic Acids Res. 2019 Jan 8;47(D1):D506-D515. doi: [10.1093/nar/gky1049](https://doi.org/10.1093/nar/gky1049). PMID: 30395287; PMCID: PMC6323992.
+
+Stein L. **Genome annotation: from sequence to biology.** *Nat Rev Genet.* 2001 Jul;2(7):493-503. doi: [10.1038/35080529](https://doi.org/10.1038/35080529). PMID: 11433356.
