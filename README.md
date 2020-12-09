@@ -33,8 +33,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         	*	[Using TBL2ASN](#Using-TBL2ASN)
         *	[Checking for errors and fixing them](#Checking-for-errors-and-fixing-them)
         	*	[Partial genes](#Partial-genes)
-        	*	[Missing stop codons](#Missing-stop-codons)
-        	*	[GT-AG splice sites](#GT-AG-splice-sites)
+        	*	[Missing stop codons and GT-AG splice sites](#Missing-stop-codons-and-GT-AG-splice-sites)
         	*	[Fixing errors](#Fixing-errors)	
    *	[Submitting ASN file to GenBank]
    *	[Miscellaneous] 
@@ -852,14 +851,11 @@ A common issue, especially with fragmented assemblies, is the presence of partia
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_1.png" alt="Issue with partial gene at the start of a contig" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
-###### Missing stop codons
-Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the proper stop codon. Note that this error is often mislabelled as a GT-AG rule issue by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/).
+###### Missing stop codons and GT-AG splice sites
+Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the proper stop codon. Note that this error is often mislabelled as a GT-AG rule issue by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/). Real issues with improper GT-AG intron/exon junctions can also be adjusted easily by drag and drop.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Missing_sc_1.png" alt="Missing stop codon in a protein gene" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/MIssing_sc_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
-
-###### GT-AG splice sites
-Insert text...
 
 ###### Fixing errors
 Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option. Then, we can simply rerun [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) followed by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/). As the errors are getting fixed, the .val files will gradually become empty.
