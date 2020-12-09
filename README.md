@@ -928,4 +928,6 @@ Mitchell AL, Attwood TK, Babbitt PC, Blum M, Bork P, Bridge A, Brown SD, Chang H
 
 UniProt Consortium. **UniProt: a worldwide hub of protein knowledge.** Nucleic Acids Res. 2019 Jan 8;47(D1):D506-D515. doi: [10.1093/nar/gky1049](https://doi.org/10.1093/nar/gky1049). PMID: 30395287; PMCID: PMC6323992.
 
+Sayers EW, Cavanaugh M, Clark K, Ostell J, Pruitt KD, Karsch-Mizrachi I. **GenBank.** *Nucleic Acids Res.* 2019 Jan 8;47(D1):D94-D99. doi: [10.1093/nar/gky989](https://doi.org/10.1093/nar/gky989). PMID: 30365038; PMCID: PMC6323954.
+
 Stein L. **Genome annotation: from sequence to biology.** *Nat Rev Genet.* 2001 Jul;2(7):493-503. doi: [10.1038/35080529](https://doi.org/10.1038/35080529). PMID: 11433356.
