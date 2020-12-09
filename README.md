@@ -910,11 +910,19 @@ The file(s) should now be ready to submit to [NCBI's genome submission portal](h
 ## References
 Buchfink B, Xie C, Huson DH. **Fast and sensitive protein alignment using DIAMOND.** *Nat Methods.* 2015 Jan;12(1):59-60. doi: [10.1038/nmeth.3176](https://doi.org/10.1038/nmeth.3176). Epub 2014 Nov 17. PMID: 25402007.
 
+Altschul SF, Gish W, Miller W, Myers EW, Lipman DJ. **Basic local alignment search tool.** *J Mol Biol.* 1990 Oct 5;215(3):403-10. doi: [10.1016/S0022-2836(05)80360-2](https://doi.org/10.1016/s0022-2836(05)80360-2). PMID: 2231712.
+
 Barrett T, Clark K, Gevorgyan R, Gorelenkov V, Gribov E, Karsch-Mizrachi I, Kimelman M, Pruitt KD, Resenchuk S, Tatusova T, Yaschenko E, Ostell J. **BioProject and BioSample databases at NCBI: facilitating capture and organization of metadata.** *Nucleic Acids Res.* 2012 Jan;40(Database issue):D57-63. doi: [10.1093/nar/gkr1163](https://doi.org/10.1093/nar/gkr1163). Epub 2011 Dec 1. PMID: 22139929; PMCID: PMC3245069.
 
 Dunn NA, Unni DR, Diesh C, Munoz-Torres M, Harris NL, Yao E, Rasche H, Holmes IH, Elsik CG, Lewis SE. **Apollo: Democratizing genome annotation.** *PLoS Comput Biol.* 2019 Feb 6;15(2):e1006790. doi: [10.1371/journal.pcbi.1006790](https://doi.org/10.1371/journal.pcbi.1006790). PMID: 30726205; PMCID: PMC6380598.
 
 Carver T, Harris SR, Berriman M, Parkhill J, McQuillan JA. **Artemis: an integrated platform for visualization and analysis of high-throughput sequence-based experimental data.** *Bioinformatics.* 2012 Feb 15;28(4):464-9. doi: [10.1093/bioinformatics/btr703](https://doi.org/10.1093/bioinformatics/btr703). Epub 2011 Dec 22. PMID: 22199388; PMCID: PMC3278759.
+
+Chan PP, Lowe TM. **tRNAscan-SE: Searching for tRNA Genes in Genomic Sequences.** *Methods Mol Biol.* 2019;1962:1-14. doi: [10.1007/978-1-4939-9173-0_1](https://doi.org/10.1007/978-1-4939-9173-0_1). PMID: 31020551; PMCID: PMC6768409.
+
+Lagesen K, Hallin P, Rødland EA, Staerfeldt HH, Rognes T, Ussery DW. **RNAmmer: consistent and rapid annotation of ribosomal RNA genes.** *Nucleic Acids Res.* 2007;35(9):3100-8. doi: [10.1093/nar/gkm160](https://doi.org/10.1093/nar/gkm160). Epub 2007 Apr 22. PMID: 17452365; PMCID: PMC1888812.
+
+Jones P, Binns D, Chang HY, Fraser M, Li W, McAnulla C, McWilliam H, Maslen J, Mitchell A, Nuka G, Pesseat S, Quinn AF, Sangrador-Vegas A, Scheremetjew M, Yong SY, Lopez R, Hunter S. **InterProScan 5: genome-scale protein function classification.** *Bioinformatics.* 2014 May 1;30(9):1236-40. doi: [10.1093/bioinformatics/btu031](https://doi.org/10.1093/bioinformatics/btu031). Epub 2014 Jan 21. PMID: 24451626; PMCID: PMC3998142.
 
 Mitchell AL, Attwood TK, Babbitt PC, Blum M, Bork P, Bridge A, Brown SD, Chang HY, El-Gebali S, Fraser MI, Gough J, Haft DR, Huang H, Letunic I, Lopez R, Luciani A, Madeira F, Marchler-Bauer A, Mi H, Natale DA, Necci M, Nuka G, Orengo C, Pandurangan AP, Paysan-Lafosse T, Pesseat S, Potter SC, Qureshi MA, Rawlings ND, Redaschi N, Richardson LJ, Rivoire C, Salazar GA, Sangrador-Vegas A, Sigrist CJA, Sillitoe I, Sutton GG, Thanki N, Thomas PD, Tosatto SCE, Yong SY, Finn RD. **InterPro in 2019: improving coverage, classification and access to protein sequence annotations.** *Nucleic Acids Res.* 2019 Jan 8;47(D1):D351-D360. doi: [10.1093/nar/gky1100](https://doi.org/10.1093/nar/gky1100). PMID: 30398656; PMCID: PMC6323941.
 
