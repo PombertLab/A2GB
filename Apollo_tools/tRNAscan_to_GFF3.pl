@@ -1,14 +1,16 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'tRNAscan_to_GFF3.pl';
-my $version = '0.8b';
+my $version = '0.8c';
+my $updated = '02/17/2021';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Converts the output of tRNAscan-SE (in tabular format) to the proper GFF3 format for loading into Apollo.
 USAGE		tRNAscan_to_GFF3.pl -t *.tRNAs -d tRNA/
 
@@ -22,26 +24,6 @@ my @tRNA; my $odir;
 GetOptions(
 	't|tRNA=s@{1,}' => \@tRNA,
 	'd|dir=s' => \$odir
-);
-
-## Database of anticodons
-my %anticodon = (
-	'CGA' => 'cga','CGG' => 'cgg','CGT' => 'cgu','CGG' => 'cgg',
-	'GCA' => 'gca','GCG' => 'gcg','GCT' => 'gcu','GCC' => 'gcc',
-	'TCT' => 'ucu','TCC' => 'ucc','TTA' => 'uua','TTG' => 'uug',
-	'CTA' => 'cua','CTG' => 'cug','ACA' => 'aca','ACG' => 'acg',
-	'CTT' => 'cuu','CTC' => 'cuc','GTT' => 'guu','GTC' => 'guc',
-	'CCA' => 'cca','CCG' => 'ccg','CCC' => 'ccc','CCT' => 'ccu',
-	'GTA' => 'gua','GTG' => 'gug','TAA' => 'uaa','TAG' => 'uag',
-	'TAT' => 'uau','AAT' => 'aau','AAC' => 'aac','GAA' => 'gaa',
-	'GAG' => 'gag','GAT' => 'gau','GAC' => 'gac','TTT' => 'uuu',
-	'TTC' => 'uuc','TAC' => 'uac','AAA' => 'aaa','AAG' => 'aag',
-	'GGA' => 'gga','GGG' => 'ggg','GGT' => 'ggu','GGC' => 'ggc',
-	'AGA' => 'aga','AGG' => 'agg','AGT' => 'agu','AGC' => 'agc',
-	'TCA' => 'uca','TCG' => 'ucg','ATG' => 'end','ATT' => 'end',
-	'ACT' => 'end','TGA' => 'uga','TGG' => 'ugg','TGT' => 'ugu',
-	'TGC' => 'ugc','ACC' => 'acc','ATA' => 'aua','ATG' => 'aug',
-	'CAA' => 'caa','CAG' => 'cag','CAT' => 'cau','CAC' => 'cac'
 );
 
 ## Checking output directory
@@ -71,7 +53,7 @@ while (my $file = shift@tRNA){
 			my $int1 = $cols[6]; $int1 =~ s/\s+$//; ## intron boundaries, if any
 			my $int2 = $cols[7]; $int2 =~ s/\s+$//;## intron boundaries, if any
 			my $cove = $cols[8]; $cove =~ s/\s+$//;
-			my $codon = $ac;
+			my $codon = lc($ac);
 			$codon =~ tr/Tt/Uu/;
 			$tRNA++;
 			## Forward strand
