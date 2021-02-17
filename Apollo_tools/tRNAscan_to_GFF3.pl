@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'tRNAscan_to_GFF3.pl';
-my $version = '0.8a';
+my $version = '0.8b';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
@@ -14,7 +14,7 @@ USAGE		tRNAscan_to_GFF3.pl -t *.tRNAs -d tRNA/
 
 OPTIONS:
 -t (--tRNA)	tRNA file(s) to convert to GFF3
--d (--dir) 	Output directory (Optional
+-d (--dir) 	Output directory (Optional)
 OPTIONS
 die "$usage\n" unless @ARGV;
 
