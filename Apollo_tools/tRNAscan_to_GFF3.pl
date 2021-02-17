@@ -31,6 +31,7 @@ unless (defined $odir){$odir = './';}
 unless (-d $odir){system "mkdir $odir";}
 print "\nOutput files will be located in directory $odir\n";
 
+
 my $tRNA = 0;
 while (my $file = shift@tRNA){
 	open TRNA, "<", "$file";
