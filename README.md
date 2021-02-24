@@ -671,7 +671,7 @@ add_metadata_to_fasta.pl \
    -o 'Chloropicon primus RCC138' \
    -s RCC138 \
    -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
-   -g 1 \
+   -g 1
 ```
 
 Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) are:
