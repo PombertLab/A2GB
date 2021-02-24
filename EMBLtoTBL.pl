@@ -1,19 +1,23 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoTBL.pl';
-my $version = '1.5a';
+my $version = '1.5b';
+my $updated = '02/24/21';
 
 use strict; use warnings; use Bio::SeqIO; use File::Basename; use Getopt::Long qw(GetOptions);
 
+
+
 my $usage = <<"OPTIONS";
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Converts EMBL files to NCBI TBL format for TBL2ASN
 REQUIREMENTS	BioPerl's Bio::SeqIO module
 NOTE		The EMBL (*.embl) and FASTA (*.fsa) files must be in the same folder.
 		Requires locus_tags to be defined in the EMBL files.
 		
-USAGE		EMBLtoTBL.pl -id IITBIO -p product_list.txt -embl *.embl
+USAGE		${name} -id IITBIO -p product_list.txt -embl *.embl
 OPTIONS:
 -id		Desired institute ID [default: IITBIO]
 -p		Tab-delimited list of locus_tags and their products
@@ -159,7 +163,7 @@ while(my $file = shift@embl){
 			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 			## Defining mRNA
 			print TBL "<$start\t>$stop\tmRNA\n";
-			protein();
+			mRNA();
 			if (($startcodon eq 'atg') && (($stopcodon eq 'taa') || ($stopcodon eq'tag') || ($stopcodon eq'tga'))){ ## =, =
 				# print "$file\t$start\t$stop\t$contig_length\n"; Debugging line
 				if (($start == 1) && ($stop == $contig_length)){print TBL "<$start\t>$stop\tCDS\n";}
@@ -176,7 +180,7 @@ while(my $file = shift@embl){
 				else{print TBL "$start\t>$stop\tCDS\n";}
 			}
 			else{print TBL "<$start\t>$stop\tCDS\n";}## !=, !=
-			protein();
+			CDS();
 		}
 		elsif ($line =~ /FT \s+CDS\s+complement\((\d+)..(\d+)\)/){ ## Reverse, single exon
 			my $start = $2;
@@ -187,7 +191,7 @@ while(my $file = shift@embl){
 			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 			## defining mRNA
 			print TBL "<$start\t>$stop\tmRNA\n";
-			protein();
+			mRNA();
 			if (($startcodon eq 'cat') && (($stopcodon eq 'tta') || ($stopcodon eq'cta') || ($stopcodon eq'tca'))){ ## =, =
 				if (($start == $contig_length) && ($stop == 1)){print TBL "<$start\t>$stop\tCDS\n";}
 				elsif (($start == $contig_length) && ($stop > 1)){print TBL "<$start\t$stop\tCDS\n";}
@@ -203,7 +207,7 @@ while(my $file = shift@embl){
 				else{print TBL "$start\t>$stop\tCDS\n";}
 			}
 			else{print TBL "<$start\t>$stop\tCDS\n";} ## !=, !=
-			protein();
+			CDS();
 		}	
 		elsif ($line =~ /FT\s+CDS\s+join\((.*)\)/){ ## Forward, multiple exons
 			my @array = split(',',$1);
@@ -233,7 +237,7 @@ while(my $file = shift@embl){
 				foreach my $subs (1..$dum){print TBL "$start[$subs]\t$stop[$subs]\n";}
 				print TBL "$start[$num]\t>$stop[$num]\n";	
 			}
-			protein();
+			mRNA();
 			
 			### Printing CDS info
 			my $startcodon = substr($DNAsequence, $start[0]-1, 3);
@@ -258,7 +262,7 @@ while(my $file = shift@embl){
 				} ## printing the last exon
 				else{print TBL "$start[$num]\t>$stop[$num]\n";} ## printing the last exon	
 			}
-			protein();
+			CDS();
 		}
 		elsif ($line =~ /FT\s+CDS\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
 			my @array = split(',',$1);
@@ -290,7 +294,7 @@ while(my $file = shift@embl){
 				foreach my $subs (1..$dum){print TBL "$start[$subs]\t$stop[$subs]\n";}
 				print TBL "$start[$num]\t>$stop[$num]\n";	
 			}
-			protein();
+			mRNA();
 
 			### Printing CDS info
 			my $startcodon = substr($DNAsequence, $start[0]-3, 3);
@@ -315,7 +319,7 @@ while(my $file = shift@embl){
 				} ## printing the last exon
 				else{print TBL "$start[$num]\t>$stop[$num]\n";} ## printing the last exon	
 			}
-			protein();
+			CDS();
 		}
 	}
 }
@@ -323,19 +327,26 @@ close IN;
 close TBL;
 
 ### Subroutines
-sub protein{
+sub mRNA{
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-		if (exists $hash{$locus_tag}){print TBL "\t\t\tproduct\t$hash{$locus_tag}\n";}
-		else{
-			print STDERR "Cannot find database entry for locus_tag: $locus_tag\n";
-			print TBL "\t\t\tproduct\thypothetical protein\n";
-		}
-		print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
-		print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
+	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
+	else{ print TBL "\t\t\tproduct\thypothetical protein\n"; }
+	print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
+	print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
+}
+sub CDS{
+	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
+	else{
+		print STDERR "Cannot find database entry for locus_tag: $locus_tag\n";
+		print TBL "\t\t\tproduct\thypothetical protein\n";
+	}
+	print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
+	print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
 }
 sub RNA{
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-	if (exists $hash{$locus_tag}){print TBL "\t\t\tproduct\t$hash{$locus_tag}\n";}
+	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
 	else{
 		print STDERR "Cannot find database entry for locus_tag: $locus_tag\n";
 		print TBL "\t\t\tproduct\thypothetical RNA\n";
