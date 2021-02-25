@@ -687,8 +687,9 @@ Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/m
 -c (--chromosome)	Tab-delimited contig -> chromosome assignment file (Optional)
 ```
 
-The optional tab-delimited contig -> chromosome assignment should look like:
+The optional tab-delimited contig -> chromosome assignment file should look like this:
 ```
+#contig_name chromosome
 chromosome_01  I
 chromosome_02  II
 chromosome_03  III

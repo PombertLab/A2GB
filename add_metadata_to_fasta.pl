@@ -58,7 +58,8 @@ if ($chromosomes){
 	open CHR, "<", "$chromosomes" or die "Can't open chromosome file $chromosomes\n";
 	while (my $line = <CHR>){
 		chomp $line;
-		if ($line =~ /^(\S+)\s+(.*)$/){
+		if ($line =~ /^#/){next;} ## Ignoring comments
+		elsif ($line =~ /^(\S+)\s+(.*)$/){
 			my $contig = $1;
 			my $chromo_assig = $2;
 			$chromo_assig =~ s/\s+$//; ## Removing trailing spaces, if any
