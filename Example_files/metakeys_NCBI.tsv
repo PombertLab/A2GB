@@ -5,7 +5,7 @@ lineage	cellular cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Chlo
 moltype	genomic
 gcode	1
 
-### Common metada keys; to use comment out and add corresponding value
+### Common metadata keys; to use, comment out and add corresponding value
 #genotype
 #host
 #isolate
@@ -13,7 +13,7 @@ gcode	1
 #substrain
 #synonym
 
-### Other metada keys; to use comment out and add corresponding value
+### Other metadata keys; to use, comment out and add corresponding value
 #acronym
 #altitude
 #anamorph
