@@ -23,7 +23,7 @@ OPTIONS:
 -l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
 -g (--gcode)		NCBI genetic code [Default: 1]
 -m (--moltype)		NCBI moltype descriptor [Default: genomic]
--c (--chromosome)	Tab-delimited contig -> chromosome assignment file
+-c (--chromosome)	Tab-delimited contig -> chromosome assignment file (Optional)
 OPTIONS
 die "$usage\n" unless @ARGV;
 

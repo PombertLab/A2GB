@@ -671,7 +671,8 @@ add_metadata_to_fasta.pl \
    -o 'Chloropicon primus RCC138' \
    -s RCC138 \
    -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
-   -g 1
+   -g 1 \
+   -c chromosomes.tsv
 ```
 
 Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) are:
@@ -683,19 +684,28 @@ Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/m
 -l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
 -g (--gcode)		NCBI genetic code [Default: 1]
 -m (--moltype)		NCBI moltype descriptor [Default: genomic]
+-c (--chromosome)	Tab-delimited contig -> chromosome assignment file (Optional)
+```
+
+The optional tab-delimited contig -> chromosome assignment should look like:
+```
+chromosome_01  I
+chromosome_02  II
+chromosome_03  III
+chromosome_04  IV
 ```
 
 Once modified, the FASTA definition lines should look like this:
 ```
 head -n 1 $ANNOT/splitGFF3/*.fsa
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_01.fsa <==
->chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic]
+>chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=I]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_02.fsa <==
->chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic]
+>chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=II]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_03.fsa <==
->chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic]
+>chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=III]
 ```
 
 ##### Generating a GenBank submission template
