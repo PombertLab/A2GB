@@ -1,11 +1,11 @@
-### metadata key    metadata value
-organism    Chloropicon primus
-strain  RCC138
-lineage cellular cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Chloropicophyceae; Chloropicales; Chloropicaceae; Chloropicon
-moltype genomic
-gcode   1
+### metadata key	metadata value
+organism	Chloropicon primus
+strain	RCC138
+lineage	cellular cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Chloropicophyceae; Chloropicales; Chloropicaceae; Chloropicon
+moltype	genomic
+gcode	1
 
-### Common metada keys
+### Common metada keys; to use comment out and add corresponding value
 #genotype
 #host
 #isolate
@@ -13,7 +13,7 @@ gcode   1
 #substrain
 #synonym
 
-### Other metada keys
+### Other metada keys; to use comment out and add corresponding value
 #acronym
 #altitude
 #anamorph
