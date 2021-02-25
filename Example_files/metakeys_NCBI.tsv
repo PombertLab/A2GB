@@ -1,0 +1,73 @@
+### metadata key    metadata value
+organism    Chloropicon primus
+strain  RCC138
+lineage cellular cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Chloropicophyceae; Chloropicales; Chloropicaceae; Chloropicon
+moltype genomic
+gcode   1
+
+### Common metada keys
+#genotype
+#host
+#isolate
+#sub-species
+#substrain
+#synonym
+
+### Other metada keys
+#acronym
+#altitude
+#anamorph
+#authority
+#bio-material
+#biotype
+#biovar
+#breed
+#cell-line
+#cell-type
+#chemovar
+#clone
+#clone-lib
+#collected-by
+#collection-date
+#common
+#country
+#cultivar
+#culture-collection
+#dev-stage
+#ecotype
+#endogenous-virus-name
+#forma
+#forma-specialis
+#fwd-PCR-primer-name
+#fwd-PCR-primer-seq
+#group
+#haplogroup
+#haplotype
+#identified-by
+#isolation-source
+#lab-host
+#lat-lon
+#linkage-group
+#map
+#mating-type
+#note
+#pathovar
+#plasmid-name
+#plastid-name
+#pop-variant
+#rev-PCR-primer-name
+#rev-PCR-primer-seq
+#segment
+#serogroup
+#serotype
+#serovar
+#sex
+#specimen-voucher
+#subclone
+#subgroup
+#subtype
+#teleomorph
+#tissue-lib
+#tissue-type
+#type
+#variety
