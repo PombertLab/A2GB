@@ -663,7 +663,7 @@ Taxonomic metadata can be added directly to the FASTA files. The list of modifie
 
 The script [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) can be used to add some of the most common modifiers to the FASTA definition lines. Alternatively, source qualifiers can also be entered directly from the [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) command line when creating the ASN files with the -j switch; e.g. -j '[organism=Chloropicon primus RCC138][strain=RCC138]'
 
-To add metadata with [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl), type:
+To add metadata with [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) using single metadata keys, type:
 
 ```Bash
 add_metadata_to_fasta.pl \
@@ -671,29 +671,52 @@ add_metadata_to_fasta.pl \
    -o 'Chloropicon primus RCC138' \
    -s RCC138 \
    -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
-   -g 1 \
+   -g 1
+```
+
+Alternatively, to add metadata with [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) and tab-delimited metadata files, type:
+
+```Bash
+add_metadata_to_fasta.pl \
+   -f $ANNOT/splitGFF3/*.fsa \
+   -k metakeys_NCBI.tsv \
    -c chromosomes.tsv
 ```
 
 Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) are:
 ```
 -f (--fasta)		Specifies which FASTA files to add metadata to
+
+## Single metadata keys
 -o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
 -s (--strain)		Strain definition; e.g. RCC138
 -i (--isolate)		Isolate name; e.g. 'Pacific Isolate'
 -l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
--g (--gcode)		NCBI genetic code [Default: 1]
--m (--moltype)		NCBI moltype descriptor [Default: genomic]
--c (--chromosome)	Tab-delimited contig -> chromosome assignment file (Optional)
+-g (--gcode)		NCBI genetic code ## https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+-m (--moltype)		NCBI moltype descriptor (e.g. genomic)
+
+## Metadata files
+-k (--keys)		Tab-delimited NCBI metadata key -> value file
+-c (--chromosome)	Tab-delimited contig -> chromosome assignment file
 ```
 
-The optional tab-delimited contig -> chromosome assignment file should look like this:
+The tab-delimited NCBI metadata key -> value file (e.g. [metakeys_NCBI.tsv](https://github.com/PombertLab/A2GB/blob/master/Example_files/metakeys_NCBI.tsv)) should look like this:
 ```
-#contig_name chromosome
-chromosome_01  I
-chromosome_02  II
-chromosome_03  III
-chromosome_04  IV
+### metadata key	metadata value
+organism	Chloropicon primus
+strain	RCC138
+lineage cellular cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Chloropicophyceae; Chloropicales; Chloropicaceae; Chloropicon
+moltype	genomic
+gcode	1
+```
+
+The tab-delimited contig -> chromosome assignment file (e.g. [chromosomes.tsv](https://github.com/PombertLab/A2GB/blob/master/Example_files/chromosomes.tsv)) should look like this:
+```
+#contig_name	chromosome
+chromosome_01	I
+chromosome_02	II
+chromosome_03	III
+chromosome_04	IV
 ```
 
 Once modified, the FASTA definition lines should look like this:

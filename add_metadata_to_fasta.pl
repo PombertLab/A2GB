@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'add_metadata_to_fasta.pl';
-my $version = '0.3a';
-my $updated = '02/24/21';
+my $version = '0.4';
+my $updated = '02/24/22';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -13,21 +13,27 @@ VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	This script adds metadata to fasta headers. This metadata is required for submission to NCBI GenBank.
 		
-USAGE		${name} -f *.fasta -o 'Chloropicon primus RCC138' -s RCC138 -g 1
+USAGE 1		${name} -f *.fasta -o 'Chloropicon primus RCC138' -s RCC138 -g 1	## Using CMD line switches
+USAGE 2		${name} -f *.fasta -k metakeys_NCBI.tsv -c chromosomes.tsv		## Using metadata files
 
 OPTIONS:
 -f (--fasta)		Specifies which FASTA files to add metadata to
+
+## Single metadata keys
 -o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
 -s (--strain)		Strain definition; e.g. RCC138
 -i (--isolate)		Isolate name; e.g. 'Pacific Isolate'
 -l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
--g (--gcode)		NCBI genetic code [Default: 1]
--m (--moltype)		NCBI moltype descriptor [Default: genomic]
--c (--chromosome)	Tab-delimited contig -> chromosome assignment file (Optional)
+-g (--gcode)		NCBI genetic code ## https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+-m (--moltype)		NCBI moltype descriptor (e.g. genomic)
+
+## Metadata files
+-k (--keys)		Tab-delimited NCBI metadata key -> value file
+-c (--chromosome)	Tab-delimited contig -> chromosome assignment file
 OPTIONS
 die "$usage\n" unless @ARGV;
 
-my @fasta; my $chromosomes;
+my @fasta; my $chromosomes; my $metakeys;
 
 ## NCBI Fasta headers 
 my %meta = (
@@ -35,22 +41,37 @@ my %meta = (
 	"strain" => undef,
 	"isolate" => undef,
 	"lineage" => undef,
-	"gcode" => 1,
-	"moltype" => 'genomic',
+	"gcode" => undef,
+	"moltype" => undef,
 );
 
 GetOptions(
 	'f|fasta=s@{1,}' => \@fasta,
+	'k|keys=s' => \$metakeys,
+	'c|chromosome=s' => \$chromosomes,
 	'o|organism=s' => \$meta{"organism"},
 	's|strain=s' => \$meta{"strain"},
 	'i|isolate=s' => \$meta{"isolate"},
 	'l|lineage=s' => \$meta{"lineage"},
 	'g|gcode=i' => \$meta{"gcode"},
 	'm|moltype=s' => \$meta{"moltype"},
-	'c|chromosome=s' => \$chromosomes
 );
-die("[E] Organism required.\n") unless(exists(${meta{"organism"}}));
 die("[E] Fasta files required.\n") unless(@fasta);
+
+## Populating database of metadata keys and their values, if desired
+if ($metakeys){
+	open META, "<", "$metakeys" or die "Can't open metadata file $metakeys\n";
+	while (my $line = <META>){
+		chomp $line;
+		if ($line =~ /^#/){next;} ## Ignoring comments
+		elsif ($line =~ /^(\S+)\s+(.*)$/){
+			my $metakey = $1;
+			my $metavalue = $2;
+			$metavalue =~ s/\s+$//; ## Removing trailing spaces, if any
+			$meta{$metakey} =  $metavalue;
+		}
+	} 
+}
 
 ## Populating database of contigs and their assigned chromosomes, if desired
 my %chromo;
