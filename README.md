@@ -940,7 +940,7 @@ tbl2asn \
 The file(s) should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
 
 ## Funding and acknowledgments
-This work was supported by the National Institute of Allergy and Infectious Diseases of the National Institutes of Health (award number R15AI128627) to Jean-Francois Pombert. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
+This work was supported in part by the National Institute of Allergy and Infectious Diseases of the National Institutes of Health (award number R15AI128627) to Jean-Francois Pombert. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
 
 ## References
 Buchfink B, Xie C, Huson DH. **Fast and sensitive protein alignment using DIAMOND.** *Nat Methods.* 2015 Jan;12(1):59-60. doi: [10.1038/nmeth.3176](https://doi.org/10.1038/nmeth.3176). Epub 2014 Nov 17. PMID: 25402007.
