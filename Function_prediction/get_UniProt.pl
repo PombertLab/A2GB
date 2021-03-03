@@ -1,16 +1,19 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2020
 my $name = 'get_UniProt.pl';
-my $version = '0.2b';
+my $version = '0.2c';
+my $updated = '03/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Downloads the SwissProt and/or trEMBL databases from UniProt
-EXAMPLE		get_UniProt.pl -s -t -f ./ -n 20 -l download.log 
+
+EXAMPLE		${name} -s -t -f ./ -n 20 -l download.log 
 
 OPTIONS:
 -s (--swiss)		Download Swiss-Prot
