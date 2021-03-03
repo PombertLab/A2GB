@@ -337,7 +337,7 @@ Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Func
 Homology searches against the [UniProt](https://www.uniprot.org/) databases will return positive matches against the corresponding accession numbers. However, these matches will not include product names. To facilitate downstream analyses, we can create tab-delimited lists of accession numbers and their products with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
 
 ```Bash
-get_uniprot_products.pl $ANNOT/UNIPROT/uniprot_*.fasta.gz
+get_uniprot_products.pl -f $ANNOT/UNIPROT/uniprot_*.fasta.gz -o $ANNOT/UNIPROT
 ```
 
 These lists should be regenerated everytime the local UniProt databases are updated. Note that creating a product list from the TrEMBL database will take time due to its size. The tab-delimited lists should look like this:
