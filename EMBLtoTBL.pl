@@ -68,10 +68,32 @@ while(my $file = shift@embl){
 		my $dum = undef;
 		
 		### Defining the locus tags
-		if ($line =~ /FT\s+\/locus_tag="(\S+)"/){$locus_tag = $1;}
-		
+		if ($line =~ /^FT\s+\/locus_tag="(\S+)"/){$locus_tag = $1;}
+		## If a pseudogene is present, it is assumed that the start and stop, as well as
+		## pseudogene note, is provided in the "" of the feature. The start and stop are
+		## seperated by ".." and the range is seperated from the note by ";". If the
+		## pseudogene is present on the complementary strand, reverse the start and stop.
+		elsif($line =~ /^FT\s+\/pseudogene/){
+			my $start;
+			my $stop;
+			my $note="";
+			if($line =~ /"complement(\d+)\.\.(\d+);(.*?)"/){
+				$start = $2;
+				$stop = $1;
+				$note = $3;
+			}
+			elsif($line =~ /"(\d+)\.\.(\d+);(.*?)"/){
+				$start = $1;
+				$stop = $2;
+				$note = $3;
+			}
+			print TBL print TBL "$start\t$stop\tgene\n";
+			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+			print TBL "\t\t\tpseduo\n";
+			print TBL "\t\t\tnote\t$note";
+		}
 		### Working on tRNAs/rRNAs
-		elsif ($line =~ /FT\s+(tRNA|rRNA)\s+(\d+)..(\d+)/){ ## Forward, single exon
+		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+(\d+)..(\d+)/){ ## Forward, single exon
 			my $type = $1;
 			my $start = $2;
 			my $stop = $3;
@@ -80,7 +102,7 @@ while(my $file = shift@embl){
 			print TBL "$start\t$stop\t$type\n";
 			RNA();
 		}
-		elsif ($line =~ /FT\s+(tRNA|rRNA)\s+join\((.*)\)/){ ## Forward, multiple exons
+		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+join\((.*)\)/){ ## Forward, multiple exons
 			my $feat = $1;
 			my @array = split(',',$2);
 			my $mRNA = undef;
@@ -110,7 +132,7 @@ while(my $file = shift@embl){
 			}
 			RNA();
 		}
-		elsif ($line =~ /FT\s+(tRNA|rRNA)\s+complement\((\d+)..(\d+)\)/){ ## Reverse, single exon
+		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+complement\((\d+)..(\d+)\)/){ ## Reverse, single exon
 			my $type = $1;
 			my $start = $3;
 			my $stop = $2;
@@ -119,7 +141,7 @@ while(my $file = shift@embl){
 			print TBL "$start\t$stop\t$type\n";
 			RNA();
 		}
-		elsif ($line =~ /FT\s+(tRNA|rRNA)\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
+		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
 			my $feat = $1;
 			my @array = split(',',$2);
 			my $mRNA = undef;
@@ -153,8 +175,8 @@ while(my $file = shift@embl){
 		}
 		
 		### Working on CDS
-		elsif ($line =~ /FT\s+\/codon_start=(\d)/){print TBL "\t\t\tcodon_start\t$1\n";} ## Looking for phased codons
-		elsif ($line =~ /FT\s+CDS\s+(\d+)..(\d+)/){ ## Forward, single exon
+		elsif ($line =~ /^FT\s+\/codon_start=(\d)/){print TBL "\t\t\tcodon_start\t$1\n";} ## Looking for phased codons
+		elsif ($line =~ /^FT\s+CDS\s+(\d+)..(\d+)/){ ## Forward, single exon
 			my $start = $1;
 			my $stop = $2;
 			my $startcodon = substr($DNAsequence, $start-1, 3);
@@ -182,7 +204,7 @@ while(my $file = shift@embl){
 			else{print TBL "<$start\t>$stop\tCDS\n";}## !=, !=
 			CDS();
 		}
-		elsif ($line =~ /FT \s+CDS\s+complement\((\d+)..(\d+)\)/){ ## Reverse, single exon
+		elsif ($line =~ /^FT\s+CDS\s+complement\((\d+)..(\d+)\)/){ ## Reverse, single exon
 			my $start = $2;
 			my $stop = $1;
 			my $startcodon = substr($DNAsequence, $start-3, 3);
@@ -209,7 +231,7 @@ while(my $file = shift@embl){
 			else{print TBL "<$start\t>$stop\tCDS\n";} ## !=, !=
 			CDS();
 		}	
-		elsif ($line =~ /FT\s+CDS\s+join\((.*)\)/){ ## Forward, multiple exons
+		elsif ($line =~ /^FT\s+CDS\s+join\((.*)\)/){ ## Forward, multiple exons
 			my @array = split(',',$1);
 			my $mRNA = undef;
 			while (my $segment = shift@array){
@@ -264,7 +286,7 @@ while(my $file = shift@embl){
 			}
 			CDS();
 		}
-		elsif ($line =~ /FT\s+CDS\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
+		elsif ($line =~ /^FT\s+CDS\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
 			my @array = split(',',$1);
 			my $mRNA = undef;
 			while (my $segment = shift@array){
