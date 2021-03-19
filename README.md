@@ -220,7 +220,10 @@ Note that [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/A
 For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) to check for missing start methionines and for internal stop codons in proteins:
 
 ```Bash
-check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
+check_problems.pl \
+   -s \
+   -m \
+   -f $ANNOT/splitGFF3/*.prot
 ```
 
 If present, we should see error messages like this:
