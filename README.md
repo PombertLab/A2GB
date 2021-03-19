@@ -78,16 +78,24 @@ First, let's create a directory to store annotations:
 
 ```Bash
 export ANNOT=/media/FatCat/user/raw_data     ## Replace /media/FatCat/user/raw_data by desired annotation directory
-mkdir $ANNOT; mv Annotations.gff3.gz $ANNOT/ ## Create directory; then move Annotations.gff3.gz into it
-cd $ANNOT/; gunzip Annotations.gff3.gz       ## Decompress the GZIP file
+mkdir $ANNOT;                    ## Create directory $ANNOT
+mv Annotations.gff3.gz $ANNOT/   ## move Annotations.gff3.gz into $ANNOT
+cd $ANNOT/;
+gunzip Annotations.gff3.gz       ## Decompress the GZIP file
 ```
 
 Second, let's predict ribosomal RNAs with RNAmmer using [run_RNAmmer.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_RNAmmer.pl); then convert the annotations to GFF3 format with [RNAmmer_to_GFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/RNAmmer_to_GFF3.pl):
 
 ```Bash
 mkdir $ANNOT/RNAmmer/
-run_RNAmmer.pl -f *.fasta -d $ANNOT/RNAmmer/
-RNAmmer_to_GFF3.pl -g  $ANNOT/RNAmmer/*.gff2 -d  $ANNOT/RNAmmer/
+
+run_RNAmmer.pl \
+   -f *.fasta \
+   -d $ANNOT/RNAmmer/
+
+RNAmmer_to_GFF3.pl \
+   -g  $ANNOT/RNAmmer/*.gff2 \
+   -d  $ANNOT/RNAmmer/
 ```
 
 
@@ -95,14 +103,24 @@ Third , let's predict transfer RNAs with tRNAscan-SE using [run_tRNAscan.pl](htt
 
 ```Bash
 mkdir $ANNOT/tRNAscan/
-run_tRNAscan.pl -f *.fasta -t E -d $ANNOT/tRNAscan/
-tRNAscan_to_GFF3.pl -t $ANNOT/tRNAscan/*.tRNAs -d $ANNOT/tRNAscan/
+
+run_tRNAscan.pl \
+   -f *.fasta \
+   -t E \
+   -d $ANNOT/tRNAscan/
+
+tRNAscan_to_GFF3.pl \
+   -t $ANNOT/tRNAscan/*.tRNAs \
+   -d $ANNOT/tRNAscan/
 ```
 
 Fourth, let's concatenate the tRNA, rRNA and CDS GFF3 annotations from RNAmmer, tRNAscan-SE, and Apollo:
 
 ```Bash
-cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 $ANNOT/Annotations.gff3 > $ANNOT/all_annotations.gff3
+cat $ANNOT/RNAmmer/*.gff3 \
+   $ANNOT/tRNAscan/*.gff3 \
+   $ANNOT/Annotations.gff3 \
+   > $ANNOT/all_annotations.gff3
 ## We concatenate Apollo's GFF3 file last as it includes sequence data
 ```
 
@@ -110,7 +128,9 @@ cat $ANNOT/RNAmmer/*.gff3 $ANNOT/tRNAscan/*.gff3 $ANNOT/Annotations.gff3 > $ANNO
 Because debugging issues with annotations is easier when working with single files in [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), let's split the concatenated Apollo GFF3 file into distinct GFF3 (.gff3) and FASTA (.fsa) files, one per contig/chromosome with [splitGFF3.pl](https://github.com/PombertLab/A2GB/blob/master/Apollo_tools/splitGFF3.pl).
 
 ```Bash
-splitGFF3.pl -g $ANNOT/all_annotations.gff3 -d $ANNOT/splitGFF3
+splitGFF3.pl \
+   -g $ANNOT/all_annotations.gff3 \
+   -d $ANNOT/splitGFF3
 ```
 
 ### Converting GFF3 files to EMBL format
@@ -119,7 +139,11 @@ This step requires a [locus_tag prefix](https://www.ncbi.nlm.nih.gov/genomes/loc
 Let's convert the GFF3 files to EMBL format with [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl). This script will generate locus tags automatically based on the provided prefix from NCBI. 
 
 ```Bash
-ApolloGFF3toEMBL.pl -p LOCUS_TAG_PREFIX -g $ANNOT/splitGFF3/*.gff3 -f $ANNOT/features.list -c 1
+ApolloGFF3toEMBL.pl \
+   -p LOCUS_TAG_PREFIX \
+   -g $ANNOT/splitGFF3/*.gff3 \
+   -f $ANNOT/features.list \
+   -c 1
 ```
 Options for [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master/ApolloGFF3toEMBL.pl) are:
 
@@ -234,8 +258,14 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 We can check if the issues have been fixed by regenerating the .prot files with [EMBLtoPROT.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoPROT.pl), then by running [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again:
 ```Bash
-EMBLtoPROT.pl -e $ANNOT/splitGFF3/*.embl -c 1
-check_problems.pl -s -m -f $ANNOT/splitGFF3/*.prot
+EMBLtoPROT.pl \
+   -e $ANNOT/splitGFF3/*.embl \
+   -c 1
+
+check_problems.pl \
+   -s \
+   -m \
+   -f $ANNOT/splitGFF3/*.prot
 ```
 If fixed, the error message(s) should be gone:
 ```
@@ -289,7 +319,14 @@ cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 [InterProScan 5](https://github.com/ebi-pf-team/interproscan) can be run using the interproscan.sh script provided with its distribution or with the [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) Perl wrapper. To run InterProScan 5 using [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl):
 
 ```Bash
-run_InterProScan.pl -c 10 -ip -go -pa -f $ANNOT/proteins.fasta -d $ANNOT/Interproscan/ -l interproscan.log
+run_InterProScan.pl \
+   -c 10 \
+   -ip \
+   -go \
+   -pa \
+   -f $ANNOT/proteins.fasta \
+   -d $ANNOT/Interproscan/ \
+   -l interproscan.log
 ```
 
 Options for [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) are:
@@ -320,7 +357,12 @@ Homology searches against the SwissProt and TrEMBL databases can be performed wi
 We can use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) to [download](https://www.uniprot.org/downloads) the SwissProt and/or TrEMBL databases from UniProt:
 
 ```Bash
-get_UniProt.pl -s -t -f $ANNOT/UNIPROT/ -n 20 -l download.log
+get_UniProt.pl \
+   -s \
+   -t \
+   -f $ANNOT/UNIPROT/ \
+   -n 20 \
+   -l download.log
 ```
 Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) are:
 
@@ -337,7 +379,9 @@ Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Func
 Homology searches against the [UniProt](https://www.uniprot.org/) databases will return positive matches against the corresponding accession numbers. However, these matches will not include product names. To facilitate downstream analyses, we can create tab-delimited lists of accession numbers and their products with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl):
 
 ```Bash
-get_uniprot_products.pl -f $ANNOT/UNIPROT/uniprot_*.fasta.gz -o $ANNOT/UNIPROT
+get_uniprot_products.pl \
+   -f $ANNOT/UNIPROT/uniprot_*.fasta.gz \
+   -o $ANNOT/UNIPROT
 ```
 
 These lists should be regenerated everytime the local UniProt databases are updated. Note that creating a product list from the TrEMBL database will take time due to its size. The tab-delimited lists should look like this:
@@ -434,7 +478,9 @@ diamond blastp \
 To create a tab-delimited list of accession numbers and their associated proteins from the downloaded NCBI .faa.gz files, we can use [get_reference_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_reference_products.pl).
 
 ```Bash
-get_reference_products.pl -f $ANNOT/REFERENCES/*.gz -l $ANNOT/REFERENCES/reference.list
+get_reference_products.pl \
+   -f $ANNOT/REFERENCES/*.gz \
+   -l $ANNOT/REFERENCES/reference.list
 ```
 
 The list created should look like this:
