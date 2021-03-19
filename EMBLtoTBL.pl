@@ -90,7 +90,7 @@ while(my $file = shift@embl){
 			print TBL print TBL "$start\t$stop\tgene\n";
 			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 			print TBL "\t\t\tpseduo\n";
-			print TBL "\t\t\tnote\t$note";
+			print TBL "\t\t\tnote\t$note\n";
 		}
 		### Working on tRNAs/rRNAs
 		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+(\d+)..(\d+)/){ ## Forward, single exon
