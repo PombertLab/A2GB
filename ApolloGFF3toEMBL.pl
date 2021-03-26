@@ -1,20 +1,21 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
-my $version = '3.9a';
-
+my $version = '3.9b';
+my $updated = '03/26/2021';
 use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Converts Apollo GFF3 files to EMBL files and writes the proteins and RNAs to separate FASTA files with the .prot and .RNA extensions.
 		Generates locus tags automatically based on the provided prefix.
 REQUIREMENTS	BioPerl's Bio::SeqIO module
 NOTE		The GFF3 (*.gff3) and corresponding FASTA (*.fsa) files must be in the same folder
 
-USAGE		$name -p LOCUS_TAG_PREFIX -g *.gff3 -f features.list -c 1
+USAGE		${name} -p LOCUS_TAG_PREFIX -g *.gff3 -f features.list -c 1
 
 OPTIONS:
 -p (--prefix)	## locus_tag prefix
@@ -132,6 +133,9 @@ while (my $file = shift@gff3){
 			if (scalar(@{$exon{$list}}) == 2){ ## Verifying if we have a single exon
 				print OUT 'FT   '."$feature{$list}".'             '."$exon{$list}[0]..$stopcodon\n";
 				print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
+				if($feature{$list} eq "rRNA"){
+					print OUT 'FT                   /colour=255 165 0'."\n";
+				}
 				if ($feature{$list} eq 'CDS'){print PROT ">$locus_tag_prefix".'_'."$contig".'g'."$locus_number\n";}
 				print MRNA ">$locus_tag_prefix".'_'."$contig".'g'."$locus_number\n";
 				my $start = (($exon{$list}[0]));
@@ -157,7 +161,9 @@ while (my $file = shift@gff3){
 				}
 				print OUT "$stopcodon)\n";
 				print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
-				
+				if($feature{$list} eq "rRNA"){
+					print OUT 'FT                   /colour=255 165 0'."\n";
+				}
 				$mRNA = undef;
 				$protein = undef;
 				my $tmp1 = undef;
@@ -189,6 +195,9 @@ while (my $file = shift@gff3){
 			print FEAT "$locus_tag_prefix".'_'."$contig".'g'."$locus_number"."\t"."$loc"."\t"."$feature{$list}"."\t".'-'."\t"."$gene{$list}[0]"."\t"."$gene{$list}[1]"."\n";
 			print OUT 'FT   gene             complement('."$gene{$list}[0]".'..'."$gene{$list}[1]".')'."\n";
 			print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
+			if($feature{$list} eq "rRNA"){
+				print OUT 'FT                   /colour=255 165 0'."\n";
+			}
 			$locus_id += 10;
 				
 			### Working on CDS features
@@ -201,6 +210,9 @@ while (my $file = shift@gff3){
 			if (scalar(@reversed) == 2){ ## Verifying if we have a single exon
 				print OUT 'FT   '."$feature{$list}".'             complement('."$reversed[0]..$reversed[1]".')'."\n";
 				print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
+				if($feature{$list} eq "rRNA"){
+					print OUT 'FT                   /colour=255 165 0'."\n";
+				}
 				if ($feature{$list} eq 'CDS'){print PROT ">$locus_tag_prefix".'_'."$contig".'g'."$locus_number\n";}
 				print MRNA ">$locus_tag_prefix".'_'."$contig".'g'."$locus_number\n";
 				my $start = (($reversed[0]));
@@ -228,7 +240,9 @@ while (my $file = shift@gff3){
 				}
 				print OUT "$stopcodon)\n";
 				print OUT 'FT                   /locus_tag="'."$locus_tag_prefix".'_'."$contig".'g'."$locus_number".'"'."\n";
-	
+				if($feature{$list} eq "rRNA"){
+					print OUT 'FT                   /colour=255 165 0'."\n";
+				}
 				my $revmRNA = undef;
 				$protein = undef;
 				my $tmp1 = undef;
