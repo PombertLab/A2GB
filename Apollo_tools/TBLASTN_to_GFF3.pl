@@ -1,57 +1,90 @@
 #!/usr/bin/perl
-## Converts the output of a tblastn search (outfmt 6) to the proper GFF3 format for loading into webApollo
-## Requires the product list from the NCBI faa file (obtained with getProducts.pl)
+my $name = 'BLASTN_to_GFF3.pl';
+my $version = '0.2';
+my $updated = '27/03/2021';
 
-use strict;
-use warnings;
+use strict; use warnings; use Getopt::Long qw(GetOptions);
 
-my $usage = 'USAGE = perl TBLASTN_to_GFF3.pl *.tblastn';
-die "$usage\n" unless @ARGV;
+my $usage = << "OPTIONS";
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
+SYNOPSIS	Converts the output of blastn/tblastn searches (outfmt 6) to GFF format for loading into Apollo
 
-while (my $file = shift@ARGV){
-	open BLAST, "<$file";
-	$file =~ s/.tblastn.6$//;
-	$file =~ s/.blastn.6$//;
-	open PROD, "<$file.products"; ## product list obtained with getProducts.pl
-	open OUT, ">$file.gff";
+USAGE		${name} -b *.tblastn -p product_list.tsv -t tblastn
+
+-b (--blast)	BLAST output file(s) in outfmt 6 format
+-p (--products)	Tab-delimited list of queries and their products (can be generated with getProducts.pl)
+-t (--type)		BLAST type: blastn or tblastn [Default: blastn]
+OPTIONS
+die "\n$usage\n" unless @ARGV;
+
+my @blast;
+my $products;
+my $type = 'blastn';
+GetOptions(
+	'b|blast=s@{1,}' => \@blast,
+	'p|products=s' => \$products,
+	't|type=s' => \$type
+);
+
+while (my $blast = shift@blast){
+	open BLAST, "<", "$blast" or die "Can't open $blast: $!\n";
+	$blast =~ s/.tblastn.6$//;
+	$blast =~ s/.blastn.6$//;
+	open PROD, "<", "$products" or die "Can't open $products: $!\n";
+	open GFF, ">", "$blast.gff" or die "Can't create $blast.gff: $!\n";
+	
 	my $hit = 0;
-	my %products = ();
+	
 	## Filling the products database
+	my %products = ();
 	while (my $line = <PROD>){
 		chomp $line;
 		if ($line =~ /^(\S+)\t(.*)$/){
-			$products{$1}=$2;
+			my $locus = $1;
+			my $product = $2;
+			$products{$locus}=$product;
 		}
 	}
 	
 	## Converting BLAST to GFF3
 	while (my $line = <BLAST>){
 		chomp $line;
-		## Discarding comments, if any
-		if ($line =~ /^\#/){next;}
-		## Printing genes
-		elsif ($line =~ /^(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)\t(\S+)/){
-			my $query = $1; 	## protein accession number
-			my $target = $2;	## location of the hit (contig or chromosome)
-			my $identity = $3;  ## identity %
-			my $len = $4;		## alignment length
-			my $mis = $5;		## mismatches
-			my $gap = $6;		## gaps
-			my $qstart = $7;	## query start
-			my $qend = $8;		## query end
-			my $tstart = $9;	## target start
-			my $tend = $10;		## target end
-			my $evalue = $11;	## evalue
-			my $bit = $12;		## bit score
+		if ($line =~ /^\#/){ ## Discarding comments, if any
+			next;
+		}
+
+		else { ## Printing matches
+			my @columns = split ("\t", $line); 
+			my $query = $columns[0]; 	## protein accession number
+			my $target = $columns[1];	## location of the hit (contig or chromosome)
+			my $identity = $columns[2]; ## identity %
+			my $len = $columns[3];		## alignment length
+			my $mis = $columns[4];		## mismatches
+			my $gap = $columns[5];		## gaps
+			my $qstart = $columns[6];	## query start
+			my $qend = $columns[7];		## query end
+			my $tstart = $columns[8];	## target start
+			my $tend = $columns[8];		## target end
+			my $evalue = $columns[10];	## evalue
+			my $bit = $columns[11];		## bit score
 			$hit++;
-			## Forward strand
-			if ($tstart < $tend){
-				print OUT "$target"."\t"."TBLASTN"."\t"."match"."\t"."$tstart"."\t"."$tend"."\t"."$evalue"."\t".'+'."\t".'.'."\t"."ID=hit$hit".';'."Name=hit$hit".';'."Note=$query".':'."$products{$query}"."\n";
-				print OUT "$target"."\t"."TBLASTN"."\t"."match_part"."\t"."$tstart"."\t"."$tend"."\t"."$evalue"."\t".'+'."\t"."0"."\t"."gene_id=hit$hit".';'."Parent=hit$hit".';'."transcript_id=hit$hit.t1".';'."Note=$query".':'."$products{$query}"."\n";
+
+			if ($tstart < $tend){ ## Forward strand
+				print GFF "$target"."\t"."$type"."\t"."match"."\t"."$tstart"."\t"."$tend"."\t"."$evalue"."\t".'+';
+				print GFF "\t".'.'."\t"."ID=hit$hit".';'."Name=hit$hit".';'."Note=$query".':'."$products{$query}"."\n";
+				print GFF "$target"."\t"."$type"."\t"."match_part"."\t"."$tstart"."\t"."$tend"."\t"."$evalue"."\t".'+';
+				print GFF "\t"."0"."\t"."gene_id=hit$hit".';'."Parent=hit$hit".';'."transcript_id=hit$hit.t1".';';
+				print GFF "Note=$query".':'."$products{$query}"."\n";
 			}
-			elsif ($tstart > $tend){
-				print OUT "$target"."\t"."TBLASTN"."\t"."match"."\t"."$tend"."\t"."$tstart"."\t"."$evalue"."\t".'-'."\t".'.'."\t"."ID=hit$hit".';'."Name=hit$hit".';'."Note=$query".':'."$products{$query}"."\n";
-				print OUT "$target"."\t"."TBLASTN"."\t"."match_part"."\t"."$tend"."\t"."$tstart"."\t"."$evalue"."\t".'-'."\t"."0"."\t"."gene_id=hit$hit".';'."Parent=hit$hit".';'."transcript_id=hit$hit.t1".';'."Note=$query".':'."$products{$query}"."\n";
+
+			elsif ($tstart > $tend){ ## Reverse strand
+				print GFF "$target"."\t"."$type"."\t"."match"."\t"."$tend"."\t"."$tstart"."\t"."$evalue"."\t".'-';
+				print GFF "\t".'.'."\t"."ID=hit$hit".';'."Name=hit$hit".';'."Note=$query".':'."$products{$query}"."\n";
+				print GFF "$target"."\t"."$type"."\t"."match_part"."\t"."$tend"."\t"."$tstart"."\t"."$evalue"."\t".'-';
+				print GFF "\t"."0"."\t"."gene_id=hit$hit".';'."Parent=hit$hit".';'."transcript_id=hit$hit.t1".';';
+				print GFF "Note=$query".':'."$products{$query}"."\n";
 			}
 		}
 	}

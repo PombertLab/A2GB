@@ -1,34 +1,59 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2017
 my $name = 'splitMakerGFF.pl';
-my $version = '0.1'; 
+my $version = '0.1a';
+my $updated = '27/03/2021'; 
 
-use strict; use warnings;
+use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
 my $usage = <<"OPTIONS";
-NAME		$name
-VERSION		$version
-SYNOPSIS	Splits the Augustus, GeneMark and Repeatmasker entries into distinct ones; useful for loading them as separate tracks in Apollo.
-USAGE		splitMakerGFF.pl *.gff
-OPTIONS
-die "$usage\n" unless @ARGV;
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
+SYNOPSIS	Splits the Maker entries into distinct ones by source;
+		Useful for loading them as separate tracks in Apollo.
 
-while(my $file = shift@ARGV){
-	open IN, "<$file";
-	$file =~ s/.gff$//;
-	open OUT1, ">$file.augustus.gff";
-	open OUT2, ">$file.genemark.gff";
-	open OUT3, ">$file.repeats.gff";
-	while (my $line = <IN>){
+USAGE		${name} \\
+		  -g *.gff \\
+		  -o SPLIT_MAKER \\
+OPTIONS
+die "\n$usage\n" unless @ARGV;
+
+my @GFF;
+my $odir;
+GetOptions(
+	'g|gff=s@{1,}' => \@GFF,
+	'o|outdir=s' => \$odir,
+);
+
+## Creating output directory
+unless (-d $odir){
+	mkdir ($odir,0755) or die "Can't create folder $odir: $!\n";
+}
+
+while (my $gff = shift@GFF){
+	open GFF, "<", "$gff" or die "Can't read $gff: $!\n";
+	$gff =~ s/.gff$//;
+	my ($basename) = fileparse($gff);
+
+	my %database;
+	while (my $line = <GFF>){
 		chomp $line;
-		if ($line =~ /^\S+\taugustus_masked/){
-			print OUT1 "$line\n";
-		}
-		elsif ($line =~ /^\S+\tgenemark/){
-			print OUT2 "$line\n";
-		}
-		elsif ($line =~ /^\S+\trepeatmasker/){
-			print OUT3 "$line\n";
+		if ($line =~ /^#/){ next; }
+		elsif ($line =~ /^\S+\t\./) { next;}
+		elsif ($line =~ /^\S+\t(\w+)/){
+			my $source = $1;
+			push (@{$database{$source}}, $line);
 		}
 	}
+
+	foreach my $key (keys %database){
+		my $filename = "$odir/$basename.$key.gff";
+		open FH, ">", "$filename" or die "Can't create $filename: $!\n";
+		while (my $data = shift @{$database{$key}}){
+			print FH "$data\n";
+		}
+		close FH;
+	}
+
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'tRNAscan_to_GFF3.pl';
-my $version = '0.8c';
+my $version = '0.8d';
 my $updated = '02/17/2021';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
@@ -12,7 +12,10 @@ NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	Converts the output of tRNAscan-SE (in tabular format) to the proper GFF3 format for loading into Apollo.
-USAGE		tRNAscan_to_GFF3.pl -t *.tRNAs -d tRNA/
+
+USAGE		${name} \\
+		  -t *.tRNAs \
+		  -d tRNA/
 
 OPTIONS:
 -t (--tRNA)	tRNA file(s) to convert to GFF3
@@ -20,7 +23,8 @@ OPTIONS:
 OPTIONS
 die "$usage\n" unless @ARGV;
 
-my @tRNA; my $odir;
+my @tRNA;
+my $odir;
 GetOptions(
 	't|tRNA=s@{1,}' => \@tRNA,
 	'd|dir=s' => \$odir
@@ -33,11 +37,11 @@ print "\nOutput files will be located in directory $odir\n";
 
 my $tRNA = 0;
 while (my $file = shift@tRNA){
-	open TRNA, "<", "$file";
+	open TRNA, "<", "$file" or die "Can't read $file: $!\n";
 	my ($RNA, $dir) = fileparse($file);
 	print "Working on file $RNA located in $dir\n\n";
-	open OUT, ">", "$odir/$RNA.gff";
-	open GFF3, ">", "$odir/$RNA.gff3";
+	open OUT, ">", "$odir/$RNA.gff" or die "Can't create $odir/$RNA.gff: $!\n";
+	open GFF3, ">", "$odir/$RNA.gff3" or die "Can't create $odir/$RNA.gff3: $!\n";
 	## Converting tRNAs to GFF3
 	while (my $line = <TRNA>){
 		chomp $line;
