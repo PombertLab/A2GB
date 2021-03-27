@@ -1,18 +1,20 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoPROT.pl';
-my $version = '1.4a';
+my $version = '1.4b';
+my $updated = '2/22/21';
 
 use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
 
 ### Defining options
 my $usage = <<"OPTIONS";
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Writes predicted proteins and mRNAs to separate FASTA files with the .prot and .mRNA extensions.
 REQUIREMENTS	BioPerl's Bio::SeqIO module
 NOTE		The EMBL (*.embl) and corresponding FASTA (*.fsa) files must be in the same folder
-USAGE		EMBLtoPROT -e *.embl -c 1
+USAGE		${name} -e *.embl -c 1
 OPTIONS:
 -e (--embl)	## EMBL files
 -c (--gcode)	## NCBI genetic code [Default: 1]
@@ -22,14 +24,17 @@ OPTIONS:
 		4  - The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code
 		11 - The Bacterial, Archaeal and Plant Plastid Code
 		NOTE - For complete list; see https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+-v (--verbose)	## Verbosity
 OPTIONS
 die "$usage\n" unless @ARGV;
 
 my @embl;
 my $gc = 1;
+my $verb;
 GetOptions(
 	'e|embl=s@{1,}' => \@embl,
-	'c|gcode=i' => \$gc
+	'c|gcode=i' => \$gc,
+	'v|verbose' => \$verb
 );
 
 ## Parsing EMBL files
@@ -47,7 +52,7 @@ my %gcodes; gcodes();
 while (my $file = shift@embl){
 	open IN, "<$file";
 	my ($embl, $dir) = fileparse($file);
-	print "Working on file $embl located in $dir\n";
+	if($verb) { print "Working on file $embl located in $dir\n"; }
 	$file =~ s/.embl$//;
 	open DNA, "<", "$file.fsa";
 	open PROT, ">", "$file.prot";
