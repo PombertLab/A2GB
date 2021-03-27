@@ -11,7 +11,10 @@ VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	Converts the output of blastn/tblastn searches (outfmt 6) to GFF format for loading into Apollo
 
-USAGE		${name} -b *.tblastn -p product_list.tsv -t tblastn
+USAGE		${name} \\
+		  -b *.tblastn \\
+		  -p product_list.tsv \\
+		  -t tblastn
 
 -b (--blast)	BLAST output file(s) in outfmt 6 format
 -p (--products)	Tab-delimited list of queries and their products (can be generated with getProducts.pl)
