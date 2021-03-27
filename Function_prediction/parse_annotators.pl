@@ -2,25 +2,30 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
 my $version = '1.1a';
+my $updated = '27/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
-
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	This script parses the output of annotators to help assign putative functions to predicted proteins.
 		Annotators are:
 		- BLASTP/DIAMOND searches against SwissProt/trEMBL databases
 		- InterProScan 5 searches
 		- BLASTP/DIAMOND searches against reference organism (optional)
 
-USAGE	parse_annotators.pl -q BEOM2.proteins.queries \\
-		-o BEOM2.annotations \\
-		-sl sprot.list -sb BEOM2.sprot.blastp.6 \\	## Searches against SwissProt
-		-tl trembl.list -tb BEOM2.trembl.blastp.6 \\	## Searches against trEMBL
-		-ip BEOM2.interpro.tsv \\			## InterProScan5 searches
-		-rl reference.list -rb reference.blastp.6	## Searches against reference organism (Optional)
+USAGE	${name} \\
+		  -q BEOM2.proteins.queries \\
+		  -o BEOM2.annotations \\
+		  -sl sprot.list \\
+		  -sb BEOM2.sprot.blastp.6 \\
+		  -tl trembl.list \\
+		  -tb BEOM2.trembl.blastp.6 \\
+		  -ip BEOM2.interpro.tsv \\
+		  -rl reference.list \\
+		  -rb reference.blastp.6 ## Searches against reference organism (Optional)
 
 OPTIONS:
 -q	List of proteins queried against annotators
@@ -39,7 +44,7 @@ OPTIONS:
 
 NOTE: The trembl.list file is large and will eat up at least 5 Gb of RAM
 OPTIONS
-die "$usage\n" unless @ARGV;
+die "\n$usage\n" unless @ARGV;
 
 my $queries; my $output;
 my $splist; my $spblast;

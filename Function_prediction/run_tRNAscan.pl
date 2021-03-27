@@ -1,28 +1,33 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'run_tRNAscan.pl';
-my $version = '0.2';
+my $version = '0.2a';
+my $updated = '27/03/2021';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
 ## Defining options
 my $usage = <<"OPTIONS";
-
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Runs tRNAscan-SE on FASTA file(s) using Infernal
-USAGE		$name -f *.fasta -t E -d tRNA/
+
+USAGE		${name} \\
+		  -f *.fasta \\
+		  -t E \\
+		  -d tRNA/
 
 OPTIONS:
 -f (--fasta)	FASTA file(s)
 -t (--type)	tRNA type: eukaryotic (E); bacterial (B); archaeal (A) [Default: E]
--d (--dir) 	Output directory (Optional)
+-d (--dir) 	Output directory [Default: ./]
 OPTIONS
-die "$usage\n" unless @ARGV;
+die "\n$usage\n" unless @ARGV;
 
 my @fasta;
 my $type = 'E';
-my $odir;
+my $odir = './';
 GetOptions(
 	'f|fasta=s@{1,}' => \@fasta,
 	't|type=s' => \$type,
@@ -32,13 +37,18 @@ GetOptions(
 $type = uc($type); ## Making sure that the letters are uppercase
 unless ($type =~ /[ABE]/){die "Unrecognized tRNA type: $type. Please use A, B or E...\n";}
 
-## Checking output directory
-unless (defined $odir){$odir = './';}
-unless (-d $odir){system "mkdir $odir";}
+## Creating output directory
+unless (-d $odir){
+	mkdir ($odir,0755) or die "Can't create folder $odir: $!\n";
+}
 print "\nOutput files will be located in directory $odir\n";
 
 while (my $file = shift@fasta){
 	my ($fasta, $dir) = fileparse($file);
 	print "Working on file $fasta located in $dir\n";
-	system "tRNAscan-SE -$type $file -o ${odir}/$fasta.tRNAs -f ${odir}/$fasta.struct -m ${odir}/$fasta.stats";
+	system "tRNAscan-SE \\
+	   -$type $file \\
+	   -o ${odir}/$fasta.tRNAs \\
+	   -f ${odir}/$fasta.struct \\
+	   -m ${odir}/$fasta.stats";
 }

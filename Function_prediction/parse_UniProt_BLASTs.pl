@@ -1,19 +1,26 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
-my $version = '0.3';
 my $name = 'parse_UniProt_BLASTs.pl';
+my $version = '0.3a';
+my $updated = '27/03/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 ## Defining options
 my $options = <<"OPTIONS";
-NAME		$name
-VERSION		$version
+NAME		${name}
+VERSION		${version}
+UPDATED		${updated}
 SYNOPSIS	Generates a tab-delimited list of products found/not found with BLAST/DIAMOND searches
 REQUIREMENTS	BLAST/DIAMOND outfmt 6 format
 		Tab-separated accession number/product list ## Can be created with get_uniprot_products.pl
 
-USAGE		parse_UniProt_BLASTs.pl -b blast_output -e 1e-10 -q query.list -u uniprot_list -o parsed.tsv
+USAGE		${name} \\
+		  -b blast_output \\
+		  -e 1e-10 \\
+		  -q query.list \\
+		  -u uniprot_list \\
+		  -o parsed.tsv
 
 OPTIONS:
 -b (--blast)	BLAST/DIAMOND tabular output (outfmt 6)
@@ -22,7 +29,7 @@ OPTIONS:
 -u (--uniprot)	Tab-delimited list of UniProt accesssion numbers/products 
 -o (--output)	Desired output name
 OPTIONS
-die "$options\n" unless @ARGV;
+die "\n$options\n" unless @ARGV;
 
 my $blast;
 my $eval = '1e-10';
@@ -91,4 +98,5 @@ while (my $line = <QUERIES>){
 }
 my $pruntime = time - $stime;
 print "Time to parse $blast: $pruntime seconds\n\n";
-close OUT; close QUERIES;
+close OUT;
+close QUERIES;
