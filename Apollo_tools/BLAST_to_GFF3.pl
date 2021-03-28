@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-my $name = 'BLASTN_to_GFF3.pl';
+my $name = 'BLAST_to_GFF3.pl';
 my $version = '0.2';
 my $updated = '27/03/2021';
 
