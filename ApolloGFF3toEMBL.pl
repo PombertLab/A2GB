@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
-my $version = '4.1';
+my $version = '4.1a';
 my $updated = '03/27/2021';
 
 use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
@@ -125,12 +125,18 @@ my $width = length $numfiles;
 ### Parsing GFF3
 my $locus_id = 10;
 my $contig_number = 0;
+
 my $protein;
 my $mRNA;
+my $locus_tag;
+my $exon_counter;
+my $intron_counter;
+
 my %feature;
 my $list;
 my $gff;
 my $dir;
+
 while (my $file = shift@gff3){
 
 	($gff, $dir) = fileparse($file);
@@ -157,7 +163,7 @@ while (my $file = shift@gff3){
 	if ($file =~ /(\d+)$/){ $contig_number = $1; }
 	
 	### Creating a single DNA string for protein translation
-	my $DNAseq= undef;
+	my $DNAseq = undef;
 	while (my $dna = <DNA>){
 		chomp $dna;
 		if ($dna =~ /^>/){ next; }
@@ -217,7 +223,6 @@ while (my $file = shift@gff3){
 	}
 	
 	### Working on the gene list. Using the @todo array so that we don't have to sort the hash ouput ###
-	my $locus_tag;
 	my @sorted_todo = sort {$a <=> $b} @todo;
 	while ($list = shift@sorted_todo){
 		if ($strands{$list} eq '+'){ ## Looking for positive strandedness
@@ -250,20 +255,14 @@ while (my $file = shift@gff3){
 				print EMBL 'FT                   /locus_tag="'."$locus_tag".'"'."\n";
 				colour_features($feature{$list});
 
-				if ($feature{$list} eq 'CDS'){ print PROT ">$locus_tag\n"; }
-				print MRNA ">$locus_tag\n";
 				my $start = (($exon{$list}[0]));
 				my $stop = (($exon{$list}[1]));
-				$protein = undef;
 
-				$mRNA =  substr($DNAsequence, $start-1, (($stop-$start)+1));
+				$mRNA = substr($DNAsequence, $start-1, (($stop-$start)+1));
 				sequence($mRNA, \*MRNA);
 
 				if ($feature{$list} eq 'CDS'){
-					for(my $i = 0; $i < (length($mRNA) - 5); $i += 3){ ## -2 if stop codon (*) desired, -5 if not
-						my $codon = substr($mRNA, $i, 3);
-						$protein .=  $gcodes{$gc}{$codon};
-					}
+					translate($mRNA);
 					sequence($protein, \*PROT);
 				}
 			}
@@ -271,42 +270,38 @@ while (my $file = shift@gff3){
 
 				## Creating exon features + saving introns to .exons files
 				if ($exon_feature){
-					my $exon_count = 0;
+					$exon_counter = 0;
 					for (my $i = 0; $i < $#{$exon{$list}}; $i += 2){
-						$exon_count++;
+						$exon_counter++;
 						my $exon_5_prime = $exon{$list}[$i];
 						my $exon_3_prime = $exon{$list}[$i + 1];
 						print EMBL 'FT   '.'exon'.'             '."$exon_5_prime..$exon_3_prime\n";
-						print EMBL 'FT                   /note="'."Exon # $exon_count from $locus_tag".'"'."\n";
+						print EMBL 'FT                   /note="'."Exon # $exon_counter from $locus_tag".'"'."\n";
 						colour_features('exon');
 
 						my $exon = substr($DNAsequence, $exon_5_prime - 1, ($exon_3_prime - $exon_5_prime + 1));
-						print EXON ">${locus_tag}_exon_$exon_count\n";
 						sequence($exon, \*EXON);
 					}
 				}
 
 				## Creating intron features + saving introns to .introns files
 				if ($intron_feature){
-					my $intron_count = 0;
+					$intron_counter = 0;
 					for (my $i = 1; $i < $#{$exon{$list}}; $i += 2){
 						my $intron_5_prime = $exon{$list}[$i] + 1;
 						my $intron_3_prime = $exon{$list}[$i + 1] - 1;
-						$intron_count++;
+						$intron_counter++;
 						print EMBL 'FT   '.'intron'.'           '."$intron_5_prime..$intron_3_prime\n";
-						print EMBL 'FT                   /note="'."Intron # $intron_count from $locus_tag".'"'."\n";
+						print EMBL 'FT                   /note="'."Intron # $intron_counter from $locus_tag".'"'."\n";
 						colour_features('intron');
 
 						my $intron = substr($DNAsequence, $intron_5_prime - 1, ($intron_3_prime - $intron_5_prime + 1));
-						print INTRON ">${locus_tag}_intron_$intron_count\n";
 						sequence($intron, \*INTRON);
 					}
 				}
 
 				## Creating EMBL features
 				print EMBL 'FT   '."$feature{$list}".'             '."join($exon{$list}[0]..";
-				if ($feature{$list} eq 'CDS'){ print PROT ">$locus_tag\n"; }
-				print MRNA ">$locus_tag\n";
 
 				foreach my $count (1..$num){
 					if ($count % 2){ # Working on odd numbers
@@ -323,7 +318,6 @@ while (my $file = shift@gff3){
 				colour_features($feature{$list});
 
 				$mRNA = undef;
-				$protein = undef;
 				my $tmp1 = undef;
 				my $tmp2 = undef;
 				foreach my $subs (0..$end){
@@ -338,10 +332,7 @@ while (my $file = shift@gff3){
 				sequence($mRNA, \*MRNA);
 
 				if ($feature{$list} eq 'CDS'){
-					for(my $i = 0; $i < (length($mRNA) - 5); $i += 3){ ## -2 if stop codon (*) desired, -5 if not
-						my $codon = substr($mRNA, $i, 3);
-						$protein .= $gcodes{$gc}{$codon};
-					}
+					translate($mRNA);
 					sequence($protein, \*PROT);
 				}
 			}
@@ -377,22 +368,15 @@ while (my $file = shift@gff3){
 				
 				colour_features($feature{$list});
 
-				if ($feature{$list} eq 'CDS'){ print PROT ">$locus_tag\n"; }
-				print MRNA ">$locus_tag\n";
-				my $start = (($reversed[0]));
-				my $stop = (($reversed[1]));
-				$protein = undef;
+				my $start = $reversed[0];
+				my $stop = $reversed[1];
 
-				my $revmRNA =  substr($DNAsequence, $start-1, (($stop-$start)+1));
-				$mRNA = reverse($revmRNA);
-				$mRNA =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
+				$mRNA = substr($DNAsequence, $start-1, (($stop-$start)+1));
+				reverse_complement($mRNA);
 				sequence($mRNA, \*MRNA);
 
 				if ($feature{$list} eq 'CDS'){
-					for(my $i = 0; $i < (length($mRNA) - 5); $i += 3){ ## -2 if stop codon (*) desired, -5 if not
-						my $codon = substr($mRNA, $i, 3);
-						$protein .= $gcodes{$gc}{$codon};
-					}
+					translate($mRNA);
 					sequence($protein, \*PROT);
 				}
 			}
@@ -400,48 +384,42 @@ while (my $file = shift@gff3){
 
 				## Creating exon features + saving introns to .exons files
 				if ($exon_feature){
-					my $exon_count = (scalar(@reversed)) / 2;
+					$exon_counter = (scalar(@reversed)) / 2;
 					for (my $i = 0; $i < $#reversed; $i += 2){
 						my $exon_5_prime = $reversed[$i + 1];
 						my $exon_3_prime = $reversed[$i];
 						print EMBL 'FT   '.'exon'.'            complement('."$exon_3_prime..$exon_5_prime".')'."\n";
-						print EMBL 'FT                   /note="'."Exon # $exon_count from $locus_tag".'"'."\n";
+						print EMBL 'FT                   /note="'."Exon # $exon_counter from $locus_tag".'"'."\n";
 						colour_features('exon');
 
-						my $revExon =  substr($DNAsequence, $exon_3_prime - 1, ($exon_5_prime - $exon_3_prime + 1));
-						my $exon = reverse($revExon);
-						$exon =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
-						print EXON ">${locus_tag}_exon_$exon_count\n";
+						my $exon =  substr($DNAsequence, $exon_3_prime - 1, ($exon_5_prime - $exon_3_prime + 1));
+						reverse_complement($exon);
 						sequence($exon, \*EXON);
 
-						$exon_count--;
+						$exon_counter--;
 					}
 				}
 
 				## Creating intron features + saving introns to .introns files
 				if ($intron_feature){
-					my $intron_count = ((scalar(@reversed))/2) - 1;
+					$intron_counter = ((scalar(@reversed))/2) - 1;
 					for (my $i = 1; $i < $#reversed; $i += 2){
 						my $intron_5_prime = $reversed[$i] + 1;
 						my $intron_3_prime = $reversed[$i + 1] - 1;
 						print EMBL 'FT   '.'intron'.'          complement('."$intron_3_prime..$intron_5_prime".')'."\n";
-						print EMBL 'FT                   /note="'."Intron # $intron_count from $locus_tag".'"'."\n";
+						print EMBL 'FT                   /note="'."Intron # $intron_counter from $locus_tag".'"'."\n";
 						colour_features('intron');
 
-						my $revIntron =  substr($DNAsequence, $intron_5_prime - 1, ($intron_3_prime - $intron_5_prime + 1));
-						my $intron = reverse($revIntron);
-						$intron =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
-						print INTRON ">${locus_tag}_intron_$intron_count\n";
+						my $intron =  substr($DNAsequence, $intron_5_prime - 1, ($intron_3_prime - $intron_5_prime + 1));
+						reverse_complement($intron);
 						sequence($intron, \*INTRON);
 
-						$intron_count--;
+						$intron_counter--;
 					}
 				}
 
 				## Creating EMBL features
 				print EMBL 'FT   '."$feature{$list}".'             complement('."join($reversed[0]..";
-				if ($feature{$list} eq 'CDS'){ print PROT ">$locus_tag\n"; }
-				print MRNA ">$locus_tag\n";
 
 				foreach my $count (1..$num){
 					if ($count % 2){ # Working on odd numbers
@@ -456,29 +434,24 @@ while (my $file = shift@gff3){
 
 				colour_features($feature{$list});
 
-				my $revmRNA = undef;
-				$protein = undef;
+				$mRNA = undef;
 				my $tmp1 = undef;
 				my $tmp2 = undef;
 				foreach my $subs (0..$end){
 					if ($subs % 2){# Working on odd numbers
 						$tmp2 = ($reversed[$subs]-1);
-						$revmRNA .= substr($DNAsequence, $tmp1, (($tmp2-$tmp1)+1));
+						$mRNA .= substr($DNAsequence, $tmp1, (($tmp2-$tmp1)+1));
 					}
 					else{	# Working on even numbers
 						$tmp1 = ($reversed[$subs]-1);
 					}
 				}
 
-				my $mRNA = reverse($revmRNA);
-				$mRNA =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
+				reverse_complement($mRNA);
 				sequence($mRNA, \*MRNA);
 
 				if ($feature{$list} eq 'CDS'){
-					for(my $i = 0; $i < (length($mRNA) - 5); $i += 3){ ## -2 if stop codon (*) desired, -5 if not
-						my $codon = substr($mRNA, $i, 3);
-						$protein .= $gcodes{$gc}{$codon};
-					}
+					translate($mRNA);
 					sequence($protein, \*PROT);
 				}
 			}
@@ -507,11 +480,43 @@ close EMBL;
 system "rm ${dir}/*.tmp1";
 
 ## Subroutines
+sub reverse_complement{
+	$_[0] = reverse($_[0]);
+	$_[0] =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
+}
+
+sub translate{
+	my $seq = $_[0];
+	$protein = undef;
+	for(my $i = 0; $i < (length($seq) - 5); $i += 3){ ## -2 if stop codon (*) desired, -5 if not
+		my $codon = substr($seq, $i, 3);
+		$protein .=  $gcodes{$gc}{$codon};
+	}
+}
+
 sub sequence{
-	my ($seq, $fh) = @_;
-	my @SEQUENCE = unpack ("(A60)*", $seq); 
-	while (my $tmp = shift@SEQUENCE){
-		print $fh "$tmp\n";
+	my ($sequence, $fh) = @_;
+	my $length = length $sequence;
+	my $header = $locus_tag;
+	
+	## Changing units if proteins
+	my $unit;
+	if ($fh eq \*PROT) { $unit = 'aa'; }
+	else { $unit = 'bp' ;}
+
+	## Changing header if exon or intron
+	if ($fh eq \*EXON) {
+		$header = "$locus_tag".'_exon_#'."$exon_counter";
+	}
+	if ($fh eq \*INTRON) {
+		$header = "$locus_tag".'_intron_#'."$intron_counter";
+	}
+
+	print $fh ">$header \[length=$length $unit\]\n";
+	
+	my @SEQUENCE = unpack ("(A60)*", $sequence);
+	while (my $seq = shift@SEQUENCE){
+		print $fh "$seq\n";
 	}
 }
 
