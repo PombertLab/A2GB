@@ -74,7 +74,7 @@ my $locus_tag;
 my $locus;
 my $protein;
 my $mRNA;
-my %codon_start;
+my %codon_start; ## To keep track of phasing issues with CDS features
 my $exon_counter; ## To keep track of exon numbers
 my $intron_counter; ## To keep track of intron numbers
 
@@ -108,12 +108,12 @@ while (my $file = shift@embl){
 	while (my $dna = <DNA>){
 		chomp $dna;
 		if ($dna =~ /^>/){ next; }
-		else{ $DNAseq .= $dna; }
+		else { $DNAseq .= $dna; }
 	}
 	my $DNAsequence = uc($DNAseq); ## Changing to upper case to fit with the translation hash
 	my $contig_length = length($DNAsequence); ## Calculating the contig size
 	
-	### Create hashes to adjust for codon_start features 
+	### Creating hashes to adjust for codon_start features 
 	my %coord = ();
 	my @feat = ();
 	my $feature;
@@ -137,6 +137,7 @@ while (my $file = shift@embl){
 		}
 	}
 	
+	### Working on features
 	while ($locus = shift@feat){
 
 		chomp $locus;
@@ -151,8 +152,8 @@ while (my $file = shift@embl){
 			if ($line =~ /^FT\s+($regex)\s+(\d+)..(\d+)/){
 
 				my $type = $1;
-				my $start = $2; $start--;
-				my $stop = $3; $stop--;
+				my $start = $2; $start--; ## -1; strings begin at 0
+				my $stop = $3; $stop--; ## -1; strings begin at 0
 				my $length = ($stop - $start + 1);
 
 				### Creating mRNA sequence
@@ -179,8 +180,8 @@ while (my $file = shift@embl){
 					if ($segment =~ /(\d+)..(\d+)/){
 						my $start = $1;
 						my $stop = $2;
-						push (@coordinates, --$start);
-						push (@coordinates, --$stop);
+						push (@coordinates, --$start); ## -1; strings begin at 0
+						push (@coordinates, --$stop); ## -1; strings begin at 0
 					}
 				}
 
@@ -227,8 +228,8 @@ while (my $file = shift@embl){
 			elsif ($line =~ /^FT\s+($regex)\s+complement\((\d+)..(\d+)\)/){
 
 				my $type = $1;
-				my $start = $3; $start--;
-				my $stop = $2; $stop--;
+				my $start = $3; $start--; ## -1; strings begin at 0
+				my $stop = $2; $stop--; ## -1; strings begin at 0
 
 				### Creating mRNA sequence
 				my $mRNA =  substr($DNAsequence, ($stop), ($start-$stop+1));
@@ -255,8 +256,8 @@ while (my $file = shift@embl){
 					if ($segment =~ /(\d+)..(\d+)/){
 						my $strt = $1;
 						my $stp = $2;
-						push (@coordinates, --$strt);
-						push (@coordinates, --$stp);
+						push (@coordinates, --$strt); ## -1; strings begin at 0
+						push (@coordinates, --$stp); ## -1; strings begin at 0
 					}
 				}
 
