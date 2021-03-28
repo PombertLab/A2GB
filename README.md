@@ -285,8 +285,8 @@ Options for [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/E
 ```
 -e (--embl)	EMBL files
 -o (--outdir)	Output directory [Default: ./]
--x (--exon)	Create fasta files of exons (.exons) fo genes with introns
--i (--intron)	Create fasta files of exons (.introns) of genes with introns
+-x (--exon)	Create fasta files of exons (.exons) for genes with introns
+-i (--intron)	Create fasta files of exons (.introns) for genes with introns
 -v (--verbose)	Add Verbosity
 -c (--gcode)	NCBI genetic code [Default: 1]
 		1  - The Standard Code
