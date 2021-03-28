@@ -438,11 +438,11 @@ while (my $file = shift@gff3){
 				my $tmp1 = undef;
 				my $tmp2 = undef;
 				foreach my $subs (0..$end){
-					if ($subs % 2){# Working on odd numbers
+					if ($subs % 2){ # Working on odd numbers
 						$tmp2 = ($reversed[$subs]-1);
 						$mRNA .= substr($DNAsequence, $tmp1, (($tmp2-$tmp1)+1));
 					}
-					else{	# Working on even numbers
+					else{ # Working on even numbers
 						$tmp1 = ($reversed[$subs]-1);
 					}
 				}
@@ -467,10 +467,10 @@ while (my $file = shift@gff3){
 
 	### Adding formatted sequence to the EMBL file
 	open SEQ, "<", "$file.tmp1" or die "Can't read file $file.tmp1: $!\n";
-		while (my $read = <SEQ>){
-			if ($read =~ /^AC|ID|XX|DE|FH/){ next; }
-			else{ print EMBL "$read" };
-		}
+	while (my $read = <SEQ>){
+		if ($read =~ /^AC|ID|XX|DE|FH/){ next; }
+		else{ print EMBL "$read" };
+	}
 	close SEQ;
 }
 
