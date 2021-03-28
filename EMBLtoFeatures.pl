@@ -109,7 +109,7 @@ while (my $file = shift@embl){
 	while (my $dna = <DNA>){
 		chomp $dna;
 		if ($dna =~ /^>/){ next; }
-		else{$DNAseq.= $dna;}
+		else{ $DNAseq .= $dna; }
 	}
 	my $DNAsequence = uc($DNAseq); ## Changing to upper case to fit with the translation hash
 	my $contig_length = length($DNAsequence); ## Calculating the contig size
@@ -124,16 +124,16 @@ while (my $file = shift@embl){
 
 	while (my $line = <IN>){
 		chomp $line;
-		if ($line =~ /^FT   gene/){ $feature = 'gene'; }
-		elsif (($line =~ /FT                   \/locus_tag="(.*)\"/) && ($feature eq 'gene')){
+		if ($line =~ /^FT\s+gene/){ $feature = 'gene'; }
+		elsif (($line =~ /^FT\s+\/locus_tag="(.*)\"/) && ($feature eq 'gene')){
 			$locus_tag = $1;
 			push(@feat, $locus_tag);
 		}
-		elsif ($line =~ /FT   ($regex)/){
+		elsif ($line =~ /^FT\s+($regex)/){
 			$feature = '$1';
 			$coord{$locus_tag} = $line;
 		}
-		elsif ($line =~ /FT\s+\/codon_start=(\d+)/){
+		elsif ($line =~ /^FT\s+\/codon_start=(\d+)/){
 			$codon_start{$locus_tag} = $1;
 		}
 	}
@@ -149,7 +149,7 @@ while (my $file = shift@embl){
 			$intron_counter = 0;
 
 			### Forward, single exon
-			if ($line =~ /FT   ($regex)\s+(\d+)..(\d+)/){
+			if ($line =~ /^FT\s+($regex)\s+(\d+)..(\d+)/){
 
 				my $type = $1;
 				my $start = $2; $start--;
@@ -169,7 +169,7 @@ while (my $file = shift@embl){
 			}
 
 			### Forward, multiple exons
-			elsif ($line =~ /FT   ($regex)\s+join\((.*)\)/){
+			elsif ($line =~ /^FT\s+($regex)\s+join\((.*)\)/){
 
 				my $type = $1;
 				my @array = split(',', $2);
@@ -225,7 +225,7 @@ while (my $file = shift@embl){
 			}
 
 			### Reverse, single exon
-			elsif ($line =~ /FT   ($regex)\s+complement\((\d+)..(\d+)\)/){
+			elsif ($line =~ /^FT\s+($regex)\s+complement\((\d+)..(\d+)\)/){
 
 				my $type = $1;
 				my $start = $3; $start--;
@@ -245,7 +245,7 @@ while (my $file = shift@embl){
 			}
 
 			### Reverse, mutiple exons
-			elsif ($line =~ /FT   ($regex)\s+complement\(join\((.*)/){
+			elsif ($line =~ /^FT\s+($regex)\s+complement\(join\((.*)/){
 
 				my $type = $1;
 				my @array = split(',',$2);
