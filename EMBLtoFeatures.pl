@@ -4,7 +4,7 @@ my $name = 'EMBLtoFeatures.pl';
 my $version = '2.0';
 my $updated = '03/28/21';
 
-use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
+use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
 ### Defining options
 my $usage = <<"OPTIONS";
@@ -13,7 +13,6 @@ VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	Writes features to separate FASTA files with the extensions .prot, .RNA, exons, etc.
 
-REQUIREMENTS	BioPerl's Bio::SeqIO module
 NOTE		The EMBL (*.embl) and corresponding FASTA (*.fsa) files must be in the same folder
 
 USAGE		${name} \\
