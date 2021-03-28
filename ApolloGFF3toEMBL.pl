@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
 my $version = '4.1b';
-my $updated = '03/27/2021';
+my $updated = '03/28/2021';
 
 use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
 
@@ -84,7 +84,7 @@ if ($list_RGB){
 		my $formatted_color = (sprintf "%-25s", $color);
 		print "${formatted_color}$RGB_colours{$color}\n";
 	}
-	print "\nTo see RGB colors: https://www.rapidtables.com/web/color/RGB_Color.html\n\n";
+	print "\nFor a visual list of RGB colors, see: https://www.rapidtables.com/web/color/RGB_Color.html\n\n";
 exit;
 }
 
@@ -144,7 +144,7 @@ print FEAT '#Locus_tag'."\t"."location"."\t"."Type"."\t"."Strand"."\t"."Start"."
 my $numfiles = scalar(@gff3);
 my $width = length $numfiles;
 
-### Parsing GFF3
+### Declaring variables
 my $locus_id = 10;
 my $contig_number = 0;
 
@@ -159,6 +159,7 @@ my $list;
 my $gff;
 my $dir;
 
+### Parsing GFF3
 while (my $file = shift@gff3){
 
 	($gff, $dir) = fileparse($file);
