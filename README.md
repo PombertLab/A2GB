@@ -256,7 +256,7 @@ Checking for missing start methionines in chromosome_03.prot located in /media/F
 OK: All proteins start with methionines...
 ```
 
-If present, internal stop codons and missing start methionines can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the subsequent steps performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), then the .prot files regenerated with [EMBLtoPROT.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoPROT.pl):
+If present, internal stop codons and missing start methionines can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the subsequent steps performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), then the .prot files regenerated with [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl):
 
 ```Bash
 art $ANNOT/splitGFF3/chromosome_01.embl
@@ -264,9 +264,9 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis_2.png" alt="Fixing an internal stop codon with Artemis" width="1000"></p>
 
-We can check if the issues have been fixed by regenerating the .prot files with [EMBLtoPROT.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoPROT.pl), then by running [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again:
+We can check if the issues have been fixed by regenerating the .prot files with [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl), then by running [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again:
 ```Bash
-EMBLtoPROT.pl \
+EMBLtoFeatures.pl \
    -e $ANNOT/splitGFF3/*.embl \
    -c 1
 
@@ -279,6 +279,22 @@ If fixed, the error message(s) should be gone:
 ```
 Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
 OK: No internal stop codon found
+```
+
+Options for [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl) are:
+```
+-e (--embl)	EMBL files
+-o (--outdir)	Output directory [Default: ./]
+-x (--exon)	Create fasta files of exons (.exons) fo genes with introns
+-i (--intron)	Create fasta files of exons (.introns) of genes with introns
+-v (--verbose)	Add Verbosity
+-c (--gcode)	NCBI genetic code [Default: 1]
+		1  - The Standard Code
+		2  - The Vertebrate Mitochondrial Code
+		3  - The Yeast Mitochondrial Code
+		4  - The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code
+		11 - The Bacterial, Archaeal and Plant Plastid Code
+		NOTE - For complete list; see https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
 ```
 
 #### Creating tab-delimited lists of RNA locus tags and their products
