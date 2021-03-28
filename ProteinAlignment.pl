@@ -3,7 +3,7 @@
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $name = 'ProteinAlignmentV2.pl';
-my $version = '0.2a';
+my $version = '0.2b';
 my $updated = '03/27/2021';
 my $usage = <<"EXIT";
 NAME		${name}
@@ -27,7 +27,7 @@ OPTIONS
 -c | --culling_limit	Number of results to return [default = 5]
 -e | --evalue			Cutoff evalue for results [default = 1e-10]
 -o | --output			Name of output file [default = aligned.log]
--q | --quiet			Prevent output to STDOUT as well as to output file [default = on]
+-q | --quiet			Stop output to STDOUT [default = off]
 EXIT
 die("\n\n$usage\n\n") unless(@ARGV);
 
@@ -38,13 +38,15 @@ my $cul_lim = 5;
 my $eval = '1e-10';
 my $out = 'aligned.log';
 my $db = 'nr';
+my $quiet;
 GetOptions(
 	'q|query=s@{1,}' => \@query,
 	'i|taxids=s' => \$taxid,
 	't|threads=s' => \$threads,
 	'c|culling_limit=s' => \$cul_lim,
 	'e|evalue=s' => \$eval,
-	'o|output=s' => \$out
+	'o|output=s' => \$out,
+	'q|quiet' => \$quiet
 );
 die("[E] Query required to run blast") unless(@query);
 
@@ -76,6 +78,8 @@ else{
 unless(-d "align_files"){
 	mkdir("align_files",0755);
 }
+
+open OUT,">","align_files/$out";
 
 ## Iterate through all protein files
 foreach my $file (@query){
@@ -235,9 +239,13 @@ foreach my $file (@query){
 	## Iterate through all the blastp results, sorted from best score to worst score
 	foreach $accession (sort{$match_data{$b}[4] <=> $match_data{$a}[4]} keys %match_data){
 		my @data = @{$match_data{$accession}};
-		print("\n\n");
+		unless($quiet){
+			print("\n\n");
+		}
 		Align(\@data,$qry_seq,$file);
-		print("\n\n");
+		unless($quiet){
+			print("\n\n");
+		}
 	}
 
 }
@@ -390,21 +398,35 @@ sub Align{
 	## Create a line buffer for a prettier print
 	my $buffer = "-" x 120;
 	## Print match data
-	print("$access\t$p_a\t$o_n\n");
+	print OUT ("$access\t$p_a\t$o_n\n");
+	unless($quiet){
+		print("$access\t$p_a\t$o_n\n");
+	}
 	for(my $i = 0;$i < scalar(@q_seq); $i++){
 		my $locale = ($i*100)+1;
 		my $location = sprintf("%0${padding}d",$locale);
 		my $q_seq_line = $q_seq[$i];
 		my $r_seq_line = $r_seq[$i];
 		my $a_seq_line = $align[$i];
-		print("$buffer\n");
-		print("$location\n");
-		print("$buffer\n");
-		print("qry\t$q_seq_line\n");
-		print("   \t$a_seq_line\n");
-		print("ref\t$r_seq_line\n");
+		print OUT ("$buffer\n");
+		print OUT ("$location\n");
+		print OUT ("$buffer\n");
+		print OUT ("qry\t$q_seq_line\n");
+		print OUT ("   \t$a_seq_line\n");
+		print OUT ("ref\t$r_seq_line\n");
+		unless($quiet){
+			print("$buffer\n");
+			print("$location\n");
+			print("$buffer\n");
+			print("qry\t$q_seq_line\n");
+			print("   \t$a_seq_line\n");
+			print("ref\t$r_seq_line\n");
+		}
 	}
-	print("$buffer\n");
+	print OUT ("$buffer\n");
+	unless($quiet){
+		print("$buffer\n");
+	}
 
 }
 
