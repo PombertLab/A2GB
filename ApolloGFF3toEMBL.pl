@@ -286,7 +286,7 @@ while (my $file = shift@gff3){
 				my $start = (($exon{$list}[0]));
 				my $stop = (($exon{$list}[1]));
 
-				$mRNA = substr($DNAsequence, $start-1, (($stop-$start)+1));
+				$mRNA = substr($DNAsequence, $start-1, $stop - $start + 1);
 				sequence($mRNA, \*MRNA);
 
 				if ($feature{$list} eq 'CDS'){
@@ -345,11 +345,11 @@ while (my $file = shift@gff3){
 				my $tmp2 = undef;
 				foreach my $subs (0..$end){
 					if ($subs % 2){ # Working on odd numbers
-						$tmp2 = ($exon{$list}[$subs]-1);
-						$mRNA .= substr($DNAsequence, $tmp1, (($tmp2-$tmp1)+1));
+						$tmp2 = $exon{$list}[$subs] - 1;
+						$mRNA .= substr($DNAsequence, $tmp1, $tmp2 - $tmp1 + 1);
 					}
 					else{ # Working on even numbers
-						$tmp1 = ($exon{$list}[$subs]-1);
+						$tmp1 = $exon{$list}[$subs] - 1;
 					}
 				}
 				sequence($mRNA, \*MRNA);
@@ -380,8 +380,8 @@ while (my $file = shift@gff3){
 				
 			### Working on CDS features
 			my $cds_count = scalar(@{$exon{$list}});
-			my $end = ($cds_count - 1);
-			my $num = ($cds_count - 2);
+			my $end = $cds_count - 1;
+			my $num = $cds_count - 2;
 			my @reversed = reverse(@{$exon{$list}}); ## Reversing the list of exons
 			my $stopcodon = $reversed[$end];
 			
@@ -394,7 +394,7 @@ while (my $file = shift@gff3){
 				my $start = $reversed[0];
 				my $stop = $reversed[1];
 
-				$mRNA = substr($DNAsequence, $start-1, (($stop-$start)+1));
+				$mRNA = substr($DNAsequence, $start - 1, $stop - $start + 1);
 				reverse_complement($mRNA);
 				sequence($mRNA, \*MRNA);
 
@@ -415,7 +415,7 @@ while (my $file = shift@gff3){
 						print EMBL 'FT                   /note="'."Exon # $exon_counter from $locus_tag".'"'."\n";
 						colour_features('exon');
 
-						my $exon =  substr($DNAsequence, $exon_3_prime - 1, ($exon_5_prime - $exon_3_prime + 1));
+						my $exon =  substr($DNAsequence, $exon_3_prime - 1, $exon_5_prime - $exon_3_prime + 1);
 						reverse_complement($exon);
 						sequence($exon, \*EXON);
 
@@ -433,7 +433,7 @@ while (my $file = shift@gff3){
 						print EMBL 'FT                   /note="'."Intron # $intron_counter from $locus_tag".'"'."\n";
 						colour_features('intron');
 
-						my $intron =  substr($DNAsequence, $intron_5_prime - 1, ($intron_3_prime - $intron_5_prime + 1));
+						my $intron =  substr($DNAsequence, $intron_5_prime - 1, $intron_3_prime - $intron_5_prime + 1);
 						reverse_complement($intron);
 						sequence($intron, \*INTRON);
 
@@ -462,11 +462,11 @@ while (my $file = shift@gff3){
 				my $tmp2 = undef;
 				foreach my $subs (0..$end){
 					if ($subs % 2){ # Working on odd numbers
-						$tmp2 = ($reversed[$subs]-1);
-						$mRNA .= substr($DNAsequence, $tmp1, (($tmp2-$tmp1)+1));
+						$tmp2 = $reversed[$subs] - 1;
+						$mRNA .= substr($DNAsequence, $tmp1, $tmp2 - $tmp1 + 1);
 					}
 					else{ # Working on even numbers
-						$tmp1 = ($reversed[$subs]-1);
+						$tmp1 = $reversed[$subs] - 1;
 					}
 				}
 
