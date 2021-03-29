@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
-my $version = '4.1b';
+my $version = '4.1c';
 my $updated = '03/28/2021';
 
 use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
@@ -23,7 +23,7 @@ USAGE		${name} \\
 		  -o OUTDIR \\
 		  -f features.list \\
 		  -z 5 \\
-		  -e \\
+		  -x \\
 		  -i \\
 		  -r 'rRNA:deep pink' 'tRNA:blue violet' \\
 		  -c 1
@@ -34,7 +34,7 @@ OPTIONS:
 -o (--outdir)	Output directory [Default: ./]
 -f (--features)	Generate a tab-delimited list of features [Default: features.list]
 -z (--zeroes)	Number of padding zeroes for locus tags [Default: 5]
--e (--exon)	Create exon features for genes with introns
+-x (--exon)	Create exon features for genes with introns
 -i (--intron)	Create intron features
 -r (--rgb)	Change default colors of EMBL features for Artemis
 -l (--lcolors)	Display a list of possible RGB colors
@@ -64,7 +64,7 @@ GetOptions(
 	'o|outdir=s' => \$outdir,
 	'f|features=s' => \$featlist,
 	'z|zeroes=i' => \$zeroes,
-	'e|exon' => \$exon_feature,
+	'x|exon' => \$exon_feature,
 	'i|intron' => \$intron_feature,
 	'r|rgb=s@{1,}' => \@RGB,
 	'l|lcolors' => \$list_RGB,
@@ -92,8 +92,12 @@ exit;
 my %feature_colours = (
 	'gene' => 'white',
 	'CDS' => 'cyan',
-	'tRNA' => 'pale green',
 	'rRNA' => 'orange', ## Artemis defaults to white, which is hard to see next to gene features
+	'tRNA' => 'pale green',
+	'tmRNA' => 'lime',
+	'ncRNA' => 'blue violet', ## for visibility
+	'snRNA' => 'deep pink', ## for visibility
+	'snoRNA' => 'hot pink', ## for visibility
 	'exon' => 'yellow',
 	'intron' => 'dark gray' ## lighter gray, to be able to read the bases underneath the features
 );

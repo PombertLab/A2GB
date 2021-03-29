@@ -153,7 +153,7 @@ Options for [ApolloGFF3toEMBL.pl](https://github.com/PombertLab/A2GB/blob/master
 -o (--outdir)	Output directory [Default: ./]
 -f (--features)	Generate a tab-delimited list of features [Default: features.list]
 -z (--zeroes)	Number of padding zeroes for locus tags [Default: 5]
--e (--exon)	Create exon features for genes with introns
+-x (--exon)	Create exon features for genes with introns
 -i (--intron)	Create intron features
 -r (--rgb)	Change default colors of EMBL features for Artemis
 -l (--lcolors)	Display a list of possible RGB colors
