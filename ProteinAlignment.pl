@@ -3,8 +3,8 @@
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $name = 'ProteinAlignmentV2.pl';
-my $version = '0.2b';
-my $updated = '03/27/2021';
+my $version = '0.2c';
+my $updated = '03/29/2021';
 my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
@@ -27,7 +27,7 @@ OPTIONS
 -c | --culling_limit	Number of results to return [default = 5]
 -e | --evalue			Cutoff evalue for results [default = 1e-10]
 -o | --output			Name of output file [default = aligned.log]
--q | --quiet			Stop output to STDOUT [default = off]
+-w | --whisper			Stop output to STDOUT [default = off]
 EXIT
 die("\n\n$usage\n\n") unless(@ARGV);
 
@@ -46,7 +46,7 @@ GetOptions(
 	'c|culling_limit=s' => \$cul_lim,
 	'e|evalue=s' => \$eval,
 	'o|output=s' => \$out,
-	'q|quiet' => \$quiet
+	'w|whisper' => \$quiet
 );
 die("[E] Query required to run blast") unless(@query);
 
