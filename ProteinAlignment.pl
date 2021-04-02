@@ -61,20 +61,22 @@ Substitutions();
 
 ## Check to see if taxids are passed through a file or as comma seperated list
 my $ids;
-if(-f $taxid){
-	open ID,"<","$taxid";
-	while(my $line = <ID>){
-		chomp($line);
-		if($line =~ /,/){
-			$ids .= $line;
-		}
-		else{
-			$ids .= "$line,";
+if($taxid){
+	if(-f $taxid){
+		open ID,"<","$taxid";
+		while(my $line = <ID>){
+			chomp($line);
+			if($line =~ /,/){
+				$ids .= $line;
+			}
+			else{
+				$ids .= "$line,";
+			}
 		}
 	}
-}
-elsif($taxid){
-	$ids = $taxid;
+	else{
+		$ids = $taxid;
+	}
 }
 
 ## Create output directory
@@ -107,7 +109,6 @@ foreach my $file (@query){
 					-task blastp-fast \\
 					-query $file \\
 					-subject $subject \\
-					-num_threads $threads \\
 					-culling_limit $cul_lim \\
 					-evalue $eval \\
 					-outfmt 0 \\
