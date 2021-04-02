@@ -3,8 +3,8 @@
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $name = 'ProteinAlignmentV2.pl';
-my $version = '0.2c';
-my $updated = '03/29/2021';
+my $version = '0.3';
+my $updated = '04/01/2021';
 my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
@@ -22,6 +22,7 @@ COMMAND		${name} \\
 OPTIONS
 
 -q | --query			Input faa file
+-s | --subject			Protein source
 -i | --taxids			Taxonomic IDs to refine search (comma-separated list or new-line-separated file)
 -t | --threads			Number of threads to run on [default = 8]
 -c | --culling_limit	Number of results to return [default = 5]
@@ -32,6 +33,7 @@ EXIT
 die("\n\n$usage\n\n") unless(@ARGV);
 
 my @query;
+my $subject;
 my $taxid;
 my $threads = 8;
 my $cul_lim = 5;
@@ -41,6 +43,7 @@ my $db = 'nr';
 my $quiet;
 GetOptions(
 	'q|query=s@{1,}' => \@query,
+	's|subject=s' => \$subject,
 	'i|taxids=s' => \$taxid,
 	't|threads=s' => \$threads,
 	'c|culling_limit=s' => \$cul_lim,
@@ -70,7 +73,7 @@ if(-f $taxid){
 		}
 	}
 }
-else{
+elsif($taxid){
 	$ids = $taxid;
 }
 
@@ -99,6 +102,18 @@ foreach my $file (@query){
 		);
 	}
 	## blastp without taxids
+	elsif($subject){
+		system("blastp \\
+					-task blastp-fast \\
+					-query $file \\
+					-subject $subject \\
+					-num_threads $threads \\
+					-culling_limit $cul_lim \\
+					-evalue $eval \\
+					-outfmt 0 \\
+					-out align_files/$file.blastp.0"
+			);
+	}
 	else{
 		system("blastp \\
 				-task blastp-fast \\
