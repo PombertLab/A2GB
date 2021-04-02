@@ -343,16 +343,16 @@ sub Align{
 	my $e_a_seq;
 
 	## Difference between reference start and query start
-	my $q_dif = $r_s - $q_s;
+	my $q_dif = $q_s - $r_s;
 	## Difference between query start and reference start
-	my $r_dif = $q_s - $r_s;
+	my $r_dif = $r_s - $q_s;
 
 	## If the query sequence starts before the reference, start printing at the beginning of the query
-	if($q_dif > 0){
+	if($q_dif > -1){
 		$q_dif = 0;
 	}
 	## If the reference sequence starts before the query, start printing at the beginning of the reference
-	if($r_dif > 0){
+	if($r_dif > -1){
 		$r_dif = 0;
 	}
 
@@ -391,7 +391,7 @@ sub Align{
 			$b_i++;
 		}
 		## If not in alignment, but in pure sequence, use the pure sequence value for the query
-		elsif($q_dif + $i - $q_b > -1 && $q_dif + $i - $q_b < length($q_seq) - 1){
+		elsif($q_dif + $i - $q_b > -1 && $q_dif + $i - $q_b < length($q_seq)){
 			$e_q_seq .= substr($q_seq,$q_dif+$i-$q_b,1);
 			$q_v = substr($q_seq,$q_dif+$i-$q_b,1);
 		}
