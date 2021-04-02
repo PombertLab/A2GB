@@ -159,28 +159,30 @@ foreach my $file (@query){
 		chomp($line);
 		## Get the protein accession number, the protein annotation, and the organism name
 		my $ref_seq;
-		## If the organism name moves onto a second line, grab the rest of the organism line
-		if($grab_rest_of_line){
-			if($line =~ /(.+)/){
-				@{$match_data{$accession}}[3] .= $1;
+		unless($subject){
+			## If the organism name moves onto a second line, grab the rest of the organism line
+			if($grab_rest_of_line){
+				if($line =~ /(.+)/){
+					@{$match_data{$accession}}[3] .= $1;
+				}
+				$grab_rest_of_line = undef;
 			}
-			$grab_rest_of_line = undef;
-		}
-		if($line =~ /^>(\S+)\s+(.+)\s(\[.+)/){
-			## $1 Accession number
-			## $2 Protein Annotation
-			## $3 Organism Name
-			$accession = $1;
-			if($prev_accession){
-				if($prev_accession ne $accession){
-					$count = 0;
+			if($line =~ /^>(\S+)\s+(.+)\s(\[.+)/){
+				## $1 Accession number
+				## $2 Protein Annotation
+				## $3 Organism Name
+				$accession = $1;
+				if($prev_accession){
+					if($prev_accession ne $accession){
+						$count = 0;
+					}
 				}
 			}
 			## Get the amino acid sequence for the blastp result
 			system("blastdbcmd \\
-				-entry $accession \\
-				-db $db \\
-				-out align_files/$accession.prot");
+			-entry $accession \\
+			-db $db \\
+			-out align_files/$accession.prot");
 			## Populate reference protein database with amino acid sequence
 			open P,"<","align_files/$accession.prot";
 			$ref_seq = "";
@@ -200,14 +202,57 @@ foreach my $file (@query){
 			push(@{$match_data{$accession}},$2);
 			## [3] Organism
 			push(@{$match_data{$accession}},$3);
-
 			unless($3 =~ /\[.+?\]/){
 				$grab_rest_of_line = 1;
 			}
 			else{
 				$grab_rest_of_line = undef;
 			}
-
+		}
+		else{
+			if($line =~ /^>(\S+)/){
+				## $1 Accession number
+				$accession = $1;
+				if($prev_accession){
+					if($prev_accession ne $accession){
+						$count = 0;
+					}
+				}
+			}
+			## Populate reference protein database with amino acid sequence
+			open P,"<","$subject";
+			$ref_seq = "";
+			my $print = 0;
+			while(my $line = <P>){
+				chomp($line);
+				if($line =~ /^>(\S+)/){
+					if($1 eq $accession){
+						$print = 1;
+						next;
+					}
+					$print = 0;
+					next;
+				}
+				if($print == 1){
+					$ref_seq .= $line;
+					next;
+				}
+			}
+			close P;
+			## [0] Reference Sequence
+			push(@{$match_data{$accession}},$ref_seq);
+			## [1] Accession number
+			push(@{$match_data{$accession}},$1);
+			## [2] Protein annotation
+			push(@{$match_data{$accession}},"NA");
+			## [3] Organism
+			push(@{$match_data{$accession}},"Reference");
+			unless($3 =~ /\[.+?\]/){
+				$grab_rest_of_line = 1;
+			}
+			else{
+				$grab_rest_of_line = undef;
+			}
 		}
 		if($line =~ /Score = (\d+)/){
 			## [4] Bitscore
