@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 my $name = 'BLAST_to_GFF3.pl';
-my $version = '0.2';
-my $updated = '27/03/2021';
+my $version = '0.2a';
+my $updated = '02/04/2021';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -69,7 +69,7 @@ while (my $blast = shift@blast){
 			my $qstart = $columns[6];	## query start
 			my $qend = $columns[7];		## query end
 			my $tstart = $columns[8];	## target start
-			my $tend = $columns[8];		## target end
+			my $tend = $columns[9];		## target end
 			my $evalue = $columns[10];	## evalue
 			my $bit = $columns[11];		## bit score
 			$hit++;
