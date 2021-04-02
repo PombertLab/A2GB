@@ -21,8 +21,8 @@ COMMAND		${name} \\
 
 OPTIONS
 
--q | --query			Input faa file
--s | --subject			Protein source
+-q | --query			Proteins of interest
+-s | --subject			Bank of protiens
 -i | --taxids			Taxonomic IDs to refine search (comma-separated list or new-line-separated file)
 -t | --threads			Number of threads to run on [default = 8]
 -c | --culling_limit	Number of results to return [default = 5]
@@ -177,40 +177,40 @@ foreach my $file (@query){
 						$count = 0;
 					}
 				}
-			}
-			## Get the amino acid sequence for the blastp result
-			system("blastdbcmd \\
-			-entry $accession \\
-			-db $db \\
-			-out align_files/$accession.prot");
-			## Populate reference protein database with amino acid sequence
-			open P,"<","align_files/$accession.prot";
-			$ref_seq = "";
-			while(my $line = <P>){
-				chomp($line);
-				if($line =~ /^>(\S+)/){
-					next;
+				## Get the amino acid sequence for the blastp result
+				system("blastdbcmd \\
+				-entry $accession \\
+				-db $db \\
+				-out align_files/$accession.prot");
+				## Populate reference protein database with amino acid sequence
+				open P,"<","align_files/$accession.prot";
+				$ref_seq = "";
+				while(my $line = <P>){
+					chomp($line);
+					if($line =~ /^>(\S+)/){
+						next;
+					}
+					$ref_seq .= $line;
 				}
-				$ref_seq .= $line;
-			}
-			close P;
-			## [0] Reference Sequence
-			push(@{$match_data{$accession}},$ref_seq);
-			## [1] Accession number
-			push(@{$match_data{$accession}},$1);
-			## [2] Protein annotation
-			push(@{$match_data{$accession}},$2);
-			## [3] Organism
-			push(@{$match_data{$accession}},$3);
-			unless($3 =~ /\[.+?\]/){
-				$grab_rest_of_line = 1;
-			}
-			else{
-				$grab_rest_of_line = undef;
+				close P;
+				## [0] Reference Sequence
+				push(@{$match_data{$accession}},$ref_seq);
+				## [1] Accession number
+				push(@{$match_data{$accession}},$1);
+				## [2] Protein annotation
+				push(@{$match_data{$accession}},$2);
+				## [3] Organism
+				push(@{$match_data{$accession}},$3);
+				unless($3 =~ /\[.+?\]/){
+					$grab_rest_of_line = 1;
+				}
+				else{
+					$grab_rest_of_line = undef;
+				}
 			}
 		}
 		else{
-			if($line =~ /^>(\S+)/){
+			if($line =~ /^>\s+(\S+)/){
 				## $1 Accession number
 				$accession = $1;
 				if($prev_accession){
@@ -218,40 +218,34 @@ foreach my $file (@query){
 						$count = 0;
 					}
 				}
-			}
-			## Populate reference protein database with amino acid sequence
-			open P,"<","$subject";
-			$ref_seq = "";
-			my $print = 0;
-			while(my $line = <P>){
-				chomp($line);
-				if($line =~ /^>(\S+)/){
-					if($1 eq $accession){
-						$print = 1;
+				## Populate reference protein database with amino acid sequence
+				open P,"<","$subject";
+				$ref_seq = "";
+				my $print = 0;
+				while(my $line = <P>){
+					chomp($line);
+					if($line =~ /^>(\S+)/){
+						if($1 eq $accession){
+							$print = 1;
+							next;
+						}
+						$print = 0;
 						next;
 					}
-					$print = 0;
-					next;
+					if($print == 1){
+						$ref_seq .= $line;
+						next;
+					}
 				}
-				if($print == 1){
-					$ref_seq .= $line;
-					next;
-				}
-			}
-			close P;
-			## [0] Reference Sequence
-			push(@{$match_data{$accession}},$ref_seq);
-			## [1] Accession number
-			push(@{$match_data{$accession}},$1);
-			## [2] Protein annotation
-			push(@{$match_data{$accession}},"NA");
-			## [3] Organism
-			push(@{$match_data{$accession}},"Reference");
-			unless($3 =~ /\[.+?\]/){
-				$grab_rest_of_line = 1;
-			}
-			else{
-				$grab_rest_of_line = undef;
+				close P;
+				## [0] Reference Sequence
+				push(@{$match_data{$accession}},$ref_seq);
+				## [1] Accession number
+				push(@{$match_data{$accession}},$1);
+				## [2] Protein annotation
+				push(@{$match_data{$accession}},"NA");
+				## [3] Organism
+				push(@{$match_data{$accession}},"Reference");
 			}
 		}
 		if($line =~ /Score = (\d+)/){
