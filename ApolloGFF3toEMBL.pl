@@ -297,6 +297,7 @@ while (my $file = shift@gff3){
 				if ($feature{$list} eq 'CDS'){
 					translate($mRNA);
 					sequence($protein, \*PROT);
+					unless ($gc == 1) { print EMBL 'FT                   /transl_table='."$gc"."\n"; }
 				}
 			}
 			elsif (scalar(@{$exon{$list}}) > 2){ ## Verifying if we have more than one exon
@@ -362,6 +363,7 @@ while (my $file = shift@gff3){
 				if ($feature{$list} eq 'CDS'){
 					translate($mRNA);
 					sequence($protein, \*PROT);
+					unless ($gc == 1) { print EMBL 'FT                   /transl_table='."$gc"."\n"; }
 				}
 			}
 		}
@@ -406,6 +408,7 @@ while (my $file = shift@gff3){
 				if ($feature{$list} eq 'CDS'){
 					translate($mRNA);
 					sequence($protein, \*PROT);
+					unless ($gc == 1) { print EMBL 'FT                   /transl_table='."$gc"."\n"; }
 				}
 			}
 			elsif (scalar(@reversed) > 2){ ## Verifying if we have more than one exon
@@ -481,6 +484,7 @@ while (my $file = shift@gff3){
 				if ($feature{$list} eq 'CDS'){
 					translate($mRNA);
 					sequence($protein, \*PROT);
+					unless ($gc == 1) { print EMBL 'FT                   /transl_table='."$gc"."\n"; }
 				}
 			}
 		}
