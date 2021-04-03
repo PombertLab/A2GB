@@ -678,9 +678,17 @@ EMBLtoTBL.pl \
 
 Options for [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) are:
 ```
--id		Desired institute ID [default: IITBIO]
--p		Tab-delimited list of locus_tags and their products
--embl		EMBL files to convert
+-id			Desired institute ID [default: IITBIO]
+-p (--prod)		Tab-delimited list of locus_tags and their products
+-e (--embl)		EMBL files to convert
+-c (--gcode)		NCBI genetic code [Default: 1]
+			1  - The Standard Code
+			2  - The Vertebrate Mitochondrial Code
+			3  - The Yeast Mitochondrial Code
+			4  - The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code
+			11 - The Bacterial, Archaeal and Plant Plastid Code
+			# For complete list; see https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+-o (--organelle)	Organelle mode; turns off protein_id / transcript_id
 ```
 
 Locus tag entries missing from the tab-delimited list of annotations will be reported in the $ANNOT/ERROR.log file. Missing entries will be annotated automatically as 'hypothetical protein', 'hypothetical tRNA' or as 'hypothetical RNA' for CDS, tRNA and rRNA features, respectively. If any entry is missing, the $ANNOT/ERROR.log file will look like this:

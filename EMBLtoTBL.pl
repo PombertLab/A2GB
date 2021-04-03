@@ -1,12 +1,10 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoTBL.pl';
-my $version = '1.5c';
-my $updated = '28/03/21';
+my $version = '1.6';
+my $updated = '2021-04-03';
 
 use strict; use warnings; use Bio::SeqIO; use File::Basename; use Getopt::Long qw(GetOptions);
-
-
 
 my $usage = <<"OPTIONS";
 NAME		${name}
@@ -17,28 +15,44 @@ REQUIREMENTS	BioPerl's Bio::SeqIO module
 NOTE		The EMBL (*.embl) and FASTA (*.fsa) files must be in the same folder.
 		Requires locus_tags to be defined in the EMBL files.
 		
-USAGE		${name} -id IITBIO -p product_list.txt -embl *.embl
+USAGE		${name} \\
+		  -id IITBIO \\
+		  -p product_list.txt \\
+		  -embl *.embl \\
+		  -c 1
+
 OPTIONS:
--id		Desired institute ID [default: IITBIO]
--p		Tab-delimited list of locus_tags and their products
--embl		EMBL files to convert
+-id			Desired institute ID [default: IITBIO]
+-p (--prod)		Tab-delimited list of locus_tags and their products
+-e (--embl)		EMBL files to convert
+-c (--gcode)		NCBI genetic code [Default: 1]
+			1  - The Standard Code
+			2  - The Vertebrate Mitochondrial Code
+			3  - The Yeast Mitochondrial Code
+			4  - The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code
+			11 - The Bacterial, Archaeal and Plant Plastid Code
+			# For complete list; see https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
+-o (--organelle)	Organelle mode; turns off protein_id / transcript_id
 OPTIONS
-die "$usage\n" unless @ARGV;
+die "\n$usage\n" unless @ARGV;
 
 my $instID = 'IITBIO'; ## 
 my $products; ## protein_list.txt
 my @embl;
+my $gcode = 1;
+my $organelle;
 GetOptions(
 	'id=s' => \$instID,
-	'p=s' => \$products,
-	'embl=s@{1,}' => \@embl,
+	'p|prod=s' => \$products,
+	'e|embl=s@{1,}' => \@embl,
+	'c|gcode=i' => \$gcode,
+	'o|organelle' => \$organelle
 );
 
-
-sub numSort {
-	if ($a < $b){ return -1; }
-	elsif ($a == $b){ return 0; }
-	elsif ($a > $b) { return 1; }
+## Checking for input files
+unless (@embl){
+	print "\nPlease specify at least one EMBL file with the -e option...\n\n";
+	exit;
 }
 
 ### Filling the products database
@@ -364,13 +378,22 @@ close IN;
 close TBL;
 
 ### Subroutines
+sub numSort {
+	if ($a < $b){ return -1; }
+	elsif ($a == $b){ return 0; }
+	elsif ($a > $b) { return 1; }
+}
+
 sub mRNA{
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
 	else{ print TBL "\t\t\tproduct\thypothetical protein\n"; }
-	print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
-	print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
+	unless ($organelle){
+		print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
+		print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
+	}
 }
+
 sub CDS{
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
@@ -378,9 +401,15 @@ sub CDS{
 		print STDERR "Cannot find database entry for locus_tag: $locus_tag\n";
 		print TBL "\t\t\tproduct\thypothetical protein\n";
 	}
-	print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
-	print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
+	unless ($gcode == 1){
+		print TBL "\t\t\ttransl_table\t$gcode\n";
+	}
+	unless ($organelle){
+		print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
+		print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
+	}
 }
+
 sub RNA{
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
