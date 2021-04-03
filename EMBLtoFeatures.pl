@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoFeatures.pl';
 my $version = '2.0a';
-my $updated = '04/03/21';
+my $updated = '2021-04-03';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
