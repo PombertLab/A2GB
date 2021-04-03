@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoFeatures.pl';
-my $version = '2.0';
-my $updated = '03/28/21';
+my $version = '2.0a';
+my $updated = '04/03/21';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
@@ -20,6 +20,7 @@ USAGE		${name} \\
 		  -o FILES \\
 		  -x \\
 		  -i \\
+		  -m \\
 		  -v \\
 		  -c 1
 
@@ -28,6 +29,7 @@ OPTIONS:
 -o (--outdir)	Output directory [Default: ./]
 -x (--exon)	Create fasta files of exons (.exons) for genes with introns
 -i (--intron)	Create fasta files of exons (.introns) for genes with introns
+-m (--mRNA)	Export messenger RNAs of CDS features to .mRNAs
 -v (--verbose)	Add Verbosity
 -c (--gcode)	NCBI genetic code [Default: 1]
 		1  - The Standard Code
@@ -43,6 +45,7 @@ my @embl;
 my $outdir = './';
 my $exon_feature;
 my $intron_feature;
+my $mRNA_feature;
 my $gc = 1;
 my $verb;
 GetOptions(
@@ -50,6 +53,7 @@ GetOptions(
 	'o|outdir=s' => \$outdir,
 	'x|exon' => \$exon_feature,
 	'i|intron' => \$intron_feature,
+	'm|mRNA' => \$mRNA_feature,
 	'c|gcode=i' => \$gc,
 	'v|verbose' => \$verb
 );
@@ -93,6 +97,7 @@ while (my $file = shift@embl){
 	my $RNA_file = "${outdir}/$file.RNA";
 	my $exon_file = "${outdir}/$file.exons";
 	my $intron_file = "${outdir}/$file.introns";
+	my $mRNA_file = "${outdir}/$file.mRNAs";
 
 	open PROT, ">", "$prot_file" or die "Can't create $prot_file: $!\n";
 	open RNA, ">", "$RNA_file" or die "Can't create $RNA_file: $!\n";
@@ -102,7 +107,10 @@ while (my $file = shift@embl){
 	if ($intron_feature){
 		open INTRON, ">", "$intron_file" or die "Can't create $intron_file: $!\n";
 	}
-
+	if ($mRNA_feature){
+		open MRNA, ">", "$mRNA_file" or die "Can't create $mRNA_file: $!\n";
+	}
+	
 	### Creating a single DNA string for protein translation
 	my $DNAseq;
 	while (my $dna = <DNA>){
@@ -162,6 +170,9 @@ while (my $file = shift@embl){
 
 				### Creating protein sequence
 				if ($type eq 'CDS'){
+					if ($mRNA_feature){
+						sequence($mRNA, \*MRNA);
+					}
 					translate($mRNA);
 					sequence($protein, \*PROT);
 					$protein = undef;
@@ -218,6 +229,9 @@ while (my $file = shift@embl){
 
 				### Creating protein sequence
 				if ($type eq 'CDS'){
+					if ($mRNA_feature){
+						sequence($mRNA, \*MRNA);
+					}
 					translate($mRNA);
 					sequence($protein, \*PROT);
 					$protein = undef;
@@ -238,6 +252,9 @@ while (my $file = shift@embl){
 
 				### Creating protein sequence
 				if ($type eq 'CDS'){
+					if ($mRNA_feature){
+						sequence($mRNA, \*MRNA);
+					}
 					translate($mRNA);
 					sequence($protein, \*PROT);
 					$protein = undef;
@@ -303,6 +320,9 @@ while (my $file = shift@embl){
 
 				### Creating protein sequence
 				if ($type eq 'CDS'){
+					if ($mRNA_feature){
+						sequence($mRNA, \*MRNA);
+					}
 					translate($mRNA);
 					sequence($protein, \*PROT);
 					$protein = undef;
