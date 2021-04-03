@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
-my $version = '4.1c';
-my $updated = '03/28/2021';
+my $version = '4.1d';
+my $updated = '2021-04-03';
 
 use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
 
