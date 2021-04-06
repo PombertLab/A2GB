@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'get_uniprot_products.pl';
 my $version = '0.2a';
-my $updated = '03/03/2021';
+my $updated = '2021-03-03';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename; use PerlIO::gzip;
 

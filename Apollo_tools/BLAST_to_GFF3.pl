@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 my $name = 'BLAST_to_GFF3.pl';
 my $version = '0.2a';
-my $updated = '02/04/2021';
+my $updated = '2021-04-02';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 

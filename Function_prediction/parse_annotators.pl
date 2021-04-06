@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators_wip.pl';
 my $version = '1.5 RC1';
-my $updated = '03/29/2021';
+my $updated = '2021-03-29';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 

@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'add_metadata_to_fasta.pl';
 my $version = '0.4';
-my $updated = '02/24/22';
+my $updated = '2021-02-24';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 

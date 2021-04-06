@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'tRNAscan_to_GFF3.pl';
 my $version = '0.8d';
-my $updated = '02/17/2021';
+my $updated = '2021-02-17';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 

@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2017
 my $name = 'splitMakerGFF.pl';
 my $version = '0.1a';
-my $updated = '27/03/2021'; 
+my $updated = '2021-03-27'; 
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 

@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'check_problems.pl';
 my $version = '0.3a';
-my $updated = '28/03/2021';
+my $updated = '2021-03-28';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 

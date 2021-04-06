@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'get_RNA_locus_tags.pl';
 my $version = '0.2a';
-my $updated = '02/24/21'; 
+my $updated = '2021-02-24'; 
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 

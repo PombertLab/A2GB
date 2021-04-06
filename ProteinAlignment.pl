@@ -4,7 +4,7 @@ use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $name = 'ProteinAlignmentV2.pl';
 my $version = '0.3';
-my $updated = '04/01/2021';
+my $updated = '2021-04-01';
 my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}

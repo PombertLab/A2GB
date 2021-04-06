@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_UniProt_BLASTs.pl';
 my $version = '0.3a';
-my $updated = '27/03/2021';
+my $updated = '2021-03-27';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
