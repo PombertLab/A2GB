@@ -227,7 +227,7 @@ For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/b
 
 ```Bash
 check_problems.pl \
-   -p $ANNOT/splitGFF3/*.prot \\
+   -p $ANNOT/splitGFF3/*.prot \
    -v
 ```
 
@@ -266,8 +266,8 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 We can check if the issues have been fixed by regenerating the .prot files with [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again using the -u flag:
 ```Bash
 check_problems.pl \
-   -p $ANNOT/splitGFF3/*.prot \\
-   -u \\
+   -p $ANNOT/splitGFF3/*.prot \
+   -u \
    -v
 ```
 If fixed, the error message(s) should be gone:
