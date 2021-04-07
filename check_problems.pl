@@ -93,9 +93,7 @@ for my $prot_file (@prot_files){
 				if ($out){
 					print OUT "\n\t\tInvalid Start Codon\tInternal Stop Codon\n\n";
 				}
-				if ($verb){
-					print "\n\t\tInvalid Start Codon\tInternal Stop Codon\n\n";
-				}
+				print "\n\t\tInvalid Start Codon\tInternal Stop Codon\n\n";
 			}
 		}
 
@@ -105,9 +103,7 @@ for my $prot_file (@prot_files){
 			if ($out){
 				print OUT "$locus_tag\t\t$aa\t\t\tX\n";
 			}
-			if ($verb){
-				print "$locus_tag\t\t$aa\t\t\tX\n";
-			}
+			print "$locus_tag\t\t$aa\t\t\tX\n";
 			$count = 1;
 		}
 
@@ -117,9 +113,7 @@ for my $prot_file (@prot_files){
 			if ($out){
 				print OUT "$locus_tag\t\t$aa\t\t\t.\n";
 			}
-			if ($verb){
-				print "$locus_tag\t\t$aa\t\t\t.\n";
-			}
+			print "$locus_tag\t\t$aa\t\t\t.\n";
 			$count = 1;
 		}
 
@@ -128,9 +122,7 @@ for my $prot_file (@prot_files){
 			if ($out){
 				print OUT "$locus_tag\t\t.\t\t\tX\n";
 			}
-			if ($verb){
-				print "$locus_tag\t\t.\t\t\tX\n";
-			}
+			print "$locus_tag\t\t.\t\t\tX\n";
 			$count = 1;
 		}
 	}
@@ -140,9 +132,7 @@ for my $prot_file (@prot_files){
 		if ($out){
 			print OUT "\nOK: No error found in $prot_file\n";
 		}
-		if ($verb){
-			print "\nOK: No error found in $prot_file\n";
-		}
+		print "\nOK: No error found in $prot_file\n";
 	}
 }
 print "\n";
