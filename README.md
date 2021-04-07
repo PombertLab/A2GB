@@ -227,37 +227,35 @@ For example, we can use [check_problems.pl](https://github.com/PombertLab/A2GB/b
 
 ```Bash
 check_problems.pl \
-   -s \
-   -m \
-   -f $ANNOT/splitGFF3/*.prot
+   -p $ANNOT/splitGFF3/*.prot \\
+   -v
 ```
 
 If present, we should see error messages like this:
 ```
-Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
-ERROR: Protein HOP50_01g07580 contains one or more stop codon(s) in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
+Checking for sequence errors in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
 
-Checking for internal stop codons in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
-ERROR: Protein HOP50_02g14900 contains one or more stop codon(s) in /media/FatCat/user/raw_data/splitGFF3/chromosome_02.prot
+		Invalid Start Codon	Internal Stop Codon
 
-Checking for internal stop codons in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
-OK: No internal stop codon found
+HOP50_01g00010		K			.
+HOP50_01g00140		V			.
+HOP50_01g07580		V			X
 
-...
+Checking for sequence errors in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
 
-Checking for missing start methionines in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
-ERROR: Protein HOP50_01g07580 starts with V in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
-ERROR: Protein HOP50_01g00140 starts with V in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
-ERROR: Protein HOP50_01g00010 starts with K in /media/FatCat/user/raw_data/splitGFF3/chromosome_01.prot
+		Invalid Start Codon	Internal Stop Codon
 
-Checking for missing start methionines in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
-ERROR: Protein HOP50_02g18530 starts with V in /media/FatCat/user/raw_data/splitGFF3/chromosome_02.prot
+HOP50_02g14980		.			X
+HOP50_02g18670		V			.
 
-Checking for missing start methionines in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
-OK: All proteins start with methionines...
+Checking for sequence errors in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
+
+		Invalid Start Codon	Internal Stop Codon
+
+HOP50_03g26990		.			X
 ```
 
-If present, internal stop codons and missing start methionines can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the subsequent steps performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/), then the .prot files regenerated with [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl):
+If present, internal stop codons and missing start methionines (wrong amino acids) can be corrected in [Apollo](https://genomearchitect.readthedocs.io/en/latest/), the GFF exported again, and the subsequent steps performed anew. Alternatively, the errors can be corrected directly on the EMBL files with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/):
 
 ```Bash
 art $ANNOT/splitGFF3/chromosome_01.embl
@@ -265,21 +263,17 @@ art $ANNOT/splitGFF3/chromosome_01.embl
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Artemis_2.png" alt="Fixing an internal stop codon with Artemis" width="1000"></p>
 
-We can check if the issues have been fixed by regenerating the .prot files with [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl), then by running [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again:
+We can check if the issues have been fixed by regenerating the .prot files with [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) again using the -u flag:
 ```Bash
-EMBLtoFeatures.pl \
-   -e $ANNOT/splitGFF3/*.embl \
-   -c 1
-
 check_problems.pl \
-   -s \
-   -m \
-   -f $ANNOT/splitGFF3/*.prot
+   -p $ANNOT/splitGFF3/*.prot \\
+   -u \\
+   -v
 ```
 If fixed, the error message(s) should be gone:
 ```
-Checking for internal stop codons in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
-OK: No internal stop codon found
+Checking for sequence errors in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
+OK: No error found in chromosome_01.prot
 ```
 
 Options for [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl) are:

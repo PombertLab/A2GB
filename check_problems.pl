@@ -1,91 +1,148 @@
 #!/usr/bin/perl
-## Pombert Lab, IIT, 2020
-my $name = 'check_problems.pl';
-my $version = '0.3a';
-my $updated = '2021-03-28';
+## Pombert Lab, IIT, 2021
+use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
-use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
+my $name = "check_problems.pl";
+my $version = "0.4";
+my $updated = '2021-04-05';
 
-my $usage = <<"OPTIONS";
-
+my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
-SYNOPSIS	Checks multifasta protein files for problems to help detect annotation errors:
-		- Proteins interrupted by stop codons
-		- Proteins that do not start with methionines
-		
-USAGE		${name} -s -m -f *.prot
+SYNOPSIS	This script is used to notify the user of protein abnormalities, such as a missing 
+		start methionines and internal stop codons. This script can also run EMBLtoFeatures.pl to 
+		update the .prot files before checking for these abnormalities.
 
-OPTIONS:
--s (--stop)	Checks for stop codons
--m (--meth)	Checks for missing start methionine
--f (--fasta)	FASTA amino acids input file(s)
+COMMAND		${name} \\
+		  -p *.prot \\
+		  -o ProteinCheck.log \\
+		  -u \\
+		  -v
+
 OPTIONS
-die "$usage\n" unless @ARGV;
+-p | --prot	FASTA files (.prot) to be checked for abnormalities
+-o | --out	Print the output to a log file
+-u | --update	Update .prot files using EMBLtoFeatures.pl
+-v | --verb	Add verbosity
+EXIT
+die "\n$usage\n\n" unless @ARGV;
 
-my $stop; my $meth; my @fasta;
+my @prot_files;
+my $out;
+my $update;
+my $verb;
 GetOptions(
-	's|stop' => \$stop,
-	'm|meth' => \$meth,
-	'f|fasta=s@{1,}' => \@fasta
+	'p|prot=s@{1,}' => \@prot_files,
+	'o|out=s' => \$out,
+	'u|update' => \$update,
+	'v|verb' => \$verb
 );
-my $count = 0;
-if ($stop){ ## Stop codons
-	foreach my $file (@fasta){
-		$count = 0;
-		my ($fasta, $dir) = fileparse($file);
-		print STDOUT "\nChecking for internal stop codons in $fasta located in $dir\n";
 
-		my $locus;
-		my %prot;
+if ($out){
+	open OUT, ">", "$out" or die "Can't create $out: $!\n";
+}
 
-		open IN, "<", "$file" or die "Can't open $file: $!\n";
-		while (my $line = <IN>){
-			chomp $line;
-			if ($line =~ /^>(\S+)/){$locus = $1;}
-			else {$prot{$locus} .= $line;}
+## Runs EMBLtoFeatures.pl if flag update is on
+if ($update){
+	foreach my $file (@prot_files){
+		my ($filename,$dir) = fileparse($file);
+		my $name = basename($file,".prot");
+		if (-f "$name.embl"){
+			if ($verb){
+				system "EMBLtoFeatures.pl \\
+				  -e $name.embl \\
+				  -v";
+			}
+			else{
+				system "EMBLtoFeatures.pl \\
+				  -e $name.embl";
+			}
 		}
+		else {
+			print "[W] $file has no correlating .fsa file\n";
+		}
+	}
+}
 
-		for (keys %prot){
-			my $key = $_;
-			my $seq = $prot{$_};
-			if ($seq =~ /\*/){
-				print STDERR "ERROR: Protein $key contains one or more stop codon(s) in $file\n";
-				$count++;
+## Checking for problems in the .prot files 
+for my $prot_file (@prot_files){
+
+	open IN, "<", "$prot_file" or die "Can't open $prot_file: $!\n";
+	my ($filename,$dir) = fileparse($prot_file);
+
+	my %sequences;
+	my $locus;
+	while (my $line = <IN>){
+		chomp $line;
+		if($line =~ /^>(\S+)/){
+			$locus = $1;
+			next;
+		}
+		$sequences{$locus} .= $line;
+	}
+
+	if ($verb) { print "\nChecking for sequence errors in $prot_file located in $dir\n"; }
+	my $count = undef;
+
+	## Iterating through locus tags in database %sequences
+	foreach my $locus_tag (sort(keys %sequences)){
+		my $line = $sequences{$locus_tag};
+		unless ($count){
+			if (($line !~ /^M/) || ($line =~ /\W/)){
+				if ($out){
+					print OUT "\n\t\tInvalid Start Codon\tInternal Stop Codon\n\n";
+				}
+				if ($verb){
+					print "\n\t\tInvalid Start Codon\tInternal Stop Codon\n\n";
+				}
 			}
 		}
 
-		if ($count == 0){ print STDOUT "OK: No internal stop codon found\n"; }
-	}
-	print STDOUT "\n";
-}
-if ($meth){ ## Start methionines
-	foreach my $file (@fasta){
-		$count = 0;
-		my ($fasta, $dir) = fileparse($file);
-		print STDOUT "\nChecking for missing start methionines in $fasta located in $dir\n";
-
-		my $locus;
-		my %prot;
-
-		open IN, "<", "$file" or die "Can't open $file: $!\n";
-		while (my $line = <IN>){
-			chomp $line;
-			if ($line =~ /^>(\S+)/){$locus = $1;}
-			else {$prot{$locus} .= $line;}
-		}
-
-		for (keys %prot){
-			my $key = $_;
-			my $seq = $prot{$_};
-			if ($seq =~ /^([^M])/){
-				print STDERR "ERROR: Protein $key starts with $1 in $file\n";
-				$count++;
+		## No start methionine (bad) + internal stop codon found (bad)
+		if (($line !~ /^(M)/) && ($line =~ /\W/)){
+			my ($aa) = $line =~ /^(\w)/;
+			if ($out){
+				print OUT "$locus_tag\t\t$aa\t\t\tX\n";
 			}
+			if ($verb){
+				print "$locus_tag\t\t$aa\t\t\tX\n";
+			}
+			$count = 1;
 		}
 
-		if ($count == 0){ print STDOUT "OK: All proteins start with methionines...\n"; }
+		## No start methionine (bad), but no internal stop codon (good)
+		elsif ($line !~ /^(M)/){
+			my ($aa) = $line =~ /^(\w)/;
+			if ($out){
+				print OUT "$locus_tag\t\t$aa\t\t\t.\n";
+			}
+			if ($verb){
+				print "$locus_tag\t\t$aa\t\t\t.\n";
+			}
+			$count = 1;
+		}
+
+		## Start methionine found (good), internal stop codon found (bad)
+		elsif ($line =~ /\W/){
+			if ($out){
+				print OUT "$locus_tag\t\t.\t\t\tX\n";
+			}
+			if ($verb){
+				print "$locus_tag\t\t.\t\t\tX\n";
+			}
+			$count = 1;
+		}
 	}
-	print STDOUT "\n";
+	
+	## No error found
+	unless ($count){ 
+		if ($out){
+			print OUT "\nOK: No error found in $prot_file\n";
+		}
+		if ($verb){
+			print "\nOK: No error found in $prot_file\n";
+		}
+	}
 }
+print "\n";
