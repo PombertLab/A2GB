@@ -14,8 +14,8 @@ SYNOPSIS	Displays lists of functions predicted per proteins. User can select or 
 		Creates a tab-delimited .curated list of annotations.
 
 COMMAND		${name} \\
-		  -s proteins.annotations \\
-		  -c
+		  -i proteins.annotations \\
+		  -r
 
 OPTIONS
 -i (--input)	Sequence homology based annotations (generated from parse_annotators.pl)
