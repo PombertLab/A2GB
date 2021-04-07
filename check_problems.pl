@@ -82,7 +82,7 @@ for my $prot_file (@prot_files){
 		$sequences{$locus} .= $line;
 	}
 
-	if ($verb) { print "\nChecking for sequence errors in $prot_file located in $dir\n"; }
+	if ($verb) { print "\nChecking for errors in $prot_file located in $dir\n"; }
 	my $count = undef;
 
 	## Iterating through locus tags in database %sequences

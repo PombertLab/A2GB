@@ -233,7 +233,7 @@ check_problems.pl \
 
 If present, we should see error messages like this:
 ```
-Checking for sequence errors in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
+Checking for errors in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
 
 		Invalid Start Codon	Internal Stop Codon
 
@@ -241,14 +241,14 @@ HOP50_01g00010		K			.
 HOP50_01g00140		V			.
 HOP50_01g07580		V			X
 
-Checking for sequence errors in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
+Checking for errors in chromosome_02.prot located in /media/FatCat/user/raw_data/splitGFF3/
 
 		Invalid Start Codon	Internal Stop Codon
 
 HOP50_02g14980		.			X
 HOP50_02g18670		V			.
 
-Checking for sequence errors in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
+Checking for errors in chromosome_03.prot located in /media/FatCat/user/raw_data/splitGFF3/
 
 		Invalid Start Codon	Internal Stop Codon
 
@@ -272,7 +272,7 @@ check_problems.pl \
 ```
 If fixed, the error message(s) should be gone:
 ```
-Checking for sequence errors in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
+Checking for errors in chromosome_01.prot located in /media/FatCat/user/raw_data/splitGFF3/
 OK: No error found in chromosome_01.prot
 ```
 
