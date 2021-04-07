@@ -21,10 +21,10 @@ COMMAND		${name} \\
 		  -v
 
 OPTIONS
--p | --prot	FASTA files (.prot) to be checked for abnormalities
--o | --out	Print the output to a log file
--u | --update	Update .prot files using EMBLtoFeatures.pl
--v | --verb	Add verbosity
+-p (--prot)	FASTA files (.prot) to be checked for abnormalities
+-o (--out)	Print the output to a log file
+-u (--update)	Update .prot files using EMBLtoFeatures.pl
+-v (--verb)	Add verbosity
 EXIT
 die "\n$usage\n\n" unless @ARGV;
 

@@ -276,7 +276,15 @@ Checking for errors in chromosome_01.prot located in /media/FatCat/user/raw_data
 OK: No error found in chromosome_01.prot
 ```
 
-Options for [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl) are:
+Options for [check_problems.pl](https://github.com/PombertLab/A2GB/blob/master/check_problems.pl) are:
+```
+-p (--prot)	FASTA files (.prot) to be checked for abnormalities
+-o (--out)	Print the output to a log file
+-u (--update)	Update .prot files using EMBLtoFeatures.pl
+-v (--verb)	Add verbosity
+```
+
+Additionally, features can be extracted from the EMBL files with [EMBLtoFeatures.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoFeatures.pl). Options for EMBLtoFeatures.pl are:
 ```
 -e (--embl)	EMBL files
 -o (--outdir)	Output directory [Default: ./]
