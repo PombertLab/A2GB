@@ -7,7 +7,6 @@ my $updated = '2021-04-08';
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
-
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
@@ -27,9 +26,8 @@ OPTIONS:
 -n (--nice)		Linux Process Priority [Default: 20] ## Runs downloads in the background
 -l (--log)		Print download information to log file
 -d (--decompress)	Decompresss downloaded files with gunzip ## trEMBL files will be huge, off by default
-
 OPTIONS
-die $usage unless @ARGV;
+die "\n$usage\n" unless @ARGV;
 
 my $nice = 20;
 my $swiss;
