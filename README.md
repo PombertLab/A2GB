@@ -582,28 +582,33 @@ To start curating annotations with [curate_annotations.pl](https://github.com/Po
 ```
 curate_annotations.pl -i $ANNOT/proteins.annotations
 
-Putative annotation(s) found for protein #0002: HOP50_01g00020:
-1.      SWISSPROT:      2.5e-50         Hybrid signal transduction histidine kinase J
-2.      TREMBL:         0.0e+00         Signal transduction histidine kinase
-3.      Pfam:           5.5E-30         Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
-4.      TIGRFAM:        NA              hypothetical protein
-5.      HAMAP:          NA              hypothetical protein
-6.      CDD:            1.8907E-11      HisKA
+[....................................................................................................]	0002/8631
 
-Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
-m
+Putative annotation(s) found for protein HOP50_01g00020:
+1.	SwissProt	2.5e-50		Hybrid signal transduction histidine kinase J
+2.	trEMBL		0.0e+00		Signal transduction histidine kinase
+3.	PFAM		5.5E-30		Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
+4.	TIGR		NA		hypothetical protein
+5.	HAMAP		NA		hypothetical protein
+6.	CDD		1.8907E-11	HisKA
+
+Please enter [1-6] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
+Selection: m
 Enter desired annotation: signal transduction histidine kinase
 
-Putative annotation(s) found for protein #0003: HOP50_01g00030:
-1.      SWISSPROT:      NA              hypothetical protein
-2.      TREMBL:         1.0e-07         Insulin-like growth factor binding, N-terminal
-3.      Pfam:           1.0E-6          Putative ephrin-receptor like
-4.      TIGRFAM:        NA              hypothetical protein
-5.      HAMAP:          NA              hypothetical protein
-6.      CDD:            6.31891E-8      TNFRSF
 
-Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
-x
+[....................................................................................................]	3/8631
+
+Putative annotation(s) found for protein HOP50_01g00030:
+1.	SwissProt	NA		hypothetical protein
+2.	trEMBL		1.0e-07		Insulin-like growth factor binding, N-terminal
+3.	PFAM		1.0E-6		Putative ephrin-receptor like
+4.	TIGR		NA		hypothetical protein
+5.	HAMAP		NA		hypothetical protein
+6.	CDD		6.31891E-8	TNFRSF
+
+Please enter [1-6] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
+Selection: x
 ```
 
 To speed up the manual annotation process, proteins without any homology/significant hit in any of the predictors used will be annotated automatically as 'hypothetical protein'. Proteins with one or more matches identified by the predictors will show a menu like the one above. Users can enter the desired selection from the menu to annotate the  proteins accordingly. The option [m] for manual annotation will likely be useful to fix typos and/or lower/uppercase character issues in the corresponding matches. To option [x] will enable the user to quit and resume at a later stage. If the option entered is not recognized, the script will exit automatically to prevent potential problems.
@@ -613,15 +618,18 @@ To resume annotations from the last annotated proteins, simply add -r (resume) t
 ```
 curate_annotations.pl -r -i $ANNOT/proteins.annotations
 
-Putative annotation(s) found for protein #0003: HOP50_01g00030:
-1.      SWISSPROT:      NA              hypothetical protein
-2.      TREMBL:         1.0e-07         Insulin-like growth factor binding, N-terminal
-3.      Pfam:           1.0E-6          Putative ephrin-receptor like
-4.      TIGRFAM:        NA              hypothetical protein
-5.      HAMAP:          NA              hypothetical protein
-6.      CDD:            6.31891E-8      TNFRSF
+[....................................................................................................]	0007/8631
 
-Please enter selection [1-6] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
+Putative annotation(s) found for protein HOP50_01g00070:
+1.	SwissProt	4.3e-186	Eukaryotic translation initiation factor 3 subunit A
+2.	trEMBL		0.0e+00		Eukaryotic translation initiation factor 3 subunit A
+3.	PFAM		4.4E-9		PCI domain
+4.	TIGR		NA		hypothetical protein
+5.	HAMAP		24.645		Eukaryotic translation initiation factor 3 subunit A [EIF3A].
+6.	CDD		NA		no motif found
+
+Please enter [1-6] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
+Selection: 
 ```
 
 The  tab-delimited list of locus_tags and their predicted functions generated by [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) should look like this:
@@ -641,16 +649,20 @@ If a reference dataset was used, the menu from [curate_annotations.pl](https://g
 ```
 curate_annotations.pl -i $ANNOT/proteins.annotations
 
-Putative annotation(s) found for protein #0002: HOP50_01g00020:
-1.      SWISSPROT:      2.5e-50         Hybrid signal transduction histidine kinase J
-2.      TREMBL:         0.0e+00         Signal transduction histidine kinase
-3.      Pfam:           5.5E-30         Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
-4.      TIGRFAM:        NA              hypothetical protein
-5.      HAMAP:          NA              hypothetical protein
-6.      CDD:            1.8907E-11      HisKA
-7.      Reference:      0.0e+00         signal transduction histidine kinase
+[....................................................................................................]	0002/8631
 
-Please enter selection [1-7] to assign annotation, [0] to annotate as 'hypothetical protein', [m] for manual annotation, or [x] to exit
+Putative annotation(s) found for protein HOP50_01g00020:
+1.	SwissProt	2.5e-50		Hybrid signal transduction histidine kinase J
+2.	trEMBL		0.0e+00		Signal transduction histidine kinase
+3.	PFAM		5.5E-30		Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
+4.	TIGR		NA		hypothetical protein
+5.	HAMAP		NA		hypothetical protein
+6.	CDD		1.8907E-11	HisKA
+7.	Ref_organism	0.0e+00		signal transduction histidine kinase
+
+Please enter [1-7] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
+Selection: m
+Enter desired annotation: signal transduction histidine kinase
 ```
 
 ### Converting EMBL files to ASN format
