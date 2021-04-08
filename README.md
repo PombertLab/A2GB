@@ -634,10 +634,10 @@ Selection:
 
 Options for [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) are:
 ```
--i (--input)		Sequence homology based annotations (generated from parse_annotators.pl)
--r (--resume)		Resume annotation from last curated locus_tag
--c (--check)		Check loci marked with '?'
--d (--3D_annot)		3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
+-i (--input)	Sequence homology based annotations (generated from parse_annotators.pl)
+-r (--resume)	Resume annotation from last curated locus_tag
+-c (--check)	Check loci marked with '?'
+-d (--3D_annot)	3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
 ```
 
 
