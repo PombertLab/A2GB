@@ -1,18 +1,20 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'get_uniprot_products.pl';
-my $version = '0.2a';
-my $updated = '2021-03-03';
+my $version = '0.2b';
+my $updated = '2021-04-08';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename; use PerlIO::gzip;
 
 my $usage = <<"OPTIONS";
 NAME		${name}
 VERSION		${version}
-SYNOPSIS	Creates tab-delimited lists of products from UniProt trEMBL/SwissProt FASTA files
 UPDATED		${updated}
+SYNOPSIS	Creates tab-delimited lists of products from UniProt trEMBL/SwissProt FASTA files
 
-USAGE		${name} -f uniprot_*.fasta.gz -o ./
+USAGE		${name} \\
+		  -f uniprot_*.fasta.gz \\
+		  -o ./
 
 OPTIONS:
 -f (--fasta)	FASTA files from Uniprot (.fasta or .fasta.gz)
@@ -28,37 +30,44 @@ GetOptions(
 );
 
 ## Creating output folder, if needed 
-unless (-e $odir) { mkdir $odir or die "\nError: Can't create folder $odir: $!\n\n"; }
+unless (-d $odir) { 
+	mkdir ($odir,0755) or die "\nError: Can't create $odir: $!\n";
+}
 
 ## Workign on Fasta files
 while (my $file = shift@fasta){
-	my $fh; my $format;
-	my $stime  = time;
+
+	my $fh;
+	my $format;
+	my $stime = time;
 	my $basename;
+
 	if ($file =~ /.gz$/){ ## Autodetecting if file is gzipped from the file extension
-		open $fh, "<:gzip", "$file" or die "Could not open $file for reading: $!\n";
+		open $fh, "<:gzip", "$file" or die "Can't open $file: $!\n";
 		$format = 'gzip';
 		$file =~ s/.fasta.gz$//;
 		$basename = fileparse($file);
 	}
 	else{
-		open $fh, "<", "$file" or die "Could not open $file for reading: $!\n"; 
+		open $fh, "<", "$file" or die "Can't open $file: $!\n"; 
 		$format = 'fasta';
 		$file =~ s/.\w+$//;
 		$basename = fileparse($file);
 	}
 	
-	open OUT, ">", "$odir/$basename.list";
+	open OUT, ">", "$odir/$basename.list" or die "Can't create $odir/$basename.list: $!\n";
 	print "\nOutput directory = $odir\n";
 	print "Extracting information from $file. This might take a while...\n\n";
 	while (my $line = <$fh>){
 		chomp $line;
 		if ($line =~ /^>(\S+)\s(.*)\sOS/){
-			my $locus = $1; my $product = $2;
+			my $locus = $1;
+			my $product = $2;
 			print OUT "$locus\t$product\n";
 		}
 	}
-	if ($format eq 'gzip'){binmode $fh, ":gzip(none)";}
+
+	if ($format eq 'gzip'){ binmode $fh, ":gzip(none)"; }
 	my $runtime = time - $stime;
 	print "Time to extract products from file $file: $runtime seconds.\n";
 }
