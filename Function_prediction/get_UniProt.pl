@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, 2020
 my $name = 'get_UniProt.pl';
-my $version = '0.2c';
-my $updated = '2021-03-03';
+my $version = '0.2d';
+my $updated = '2021-04-08';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -13,7 +13,12 @@ VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	Downloads the SwissProt and/or trEMBL databases from UniProt
 
-EXAMPLE		${name} -s -t -f ./ -n 20 -l download.log 
+EXAMPLE		${name} \\
+		  -s \\
+		  -t \\
+		  -f ./ \\
+		  -n 20 \\
+		  -l download.log 
 
 OPTIONS:
 -s (--swiss)		Download Swiss-Prot
@@ -29,7 +34,7 @@ die $usage unless @ARGV;
 my $nice = 20;
 my $swiss;
 my $trembl;
-my $folder;
+my $folder = './';
 my $log;
 my $decomp;
 GetOptions(
@@ -42,25 +47,52 @@ GetOptions(
 );
 
 ## Checking output directory + creating download log
-unless (defined $folder){$folder = './';}
-unless (-d $folder){system "mkdir $folder";}
+unless (-d $folder){ 
+	mkdir ($folder,0755) or die "Can't create $folder: $!\n";
+}
 print "\nOutput files will be located in directory $folder\n";
-if ($log){open LOG, ">", "${folder}/${log}";}
+if ($log){ open LOG, ">", "${folder}/${log}"; }
 
 ## Downloading SwissProt
 if ($swiss){
 	print "\nDownloading SwissProt...\n\n";
-	if ($log){my $date = `date`; print LOG "Downloading SwissProt on $date";}
-	system "nice -n $nice wget -c -P $folder ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz";
-	if ($log){my $size = `du -h $folder/uniprot_sprot.fasta.gz`; print LOG "$size";}
+	if ($log){
+		my $date = `date`;
+		print LOG "Downloading SwissProt on $date";
+	}
+
+	system "nice \\
+	  -n $nice \\
+	  wget \\
+	  -c \\
+	  -P $folder \\
+	  ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz";
+
+	if ($log){
+		my $size = `du -h $folder/uniprot_sprot.fasta.gz`;
+		print LOG "$size";
+	}
 }
 
 ## Downloading trEMBL
 if ($trembl){
 	print "\nDownloading trEMBL database. This will take a while...\n\n";
-	if ($log){my $date = `date`; print LOG "Downloading trEMBL on $date";	}
-	system "nice -n $nice wget -c -P $folder ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz";
-	if ($log){my $size = `du -h $folder/uniprot_trembl.fasta.gz`; print LOG "$size";}
+	if ($log){
+		my $date = `date`;
+		print LOG "Downloading trEMBL on $date";
+	}
+
+	system "nice \\
+	  -n $nice \\
+	  wget \\
+	  -c \\
+	  -P $folder \\
+	  ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.fasta.gz";
+	
+	if ($log){
+		my $size = `du -h $folder/uniprot_trembl.fasta.gz`;
+		print LOG "$size";
+	}
 }
 
 ## Decompressing the downloaded databases
@@ -71,7 +103,7 @@ if ($decomp){
 	}
 	if ($trembl){
 		print "\nDecompressing downloaded trEMBL database with gunzip. Will take a while...\n\n";
-		system "uniprot_$folder/trembl.fasta.gz";
+		system "gunzip $folder/trembl.fasta.gz";
 	}
 }
 ## Updating logs
