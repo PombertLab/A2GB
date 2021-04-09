@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'add_metadata_to_fasta.pl';
-my $version = '0.4';
-my $updated = '2021-02-24';
+my $version = '0.4a';
+my $updated = '2021-04-09';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -33,7 +33,9 @@ OPTIONS:
 OPTIONS
 die "$usage\n" unless @ARGV;
 
-my @fasta; my $chromosomes; my $metakeys;
+my @fasta;
+my $chromosomes;
+my $metakeys;
 
 ## NCBI Fasta headers 
 my %meta = (
@@ -56,14 +58,14 @@ GetOptions(
 	'g|gcode=i' => \$meta{"gcode"},
 	'm|moltype=s' => \$meta{"moltype"},
 );
-die("[E] Fasta files required.\n") unless(@fasta);
+die "[E] Fasta files required.\n" unless @fasta;
 
 ## Populating database of metadata keys and their values, if desired
 if ($metakeys){
 	open META, "<", "$metakeys" or die "Can't open metadata file $metakeys\n";
 	while (my $line = <META>){
 		chomp $line;
-		if ($line =~ /^#/){next;} ## Ignoring comments
+		if ($line =~ /^#/){ next; } ## Ignoring comments
 		elsif ($line =~ /^(\S+)\s+(.*)$/){
 			my $metakey = $1;
 			my $metavalue = $2;
@@ -79,7 +81,7 @@ if ($chromosomes){
 	open CHR, "<", "$chromosomes" or die "Can't open chromosome file $chromosomes\n";
 	while (my $line = <CHR>){
 		chomp $line;
-		if ($line =~ /^#/){next;} ## Ignoring comments
+		if ($line =~ /^#/){ next; } ## Ignoring comments
 		elsif ($line =~ /^(\S+)\s+(.*)$/){
 			my $contig = $1;
 			my $chromo_assig = $2;
@@ -91,15 +93,15 @@ if ($chromosomes){
 
 ## Working on FASTA files
 while (my $file = shift@fasta){
-	open IN, "<$file";
-	open OUT, ">$file.headers";
+	open IN, "<", "$file" or die "Can't open $file: $!\n";
+	open OUT, ">", "$file.headers" or die "Can't create $file.headers: $!\n";
 	while (my $line = <IN>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
 			my $contig = $1;
 			print OUT ">$contig";
 			for my $key (keys %meta){
-				if($meta{$key}){
+				if ($meta{$key}){
 					print OUT " [$key=$meta{$key}]";
 				}
 			}
@@ -110,7 +112,7 @@ while (my $file = shift@fasta){
 			}
 			print OUT "\n";
 		}
-		else {print OUT "$line\n";}
+		else { print OUT "$line\n"; }
 	}
 	close OUT;
 	system "mv $file.headers $file"; ## Overwrites original file 
