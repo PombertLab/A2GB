@@ -68,6 +68,7 @@ else{
 				if ( $proceed eq 'y' ) { last WHILE; }
 				elsif ($proceed eq 'n') { die "\nScript terminating...\n\n"; }
 				system "clear";
+				system "mv $filename.curated $filename.backup.curated";
 				print "\n $proceed is an invalid operator.\n";
 			}
 		}
