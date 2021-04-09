@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'curate_annotations.pl';
-my $version = '1.6';
-my $updated = '2021-04-07';
+my $version = '1.6a';
+my $updated = '2021-04-09';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -62,8 +62,8 @@ else{
 	if (-f "$filename.curated"){
 		unless ($continue){
 			WHILE: while (0==0){
-				print "\nIt appears that a curation file already exists for the provided annotation file. If you proceed,";
-				print " you will annotate locuses that have already been annotated. Would you like to continue? \n\n[y]/[n]: ";
+				print "\nWARNING: It appears that a curation file already exists for the provided annotation file.";
+				print "If you proceed, you will overwrite annotated loci.\n\nWould you like to continue? \n\n[y]/[n]: ";
 				chomp (my $proceed = lc(<STDIN>));
 				if ( $proceed eq 'y' ) { last WHILE; }
 				elsif ($proceed eq 'n') { die "\nScript terminating...\n\n"; }
@@ -71,14 +71,16 @@ else{
 				print "\n $proceed is an invalid operator.\n";
 			}
 		}
-		open IN, "<", "$filename.curated" or die "Can't read $filename.curated: $!\n";
-		while (my $line = <IN>){
-			chomp $line;
-			print OUT "$line\n";
-			my @data = split("\t",$line);
-			$last_locus = $data[0];
+		else{
+			open IN, "<", "$filename.curated" or die "Can't read $filename.curated: $!\n";
+			while (my $line = <IN>){
+				chomp $line;
+				print OUT "$line\n";
+				my @data = split("\t",$line);
+				$last_locus = $data[0];
+			}
+			close IN;
 		}
-		close IN;
 	}
 }
 
@@ -141,7 +143,7 @@ while (my $line = <IN>){
 	else {
 		my $val = scalar(@to_review);
 		print "Values left to review $val\n";
-		## If there are still more locuses to review, check for review necessity
+		## If there are still more loci to review, check for review necessity
 		if (@to_review){
 			my $review_line = shift(@to_review);
 			## Check to see if we are at an annotation that needs review, indicated by a '?'
@@ -152,7 +154,7 @@ while (my $line = <IN>){
 				next;
 			}
 		}
-		## If there are no more locuses to review, let user know and exit script.
+		## If there are no more loci to review, let user know and exit script.
 		else{
 			print "\nAnnotation review completed.\n\n";
 			exit;
