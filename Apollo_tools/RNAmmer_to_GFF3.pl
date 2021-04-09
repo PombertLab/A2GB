@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'RNAmmer_to_GFF3.pl';
-my $version = '0.6a';
-my $updated = '2021-03-27';
+my $version = '0.7';
+my $updated = '2021-04-09';
 
 use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
 
@@ -22,20 +22,31 @@ OPTIONS:
 OPTIONS
 die "\n$usage\n" unless @ARGV;
 
-my @gff2; my $odir;
+my @gff2;
+my $odir = './';
 GetOptions(
 	'g|gff2=s@{1,}' => \@gff2,
 	'd|dir=s' => \$odir
 );
 
 ## Checking output directory
-unless (defined $odir){ $odir = './'; }
 unless (-d $odir){
 	mkdir ($odir,0755) or die "Can't create folder $odir: $!\n";
 }
 print "Output files will be located in directory $odir\n";
 
+## Setting up variables
+my $location;
+my $source;
+my $feature;
+my $start;
+my $end;
+my $score;
+my $strand;
+my $gene;
 my $rRNA = 0;
+
+## Workign on gff file
 while (my $file = shift@gff2){
 
 	open RRNA, "<", "$file" or die "Can't read $file: $!\n";
@@ -43,35 +54,35 @@ while (my $file = shift@gff2){
 
 	print "Working on file $gff2 located in $dir\n";
 	$gff2 =~ s/.gff2$//;
-	open OUT, ">", "$odir/$gff2.gff" or die "Can't create $odir/$gff2.gff: $!\n";
+	open GFF, ">", "$odir/$gff2.gff" or die "Can't create $odir/$gff2.gff: $!\n";
 	open GFF3, ">", "$odir/$gff2.gff3" or die "Can't create $odir/$gff2.gff3: $!\n";
 		
 	## Converting rRNAs to GFF3
 	while (my $line = <RRNA>){
 		chomp $line;
-		if ($line =~ /^#/){next;} ## disregard comments
+		if ($line =~ /^#/){ next; } ## disregard comments
 		else{
 			my @cols = split("\t", $line);
-			my $location = $cols[0];
-			my $source = $cols[1];
-			my $feature = $cols[2];
-			my $start = $cols[3];
-			my $end = $cols[4];
-			my $score = $cols[5];
-			my $strand = $cols[6];
-			my $gene = $cols[8];
+			$location = $cols[0];
+			$source = $cols[1];
+			$feature = $cols[2];
+			$start = $cols[3];
+			$end = $cols[4];
+			$score = $cols[5];
+			$strand = $cols[6];
+			$gene = $cols[8];
 			$rRNA++;
 
-			if ($strand eq '+'){
-				print OUT "$location"."\t"."RNAMMER"."\t"."rRNA"."\t"."$start"."\t"."$end"."\t"."$score"."\t".'+'."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
-				print GFF3 "$location"."\t"."RNAMMER"."\t"."gene"."\t"."$start"."\t"."$end"."\t"."$score"."\t".'+'."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
-				print GFF3 "$location"."\t"."RNAMMER"."\t"."rRNA"."\t"."$start"."\t"."$end"."\t"."$score"."\t".'+'."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
-			}
-			elsif ($strand eq '-'){
-				print OUT "$location"."\t"."RNAMMER"."\t"."rRNA"."\t"."$start"."\t"."$end"."\t"."$score"."\t".'-'."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
-				print GFF3 "$location"."\t"."RNAMMER"."\t"."gene"."\t"."$start"."\t"."$end"."\t"."$score"."\t".'-'."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
-				print GFF3 "$location"."\t"."RNAMMER"."\t"."rRNA"."\t"."$start"."\t"."$end"."\t"."$score"."\t".'-'."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
-			}
+			data_print('rRNA', $strand, \*GFF);
+			data_print('gene', $strand, \*GFF3);
+			data_print('rRNA', $strand, \*GFF3);
 		}
 	}
+}
+
+## Subroutines
+sub data_print{
+	my ($type, $strand, $fh) = @_;
+	print $fh "$location"."\t"."RNAMMER"."\t"."$type"."\t"."$start"."\t"."$end"."\t"."$score"."\t";
+	print $fh "$strand"."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
 }
