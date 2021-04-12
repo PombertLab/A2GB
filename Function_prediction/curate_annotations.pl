@@ -122,6 +122,7 @@ my $tab;
 open IN, "<", $input or die "Can't read $input: $!\n";
 if ($last_locus) { $start = undef; }
 while (my $line = <IN>){
+	system "clear";
 	chomp $line;
 	## If we are at the header of the file, get the header info and skip to the next line
 	if ($line =~ /^#/){
@@ -143,7 +144,6 @@ while (my $line = <IN>){
 	}
 	else {
 		my $val = scalar(@to_review);
-		print "Values left to review $val\n";
 		## If there are still more loci to review, check for review necessity
 		if (@to_review){
 			my $review_line = shift(@to_review);
