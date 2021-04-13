@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'curate_annotations.pl';
-my $version = '1.8';
-my $updated = '2021-04-12';
+my $version = '1.9';
+my $updated = '2021-04-13';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -21,18 +21,20 @@ OPTIONS
 -i (--input)	Sequence homology based annotations (generated from parse_annotators.pl)
 -r (--resume)		Resume annotation from last curated locus_tag
 -c (--check)		Check loci marked with '?'
+-v (--verify)		Check loci marked for 3D verification
 -d (--3D_annot)		3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
 EXIT
 die "\n\n$usage\n\n" unless @ARGV;
 
 my $input;
-my $input_3D;
 my $continue;
 my $review;
-
+my $verify;
+my $input_3D;
 GetOptions(
 	"i|input=s" => \$input,
 	"r|resume" => \$continue,
+	"v|verify" => \$verify,
 	"c|check" => \$review,
 	"d|3D_annot=s" => \$input_3D
 );
@@ -48,7 +50,8 @@ open OUT, ">", "temp_files/$filename.temp" or die "Can't create temp_files/$file
 ## If reviewing annotations, load existing annotations into RAM
 my $last_locus = undef;
 my @to_review;
-if ($review){
+if ($review||$verify){
+	print "verifying\n";
 	open IN, "<", "$filename.curated" or die "Can't open $filename.curated: $!\n";
 	while (my $line = <IN>){
 		chomp $line;
@@ -66,19 +69,20 @@ else{
 				print "\n\nWould you like to [c]ontinue, [r]estart, or [e]xit?: ";
 				chomp (my $proceed = lc(<STDIN>));
 				if ( $proceed eq 'r' ) {
-					last WHILE;
 					system "clear";
 					system "mv $filename.curated $filename.backup.curated";
-					print "\n $proceed is an invalid operator.\n";
+					last WHILE;
 				}
 				elsif ( $proceed eq 'e' ) {
-					last WHILE;
 					print "\nScript terminating...\n\n";
 					exit;
+					last WHILE;
 				}
 				elsif ($proceed eq 'c') {
-					last WHILE;
 					last_locus();
+					print "continuing\n";
+					print "$last_locus\n";
+					last WHILE;
 				}
 				else {
 					system "clear";
@@ -91,7 +95,6 @@ else{
 		}
 	}
 }
-
 ## If we are given a 3D file, parse through it to get the match data
 my %three_d; my $three_d_query;
 if ($input_3D){
@@ -141,7 +144,7 @@ while (my $line = <IN>){
 	
 	## If we are reviewing, skip the check start process because we are not going to be curating the same way.
 	my $annon_notes;
-	unless ($review){
+	unless ($review||$verify){
 		## Check to see if we are the $last_locus, and if we are, start the anntotation process
 		unless ($start){
 			if ($line =~ /$last_locus/){
@@ -151,20 +154,23 @@ while (my $line = <IN>){
 		}
 	}
 	else {
-		my $val = scalar(@to_review);
 		## If there are still more loci to review, check for review necessity
 		if (@to_review){
 			my $review_line = shift(@to_review);
 			## Check to see if we are at an annotation that needs review, indicated by a '?'
-			## If we are reading a line that does not require reviewing, print the line out, and move to the next one.
-			## If we are reading a line that does require reviewing, print the normal annotation curation printouts.
-			unless ($review_line =~ /\?/){
+			## If we are reading a line that does not require reviewing or verification, print the line out, and move to the next one.
+			## If we are reading a line that does require reviewing, print the normal annotation curation printouts with annotaiton notes.
+			## If we are reading a line that does require verification, print the normal annotation printout
+			unless ($review_line =~ /\?|Verify 3D Structural Homology/){
 				print OUT "$review_line\n";
 				next;
 			}
-			elsif ($review_line =~ /\S+\t\?(.*?\w+.*)||\S+\t(.*?\w+.*?)\?/) {
-				if ($1) { $annon_notes = $1; }
-				if ($2)	{ $annon_notes = $2; }
+			elsif ($review_line =~ /\S+\t\?(.*?\w+.*)|\S+\t(.*?\w+.*?)\?/) {
+				$annon_notes = $1;
+				if (!$review){ next; }
+			}
+			elsif ($review_line =~ /Verify 3D Structural Homology/){
+				if (!$verify){ next; }
 			}
 		}
 		## If there are no more loci to review, let user know and exit script.
@@ -231,7 +237,7 @@ while (my $line = <IN>){
 	WHILE: while (0==0){
 		my $status_3D = 0;
 		print "\n$status\t$current_protein/$protein_total\n";
-		if(@to_review){
+		if($review){
 			print "\n## Annotation Notes:\n";
 			if($annon_notes) {
 				print "\t$annon_notes\n";
@@ -268,7 +274,7 @@ while (my $line = <IN>){
 		print "\t[m] to manually annotate the locus\n";
 		if ($annon_notes) { print "\t[k] to keep annotation notes\n"; }
 		if ($three_d_predictions > 0) { print "\t[v] to mark this annoation for 3D structural verification\n"; }
-		print "\t[?] to mark this annotation for review\n";
+		print "\t[?] to mark this annotation for review and add curation notes (optional)\n";
 		print "\t[x] to exit.\n";
 		print "\nSelection: ";
 		chomp (my $select = <STDIN>);
@@ -288,7 +294,7 @@ while (my $line = <IN>){
 			last WHILE;
 		}
 		elsif ($select eq 'k' && $annon_notes){
-			print OUT "$locus\t$annon_notes\n";
+			print OUT "$locus\t? $annon_notes\n";
 			last WHILE;
 		}
 		elsif ($select eq 'v' && $three_d_predictions > 0){
@@ -303,7 +309,9 @@ while (my $line = <IN>){
 			last WHILE;
 		}
 		elsif ($select eq '?'){
-			print OUT "$locus\t?\n";
+			print "\nAnnotation note(s) (if any): ";
+			chomp(my $note = <STDIN>);
+			print OUT "$locus\t? $note\n";
 			system "clear";
 			last WHILE;
 		}
@@ -340,7 +348,7 @@ sub tab {
 }
 
 sub cleanup {
-	if ($review){
+	if ($review||$verify){
 		while (my $line = shift(@to_review)){
 			print OUT "$line\n";
 		}
