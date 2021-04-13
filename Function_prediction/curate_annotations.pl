@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'curate_annotations.pl';
-my $version = '1.6a';
-my $updated = '2021-04-09';
+my $version = '1.7';
+my $updated = '2021-04-12';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -63,24 +63,31 @@ else{
 		unless ($continue){
 			WHILE: while (0==0){
 				print "\nWARNING: It appears that a curation file already exists for the provided annotation file.";
-				print "If you proceed, you will overwrite annotated loci.\n\nWould you like to continue? \n\n[y]/[n]: ";
+				print "\n\nWould you like to [c]ontinue, [r]estart, or [e]xit?: ";
 				chomp (my $proceed = lc(<STDIN>));
-				if ( $proceed eq 'y' ) { last WHILE; }
-				elsif ($proceed eq 'n') { die "\nScript terminating...\n\n"; }
-				system "clear";
-				system "mv $filename.curated $filename.backup.curated";
-				print "\n $proceed is an invalid operator.\n";
+				if ( $proceed eq 'r' ) {
+					last WHILE;
+					system "clear";
+					system "mv $filename.curated $filename.backup.curated";
+					print "\n $proceed is an invalid operator.\n";
+				}
+				elsif ( $proceed eq 'e' ) {
+					last WHILE;
+					print "\nScript terminating...\n\n";
+					exit;
+				}
+				elsif ($proceed eq 'c') {
+					last WHILE;
+					last_locus();
+				}
+				else {
+					system "clear";
+					print "\nERROR: Invalid input '$proceed'\n\n" 
+				}
 			}
 		}
 		else{
-			open IN, "<", "$filename.curated" or die "Can't read $filename.curated: $!\n";
-			while (my $line = <IN>){
-				chomp $line;
-				print OUT "$line\n";
-				my @data = split("\t",$line);
-				$last_locus = $data[0];
-			}
-			close IN;
+			last_locus();
 		}
 	}
 }
@@ -183,6 +190,7 @@ while (my $line = <IN>){
 	}
 	## Add 3D information if provided
 	my $three_d_sources = 0;
+	my $three_d_predictions = 0;
 	if (defined $input_3D){
 		if (defined $three_d{$locus}){
 			foreach my $struct (@{$three_d{$locus}}){
@@ -192,6 +200,7 @@ while (my $line = <IN>){
 				push(@evalues,$data[0]);
 				# print "3D.\tGESAMT:\t\t"."$_"."\n";
 				$three_d_sources++;
+				$three_d_predictions++;
 			}
 		}
 		else {
@@ -219,7 +228,7 @@ while (my $line = <IN>){
 	WHILE: while (0==0){
 		my $status_3D = 0;
 		print "\n$status\t$current_protein/$protein_total\n";
-		print "\nPutative annotation(s) found for protein $data[0]:\n";
+		print "\n## Putative annotation(s) found for protein $data[0]:\n";
 		## Loop through our information arrays so we don't have a million conditionals, and we are more robust this way
 		for (my $i = 1; $i <= $options; $i++){
 			my $source = $sources[$i-1];
@@ -241,16 +250,22 @@ while (my $line = <IN>){
 				print "${evalue}${tab}${prediction}\n";
 			}
 		}
-		print "\nPlease enter [1-$choices] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', ";
-		print "[m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.\n";
-		print "Selection: ";
+		print "\nPlease enter:\n\n";
+		print "\t[1-$choices] to assign annotation\n";
+		print "\t[0] to annotate the locus as a 'hypothetical protein'\n";
+		print "\t[m] to manually annotate the locus\n";
+		print "\t[?] to mark this annotation for review\n";
+		if ($three_d_predictions > 0) { print "\t[v] to mark this annoation for 3D structural verification\n"; }
+		print "\t[x] to exit.\n";
+		print "\nSelection: ";
 		chomp (my $select = <STDIN>);
 		if ($select eq 'x'){
 			if ($review){
 				print OUT "$locus\t?\n";
 			}
 			cleanup();
-			die "Exiting annotation curation..." ;
+			print "\nExiting annotation curation...\n\n";
+			exit;
 		}
 		elsif ($select eq 'm'){
 			print "Enter desired annotation: ";
@@ -266,6 +281,17 @@ while (my $line = <IN>){
 		}
 		elsif ($select eq '0'){
 			print OUT "$locus\thypothetical protein\n";
+			system "clear";
+			last WHILE;
+		}
+		elsif ($select eq 'v' && $three_d_predictions > 0){
+			print OUT "$locus\tVerify 3D Structural Homology\t";
+			foreach my $struct (@{$three_d{$locus}}){
+				if ($struct =~ /^\S+\t(\S+)/) {
+					print OUT "$1,";
+				}
+			}
+			print OUT "\n";
 			system "clear";
 			last WHILE;
 		}
@@ -291,12 +317,12 @@ cleanup();
 
 ##subroutines
 
-sub tab{
+sub tab {
 	if ($string_length >= 8){ $tab = "\t"; }
 	else { $tab = "\t\t"; }
 }
 
-sub cleanup{
+sub cleanup {
 	if ($review){
 		while (my $line = shift(@to_review)){
 			print OUT "$line\n";
@@ -304,4 +330,15 @@ sub cleanup{
 	}
 	system "mv temp_files/$filename.temp $filename.curated";
 	system "rm -r temp_files";
+}
+
+sub last_locus {
+	open IN, "<", "$filename.curated" or die "Can't read $filename.curated: $!\n";
+		while (my $line = <IN>){
+			chomp $line;
+			print OUT "$line\n";
+			my @data = split("\t",$line);
+			$last_locus = $data[0];
+		}
+	close IN;
 }
