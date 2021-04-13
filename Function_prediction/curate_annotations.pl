@@ -273,7 +273,7 @@ while (my $line = <IN>){
 		print "\t[0] to annotate the locus as a 'hypothetical protein'\n";
 		print "\t[m] to manually annotate the locus\n";
 		if ($annon_notes) { print "\t[k] to keep annotation notes\n"; }
-		if ($three_d_predictions > 0) { print "\t[v] to mark this annoation for 3D structural verification\n"; }
+		if ($three_d_predictions > 0) { print "\t[v] to mark this annotation for 3D structural verification\n"; }
 		print "\t[?] to mark this annotation for review and add curation notes (optional)\n";
 		print "\t[x] to exit.\n";
 		print "\nSelection: ";
