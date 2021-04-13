@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'curate_annotations.pl';
-my $version = '1.7';
+my $version = '1.8';
 my $updated = '2021-04-12';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
@@ -140,6 +140,7 @@ while (my $line = <IN>){
 	$current_protein++;
 	
 	## If we are reviewing, skip the check start process because we are not going to be curating the same way.
+	my $annon_notes;
 	unless ($review){
 		## Check to see if we are the $last_locus, and if we are, start the anntotation process
 		unless ($start){
@@ -160,6 +161,10 @@ while (my $line = <IN>){
 			unless ($review_line =~ /\?/){
 				print OUT "$review_line\n";
 				next;
+			}
+			elsif ($review_line =~ /\S+\t\?(.*?\w+.*)||\S+\t(.*?\w+.*?)\?/) {
+				if ($1) { $annon_notes = $1; }
+				if ($2)	{ $annon_notes = $2; }
 			}
 		}
 		## If there are no more loci to review, let user know and exit script.
@@ -198,7 +203,6 @@ while (my $line = <IN>){
 				my @data = split ("\t", $struct);
 				push(@predictions,$data[1]);
 				push(@evalues,$data[0]);
-				# print "3D.\tGESAMT:\t\t"."$_"."\n";
 				$three_d_sources++;
 				$three_d_predictions++;
 			}
@@ -209,7 +213,6 @@ while (my $line = <IN>){
 			push(@evalues,"NA");
 			$NA_count++;
 			$three_d_sources++;
-			# print "3D.\tGESAMT:\t\t"."NA\t\tno match found"."\n";
 		}
 	}
 
@@ -228,6 +231,15 @@ while (my $line = <IN>){
 	WHILE: while (0==0){
 		my $status_3D = 0;
 		print "\n$status\t$current_protein/$protein_total\n";
+		if(@to_review){
+			print "\n## Annotation Notes:\n";
+			if($annon_notes) {
+				print "\t$annon_notes\n";
+			}
+			else{
+				print "\tN/A\n";
+			}
+		}
 		print "\n## Putative annotation(s) found for protein $data[0]:\n";
 		## Loop through our information arrays so we don't have a million conditionals, and we are more robust this way
 		for (my $i = 1; $i <= $options; $i++){
@@ -242,7 +254,7 @@ while (my $line = <IN>){
 			}
 			else {
 				if ($status_3D == 0){
-					print "\n".'## 3D structural homologs (if any)'."\n";
+					print "\n".'## 3D structural homologs (if any):'."\n";
 					$status_3D = 1;
 				}
 				print "3D.\t${source}${tab}";
@@ -254,8 +266,9 @@ while (my $line = <IN>){
 		print "\t[1-$choices] to assign annotation\n";
 		print "\t[0] to annotate the locus as a 'hypothetical protein'\n";
 		print "\t[m] to manually annotate the locus\n";
-		print "\t[?] to mark this annotation for review\n";
+		if ($annon_notes) { print "\t[k] to keep annotation notes\n"; }
 		if ($three_d_predictions > 0) { print "\t[v] to mark this annoation for 3D structural verification\n"; }
+		print "\t[?] to mark this annotation for review\n";
 		print "\t[x] to exit.\n";
 		print "\nSelection: ";
 		chomp (my $select = <STDIN>);
@@ -274,14 +287,8 @@ while (my $line = <IN>){
 			system "clear";
 			last WHILE;
 		}
-		elsif ($select eq '?'){
-			print OUT "$locus\t?\n";
-			system "clear";
-			last WHILE;
-		}
-		elsif ($select eq '0'){
-			print OUT "$locus\thypothetical protein\n";
-			system "clear";
+		elsif ($select eq 'k' && $annon_notes){
+			print OUT "$locus\t$annon_notes\n";
 			last WHILE;
 		}
 		elsif ($select eq 'v' && $three_d_predictions > 0){
@@ -292,6 +299,16 @@ while (my $line = <IN>){
 				}
 			}
 			print OUT "\n";
+			system "clear";
+			last WHILE;
+		}
+		elsif ($select eq '?'){
+			print OUT "$locus\t?\n";
+			system "clear";
+			last WHILE;
+		}
+		elsif ($select eq '0'){
+			print OUT "$locus\thypothetical protein\n";
 			system "clear";
 			last WHILE;
 		}
