@@ -289,9 +289,15 @@ while (my $line = <IN>){
 		elsif ($select eq 'm'){
 			print "Enter desired annotation: ";
 			chomp (my $manual = <STDIN>);
-			print OUT "$locus\t$manual\n";
-			system "clear";
-			last WHILE;
+			if ($manual !~ /^\S+/ && length($manual) > 5){
+				system "clear";
+				print "\nERROR: Annotation cannot start with ' '.\n\n";
+			}
+			else{
+				print OUT "$locus\t$manual\n";
+				system "clear";
+				last WHILE;
+			}
 		}
 		elsif ($select eq 'k' && $annon_notes){
 			print OUT "$locus\t? $annon_notes\n";
