@@ -167,10 +167,16 @@ while (my $line = <IN>){
 			}
 			elsif ($review_line =~ /\S+\t\?(.*?\w+.*)|\S+\t(.*?\w+.*?)\?/) {
 				$annon_notes = $1;
-				if (!$review){ next; }
+				if (!$review){ 
+					print OUT "$review_line\n";
+					next;
+				}
 			}
 			elsif ($review_line =~ /Verify 3D Structural Homology/){
-				if (!$verify){ next; }
+				if (!$verify){ 
+					print OUT "$review_line\n";
+					next;
+				}
 			}
 		}
 		## If there are no more loci to review, let user know and exit script.
@@ -280,7 +286,16 @@ while (my $line = <IN>){
 		chomp (my $select = <STDIN>);
 		if ($select eq 'x'){
 			if ($review){
-				print OUT "$locus\t?\n";
+				print OUT "$locus\t? $annon_notes\n";
+			}
+			elsif ($verify){
+				print OUT "$locus\tVerify 3D Structural Homology\t";
+				foreach my $struct (@{$three_d{$locus}}){
+					if ($struct =~ /^\S+\t(\S+)/) {
+						print OUT "$1,";
+					}
+				}
+				print OUT "\n";
 			}
 			cleanup();
 			print "\nExiting annotation curation...\n\n";
