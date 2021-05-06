@@ -2,7 +2,7 @@
 ## Pombert Lab, IIT, 2020
 my $name = 'curate_annotations.pl';
 my $version = '1.9';
-my $updated = '2021-04-13';
+my $updated = '2021-04-27';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -18,26 +18,35 @@ COMMAND		${name} \\
 		  -r
 
 OPTIONS
--i (--input)	Sequence homology based annotations (generated from parse_annotators.pl)
+-sq (--seq_hom)		Sequence homology based annotations (generated from parse_annotators.pl)
+-rd (--rcsb_3d)		3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
+-pd (--pfam_3d)		3D structural homology annotations based on predicted stuctures (Generated with descriptive)
+-cx (--chimerax)	Path to ChimeraX pdb sessions
 -r (--resume)		Resume annotation from last curated locus_tag
 -c (--check)		Check loci marked with '?'
 -v (--verify)		Check loci marked for 3D verification
--d (--3D_annot)		3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
 EXIT
 die "\n\n$usage\n\n" unless @ARGV;
 
 my $input;
+my $rcsb_input;
+my $pfam_input;
+my $chimerax;
 my $continue;
 my $review;
 my $verify;
-my $input_3D;
 GetOptions(
-	"i|input=s" => \$input,
+	"sq|sequence=s" => \$input,
+	"rd|rcsb_3d=s" => \$rcsb_input,
+	"pd|pfam_3d=s" => \$pfam_input,
+	"cx|chimerax=s" => \$chimerax,
 	"r|resume" => \$continue,
 	"v|verify" => \$verify,
 	"c|check" => \$review,
-	"d|3D_annot=s" => \$input_3D
 );
+
+my ($h_filename,$h_dir) = fileparse($0);
+my $script = $h_dir."ChimeraX_helper_scripts/Restore_ChimeraX_Session.py";
 
 ## Make a temporary directory to store our temporary files.
 unless (-d 'temp_files'){
@@ -95,20 +104,54 @@ else{
 		}
 	}
 }
-## If we are given a 3D file, parse through it to get the match data
-my %three_d; my $three_d_query;
-if ($input_3D){
-	open DD, "<", "$input_3D" or die "\n[E] Can't open 3D matches file: $input_3D\n\n";
-	while (my $line = <DD>){
+
+## If we are given a rcsb 3D file, parse through it to get the match data
+my %rcsb; my $rcsb_query;
+if ($rcsb_input){
+
+	open R3D, "<", "$rcsb_input" or die "\n[E] Can't open 3D matches file: $rcsb_input\n\n";
+	
+	while (my $line = <R3D>){
 		chomp $line;
-		if ($line =~ /^### .*?(\w+)\-\w+\-\w+$/){ $three_d_query = $1; }
+		if ($line =~ /^### .*?(\w+)\-\w+\-\w+$/){ $rcsb_query = $1; }
 		else {
-			if ($line =~ /^\S+\s+\d+\s+(\w+)\s+\w\s+(\S+).*pdb\w+.ent.gz\s(.*)$/){
-				my $hit = $1;
-				my $qscore = $2;
-				my $match = $3;
-				push (@{$three_d{$three_d_query}}, "$qscore\t$hit - $match");
-			}
+			my @data = split("\t",$line);
+			my $hit = $data[2];
+			my $chain = $data[3];
+			my $qscore = $data[4];
+			my $match = $data[$#data];
+			push (@{$rcsb{$rcsb_query}}, "$qscore\t$hit - Chain: $chain - $match");
+		}
+	}
+}
+
+## If we are given a pfam 3D file, parse through it to get the match data
+my %pfam; my $pfam_query;
+if ($pfam_input){
+
+	open P3D, "<", "$pfam_input" or die "\n[E] Can't open 3D matches file: $pfam_input\n\n";
+	
+	while (my $line = <P3D>){
+		chomp $line;
+		if ($line =~ /^### .*?(\w+)\-\w+\-\w+$/){ $pfam_query = $1; }
+		else {
+			my @data = split("\t",$line);
+			my $hit = $data[$#data-1];
+			my $qscore = $data[3];
+			my $match = $data[$#data];
+			$hit =~ s/.pdb$//;
+			push (@{$pfam{$pfam_query}}, "$qscore\t$hit - $match");
+			
+		}
+	}
+}
+
+my %cxs;
+if ($chimerax){
+	opendir(DIR,$chimerax);
+	while (my $file = readdir(DIR)){
+		if($file =~ /(\S+)\.cxs$/){
+			$cxs{$1} = "$chimerax/$file";
 		}
 	}
 }
@@ -116,6 +159,7 @@ if ($input_3D){
 ## Get total protein count. Start at -1 because, you know, file header
 open IN, "<", "$input" or die "Can't read $input: $!\n";
 my $protein_total = -1;
+
 while (my $line = <IN>){
 	$protein_total++;
 }
@@ -130,10 +174,16 @@ my $start = 1;
 my $string_length;
 my $tab;
 open IN, "<", $input or die "Can't read $input: $!\n";
+
 if ($last_locus) { $start = undef; }
+
+my $last_annotation;
+my $previous_annotation;
 while (my $line = <IN>){
+	
 	system "clear";
 	chomp $line;
+	
 	## If we are at the header of the file, get the header info and skip to the next line
 	if ($line =~ /^#/){
 		$line =~ s/#//;
@@ -165,18 +215,11 @@ while (my $line = <IN>){
 				print OUT "$review_line\n";
 				next;
 			}
-			elsif ($review_line =~ /\S+\t\?(.*?\w+.*)|\S+\t(.*?\w+.*?)\?/) {
-				$annon_notes = $1;
-				if (!$review){ 
-					print OUT "$review_line\n";
-					next;
-				}
+			elsif ($review_line =~ /\?/ && !$review) {
+				print OUT "$review_line\n";
 			}
-			elsif ($review_line =~ /Verify 3D Structural Homology/){
-				if (!$verify){ 
-					print OUT "$review_line\n";
-					next;
-				}
+			elsif ($review_line =~ /Verify 3D Structural Homology/ && !$verify){
+				print OUT "$review_line\n";
 			}
 		}
 		## If there are no more loci to review, let user know and exit script.
@@ -185,6 +228,7 @@ while (my $line = <IN>){
 			exit;
 		}
 	}
+
 	## Locus	E-Value_1	Annot_1	E-Value_2	Annot_2	etc...
 	## Odds are evalues, evens are predictions, except for the first even, which is the locus tag
 	my @data = split("\t",$line);
@@ -205,18 +249,19 @@ while (my $line = <IN>){
 			}
 		}
 	}
-	## Add 3D information if provided
-	my $three_d_sources = 0;
-	my $three_d_predictions = 0;
-	if (defined $input_3D){
-		if (defined $three_d{$locus}){
-			foreach my $struct (@{$three_d{$locus}}){
+
+	## Add rcsb information if provided
+	my $rcsb_sources = 0;
+	my $rcsb_predictions = 0;
+	if (defined $rcsb_input){
+		if (defined $rcsb{$locus}){
+			foreach my $struct (@{$rcsb{$locus}}){
 				push(@sources,"GESAMT");
 				my @data = split ("\t", $struct);
 				push(@predictions,$data[1]);
 				push(@evalues,$data[0]);
-				$three_d_sources++;
-				$three_d_predictions++;
+				$rcsb_sources++;
+				$rcsb_predictions++;
 			}
 		}
 		else {
@@ -224,7 +269,30 @@ while (my $line = <IN>){
 			push(@predictions,"no match found");
 			push(@evalues,"NA");
 			$NA_count++;
-			$three_d_sources++;
+			$rcsb_sources++;
+		}
+	}
+
+	## Add pfam information if provided
+	my $pfam_sources = 0;
+	my $pfam_predictions = 0;
+	if (defined $pfam_input){
+		if (defined $pfam{$locus}){
+			foreach my $struct (@{$pfam{$locus}}){
+				push(@sources,"GESAMT");
+				my @data = split ("\t", $struct);
+				push(@predictions,$data[1]);
+				push(@evalues,$data[0]);
+				$pfam_sources++;
+				$pfam_predictions++;
+			}
+		}
+		else {
+			push(@sources,"GESAMT");
+			push(@predictions,"no match found");
+			push(@evalues,"NA");
+			$NA_count++;
+			$pfam_sources++;
 		}
 	}
 
@@ -239,10 +307,11 @@ while (my $line = <IN>){
 	my $remaining = "." x (100-int(($current_protein/$protein_total)*100));
 	my $status = "[".$progress.$remaining."]";
 	my $options = scalar(@sources);
-	my $choices = $options - $three_d_sources;
+	my $choices = $options - $rcsb_sources - $pfam_sources;
 	WHILE: while (0==0){
-		my $status_3D = 0;
+		
 		print "\n$status\t$current_protein/$protein_total\n";
+		
 		if($review){
 			print "\n## Annotation Notes:\n";
 			if($annon_notes) {
@@ -252,45 +321,63 @@ while (my $line = <IN>){
 				print "\tN/A\n";
 			}
 		}
+
 		print "\n## Putative annotation(s) found for protein $data[0]:\n";
+		
 		## Loop through our information arrays so we don't have a million conditionals, and we are more robust this way
+		my $rcsb_status = 0;
+		my $pfam_status = 0;
 		for (my $i = 1; $i <= $options; $i++){
 			my $source = $sources[$i-1];
 			my $prediction = $predictions[$i-1];
 			my $evalue = $evalues[$i-1];
 			$string_length = length("$source"); tab();
 			if ($i <= $choices){
-				print "${i}.\t${source}${tab}";
+				print "\t${i}.\t${source}${tab}";
 				$string_length = length("$evalue"); tab();
 				print "${evalue}${tab}${prediction}\n";
 			}
-			else {
-				if ($status_3D == 0){
-					print "\n".'## 3D structural homologs (if any):'."\n";
-					$status_3D = 1;
+			elsif($rcsb_status < $rcsb_sources) {
+				if ($rcsb_status == 0){
+					print "\n".'## 3D structural homologs based on experimentally determined structures (if any):'."\n";
 				}
-				print "3D.\t${source}${tab}";
+				$rcsb_status ++;
+				print "\tRCSB.\t${source}${tab}";
+				$string_length = length("$evalue"); tab();
+				print "${evalue}${tab}${prediction}\n";
+			}
+			else{
+				if ($pfam_status == 0){
+					print "\n".'## 3D structural homologs based on predicted structures (if any):'."\n";
+				}
+				$pfam_status++;
+				print "\tPFAM.\t${source}${tab}";
 				$string_length = length("$evalue"); tab();
 				print "${evalue}${tab}${prediction}\n";
 			}
 		}
+
 		print "\nPlease enter:\n\n";
 		print "\t[1-$choices] to assign annotation\n";
 		print "\t[0] to annotate the locus as a 'hypothetical protein'\n";
-		print "\t[m] to manually annotate the locus\n";
-		if ($annon_notes) { print "\t[k] to keep annotation notes\n"; }
-		if ($three_d_predictions > 0) { print "\t[v] to mark this annotation for 3D structural verification\n"; }
-		print "\t[?] to mark this annotation for review and add curation notes (optional)\n";
+		print "\t[m] to manually annotate the locus, e.g. DUFxxx domain-containing protein\n";
+		print "\t[n] to manually annotate the locus with annotation notes, e.g. structural homolog\n";
+		if ($annon_notes) { print "\t[k] to keep annotation\n"; }
+		if ($rcsb_predictions > 0) { print "\t[v] to mark this annotation for 3D structural verification\n"; }
+		print "\t[?] to mark this annotation for review and add annotation notes (optional)\n\n";
+		if ($rcsb_predictions > 0 || $pfam_predictions > 0){ print "\t[d] to display 3D homology for $locus\n\n"; }
 		print "\t[x] to exit.\n";
 		print "\nSelection: ";
 		chomp (my $select = <STDIN>);
+
+		## Select exit curation
 		if ($select eq 'x'){
 			if ($review){
-				print OUT "$locus\t? $annon_notes\n";
+				print OUT "$locus\t?\t$annon_notes\n";
 			}
 			elsif ($verify){
 				print OUT "$locus\tVerify 3D Structural Homology\t";
-				foreach my $struct (@{$three_d{$locus}}){
+				foreach my $struct (@{$rcsb{$locus}}){
 					if ($struct =~ /^\S+\t(\S+)/) {
 						print OUT "$1,";
 					}
@@ -301,10 +388,11 @@ while (my $line = <IN>){
 			print "\nExiting annotation curation...\n\n";
 			exit;
 		}
+		## Enter manual curation (no notes)
 		elsif ($select eq 'm'){
 			print "Enter desired annotation: ";
 			chomp (my $manual = <STDIN>);
-			if ($manual !~ /^\S+/ && length($manual) > 5){
+			if ($manual !~ /^\S+/ && length($manual) < 5){
 				system "clear";
 				print "\nERROR: Annotation cannot start with ' '.\n\n";
 			}
@@ -314,13 +402,31 @@ while (my $line = <IN>){
 				last WHILE;
 			}
 		}
+		## Enter manual curation (with notes)
+		elsif ($select eq 'n'){
+			print "Enter desired annotation: ";
+			chomp (my $manual = <STDIN>);
+			if ($manual !~ /^\S+/ && length($manual) < 5){
+				system "clear";
+				print "\nERROR: Annotation cannot start with ' '.\n\n";
+			}
+			else{
+				print "Desired Annotation Note: ";
+				chomp (my $note = <STDIN>);
+				print OUT "$locus\t$manual\tNote: $note\n";
+				system "clear";
+				last WHILE;
+			}
+		}
+		## Keep annotation
 		elsif ($select eq 'k' && $annon_notes){
 			print OUT "$locus\t? $annon_notes\n";
 			last WHILE;
 		}
-		elsif ($select eq 'v' && $three_d_predictions > 0){
+		## Mark for 3D verification
+		elsif ($select eq 'v' && ($rcsb_predictions > 0 || $pfam_predictions > 0)){
 			print OUT "$locus\tVerify 3D Structural Homology\t";
-			foreach my $struct (@{$three_d{$locus}}){
+			foreach my $struct (@{$rcsb{$locus}}){
 				if ($struct =~ /^\S+\t(\S+)/) {
 					print OUT "$1,";
 				}
@@ -329,6 +435,7 @@ while (my $line = <IN>){
 			system "clear";
 			last WHILE;
 		}
+		## Mark locus for review
 		elsif ($select eq '?'){
 			print "\nAnnotation note(s) (if any): ";
 			chomp(my $note = <STDIN>);
@@ -336,11 +443,13 @@ while (my $line = <IN>){
 			system "clear";
 			last WHILE;
 		}
+		## Annotate locus as hypothetical protein
 		elsif ($select eq '0'){
 			print OUT "$locus\thypothetical protein\n";
 			system "clear";
 			last WHILE;
 		}
+		## Select annotation from sequence homology
 		elsif ($select =~ /^\d+$/){
 			my $selection = int($select)-1;
 			if ($selection < $choices){
@@ -353,13 +462,22 @@ while (my $line = <IN>){
 				print "\nERROR: Invalid input value '$select'.\n\n";
 			}
 		}
+		elsif ($select eq "d" && ($rcsb_predictions > 0 || $pfam_predictions > 0)){
+			if (exists($cxs{$locus})){
+				system "clear";
+				system "chimerax $cxs{$locus} $script &";
+			}
+		}
+		## If option isn't one of the following, throw an error and let the user know
 		else {
 			system "clear";
 			print "\nERROR: Invalid input value '$select'.\n\n";
 		}
 	}
+	system "pkill chimerax";
 }
 cleanup();
+print "Annotation curation completed. Be sure to run with the -c or -v flag to check any non-annotated loci...\n";
 
 ##subroutines
 
