@@ -62,6 +62,7 @@ The A2GB pipeline will:
 - [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
 - [InterProScan 5](https://github.com/ebi-pf-team/interproscan) (latest version)
 - [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+) or [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
+- [ChimeraX](https://www.cgl.ucsf.edu/chimerax/download.html)
 - [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)
 
 ## A2GB workflow
