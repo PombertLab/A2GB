@@ -6,8 +6,8 @@ import re
 import os
 
 name = 'Create_ChimeraX_Session.py'
-version = '0.2'
-updated = '2021-04-26'
+version = '0.2a'
+updated = '2021-05-11'
 
 usage = f'''
 NAME		{name}
@@ -19,14 +19,14 @@ SYNOPSIS	This script is used to align a reference .pdb to a predicted .pdb,
 		chains, and saves the result as a ChimeraX session (.cxs)
 
 COMMAND		{name} \\
-			-p ...preference \\
-			-r ...reference
+			-p_f GPU96_02g03480.pdb \\
+			-r_m 6cb1.ent
 
 OPTIONS
 
--p_f (--pred)		Predicted pdb file
--p_m (--pfam)		PFAM match file
--r_m (--rcsb)		RCSD match file
+-p_f (--pred)		Predicted .pdb file
+-p_m (--pfam)		Matching PFAM .pdb file
+-r_m (--rcsb)		Matching RCSB .pdb file
 -o_d (--outdir)		Output directory for .cxs files [Default: ./CXS]
 '''
 
@@ -34,13 +34,11 @@ if len(argv) < 2:
 	print(usage)
 	exit()
 
-outdir = './CXS'
-
 parser = argparse.ArgumentParser(usage=usage)
 parser.add_argument('-p_f','--pred',type=str,required=True)
 parser.add_argument('-p_m','--pfam',type=str)
 parser.add_argument('-r_m','--rcsb',type=str)
-parser.add_argument('-o_d','--outdir',type=str)
+parser.add_argument('-o_d','--outdir',type=str,default="./CXS")
 parser.add_argument('--nogui')
 
 args = parser.parse_args()
