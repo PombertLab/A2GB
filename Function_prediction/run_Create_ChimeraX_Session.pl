@@ -3,8 +3,8 @@
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
 my $name = 'Create_ChimeraX_Session.pl';
-my $version = '0.1';
-my $updated = '2021-04-26';
+my $version = '0.1a';
+my $updated = '2021-05-11';
 
 my $usage = <<"EXIT";
 NAME		${name}
@@ -68,7 +68,7 @@ if ($rcsb){
 				$db{$file} = "$rcsb/$dir/$file";
 			}
 		}
-		# closedir DIR2;
+		closedir DIR2;
 	}
 	closedir DIR;
 }
