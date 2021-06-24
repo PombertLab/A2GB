@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'curate_annotations.pl';
-my $version = '1.9';
-my $updated = '2021-04-27';
+my $version = '1.9a';
+my $updated = '2021-06-24';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
@@ -14,7 +14,7 @@ SYNOPSIS	Displays lists of functions predicted per proteins. User can select or 
 		Creates a tab-delimited .curated list of annotations.
 
 COMMAND		${name} \\
-		  -i proteins.annotations \\
+		  -sq proteins.annotations \\
 		  -r
 
 OPTIONS
