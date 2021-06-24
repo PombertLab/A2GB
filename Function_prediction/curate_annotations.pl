@@ -20,7 +20,7 @@ COMMAND		${name} \\
 OPTIONS
 -sq (--seq_hom)		Sequence homology based annotations (generated from parse_annotators.pl)
 -rd (--rcsb_3d)		3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
--pd (--pfam_3d)		3D structural homology annotations based on predicted stuctures (Generated with descriptive)
+-pd (--pfam_3d)		3D structural homology annotations based on predicted stuctures (Generated with descriptive_GESAMT_matches.pl)
 -cx (--chimerax)	Path to ChimeraX pdb sessions
 -r (--resume)		Resume annotation from last curated locus_tag
 -c (--check)		Check loci marked with '?'
@@ -99,7 +99,7 @@ else{
 				}
 			}
 		}
-		else{
+		else {
 			last_locus();
 		}
 	}
