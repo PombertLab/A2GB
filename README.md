@@ -581,7 +581,7 @@ The script [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/maste
 To start curating annotations with [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl), simply type:
 
 ```
-curate_annotations.pl -i $ANNOT/proteins.annotations
+curate_annotations.pl -sq $ANNOT/proteins.annotations
 
 [....................................................................................................]	0002/8631
 
@@ -617,7 +617,7 @@ To speed up the manual annotation process, proteins without any homology/signifi
 To resume annotations from the last annotated proteins, simply add -r (resume) to the command line:
 
 ```
-curate_annotations.pl -r -i $ANNOT/proteins.annotations
+curate_annotations.pl -r -sq $ANNOT/proteins.annotations
 
 [....................................................................................................]	0007/8631
 
@@ -648,7 +648,7 @@ HOP50_01g00050  glutamine-dependent NAD(+) synthetase
 
 If a reference dataset was used, the menu from [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) should look like this:
 ```
-curate_annotations.pl -i $ANNOT/proteins.annotations
+curate_annotations.pl -sq $ANNOT/proteins.annotations
 
 [....................................................................................................]	0002/8631
 
@@ -668,10 +668,13 @@ Enter desired annotation: signal transduction histidine kinase
 
 Options for [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) are:
 ```
--i (--input)	Sequence homology based annotations (generated from parse_annotators.pl)
--r (--resume)	Resume annotation from last curated locus_tag
--c (--check)	Check loci marked with '?'
--d (--3D_annot)	3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
+-sq (--seq_hom)		Sequence homology based annotations (generated from parse_annotators.pl)
+-rd (--rcsb_3d)		3D structural homology based annotations (Generated with descriptive_GESAMT_matches.pl)
+-pd (--pfam_3d)		3D structural homology annotations based on predicted stuctures (Generated with descriptive)
+-cx (--chimerax)	Path to ChimeraX pdb sessions
+-r (--resume)		Resume annotation from last curated locus_tag
+-c (--check)		Check loci marked with '?'
+-v (--verify)		Check loci marked for 3D verification
 ```
 
 ### Converting EMBL files to ASN format
