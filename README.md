@@ -524,6 +524,9 @@ QDZ17486.1      coiled-coil domain-containing protein
 QDZ17487.1      putative transmembrane protein
 ```
 
+#### Searching the KEGG databases for orthologs
+The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried for orthologs; proteins with matches against KEGG proteins will assigned KO numbers (for KEGG orthologs). These can be useful during the annotation process. KEGG orthologs can be identified with [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
+
 #### Parsing the result of InterProScan 5 and DIAMOND searches
 
 First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5 and/or DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
@@ -537,7 +540,7 @@ HOP50_01g00030
 HOP50_01g00040
 ```
 
-Then, let's parse the output of the InterProScan 5 and DIAMOND searches using the list of queries produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) and the lists of accession numbers/products created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl). We will use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) to do this (Note that the uniprot_trembl.list file will be large and will eat up at least 5 Gb of RAM):
+Then, let's parse the output of the InterProScan 5 and DIAMOND searches using the list of queries produced by [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) and the lists of accession numbers/products created with [get_uniprot_products.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_uniprot_products.pl). We will use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) to do this:
 
 ```Bash
 parse_annotators.pl \
@@ -576,7 +579,7 @@ parse_annotators.pl \
    -rb $ANNOT/REFERENCES/reference.diamond.6
 ```
 
-Options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
+If desired, results from KEGG searches can also be parsed accordingly. Options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
 ```
 -q	List of proteins queried against annotators
 -o	Output file
@@ -598,9 +601,6 @@ Options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master
 -gk	GhostKOALA output file
 -bk	BlastKOALA output file
 ```
-
-#### Searching the KEGG databases for orthologs
-The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried to search for orthologs; proteins with matches against KEGG assigned KO numbers (for KEGG ortholog). These can be useful during the annotation process. KEGG orthologs can be identified by [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
 
 #### Curating the protein annotations
 The script [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) was designed to faciliate comparisons between function prediction tools. It requires as input the file generated with [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl). At minimum, this file should include the result of DIAMOND (or NCBI BLAST+) BLASTP homology searches against the SwissProt/TrEMBL databases and the result of InterProScan 5 searches. [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) will generate a user-curated tab-delimited list of locus_tags and their predicted functions. This list will be stored in a file with the .curated file extension. 
