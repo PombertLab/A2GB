@@ -23,7 +23,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
         *	[Searching the KEGG databases for orthologs](#Searching-the-KEGG-databases-for-orthologs)
-        *	[Parsing the result of InterProScan 5, DIAMOND and KEGG searches](#Parsing-the-result-of-InterProScan-5,-DIAMOND-and-KEGG-searches)
+        *	[Parsing the result of InterProScan 5 DIAMOND and KEGG searches](#Parsing-the-result-of-InterProScan-5-DIAMOND-and-KEGG-searches)
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
@@ -527,7 +527,7 @@ QDZ17487.1      putative transmembrane protein
 #### Searching the KEGG databases for orthologs
 The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried for orthologs; proteins with matches against KEGG proteins will assigned KO numbers (for KEGG orthologs). These can be useful during the annotation process. KEGG orthologs can be identified with [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
 
-#### Parsing the result of InterProScan 5, DIAMOND and KEGG searches
+#### Parsing the result of InterProScan 5 DIAMOND and KEGG searches
 First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5 and/or DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
 ```Bash
 get_queries.pl $ANNOT/proteins.fasta
