@@ -527,7 +527,7 @@ QDZ17487.1      putative transmembrane protein
 The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried for orthologs; proteins with matches against KEGG proteins will be assigned KO numbers (for KEGG orthologs). These can be useful during the annotation process. KEGG orthologs can be identified with [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
 
 #### Parsing the results from homology searches
-First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5, DIAMOND and/or KEGG searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
+First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan5, DIAMOND and/or KEGG searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
 ```Bash
 get_queries.pl $ANNOT/proteins.fasta
 
