@@ -23,7 +23,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
         *	[Searching KEGG databases for orthologs](#Searching-KEGG-databases-for-orthologs)
-        *	[Parsing the result of InterProScan5 DIAMOND and KEGG searches](#Parsing-the-result-of-InterProScan5-DIAMOND-and-KEGG-searches)
+        *	[Parsing the result of homology searches](#Parsing-the-result-of-homology-searches)
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
@@ -526,7 +526,7 @@ QDZ17487.1      putative transmembrane protein
 #### Searching KEGG databases for orthologs
 The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried for orthologs; proteins with matches against KEGG proteins will assigned KO numbers (for KEGG orthologs). These can be useful during the annotation process. KEGG orthologs can be identified with [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
 
-#### Parsing the result of InterProScan 5 DIAMOND and KEGG searches
+#### Parsing the result of homology searches
 First, let's start by creating a simple list of all proteins queries, even those that returned no homology in InterProScan 5 and/or DIAMOND searches. We will use [get_queries.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_queries.pl) for this: 
 ```Bash
 get_queries.pl $ANNOT/proteins.fasta
@@ -562,7 +562,7 @@ HOP50_01g00020  2.5e-50 Hybrid signal transduction histidine kinase J   0.0e+00 
 HOP50_01g00030  NA      hypothetical protein    1.0e-07 Insulin-like growth factor binding, N-terminal  1.0E-6  Putative ephrin-receptor like   NA      hypothetical protein    NA      hypothetical protein    6.31891E-8      TNFRSF
 ```
 
-To use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) with reference(s) dataset(s), type:
+To use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) with a reference dataset, type:
 
 ```Bash
 parse_annotators.pl \
@@ -577,7 +577,22 @@ parse_annotators.pl \
    -rb $ANNOT/REFERENCES/reference.diamond.6
 ```
 
-If desired, results from KEGG searches can also be parsed accordingly. Options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
+We can also use multiple reference datasets if desired (file prefixes should match between the corresponding .list and .diamond.6 files). To use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) with multiple reference datasets, type:
+
+```Bash
+parse_annotators.pl \
+   -q $ANNOT/proteins.queries \
+   -o $ANNOT/proteins.annotations \
+   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv \
+   -sl $ANNOT/UNIPROT/uniprot_sprot.list \
+   -tl $ANNOT/UNIPROT/uniprot_trembl.list \
+   -sb $ANNOT/DIAMOND/sprot.diamond.6 \
+   -tb $ANNOT/DIAMOND/trembl.diamond.6 \
+   -rl $ANNOT/REFERENCES/*.list \
+   -rb $ANNOT/REFERENCES/*.diamond.6
+```
+
+If desired, results from KEGG searches can also be parsed accordingly by invoking the -ko, -gk and/or -bk command line options. Current options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
 ```
 -q	List of proteins queried against annotators
 -o	Output file
