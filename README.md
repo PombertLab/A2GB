@@ -637,7 +637,7 @@ Please enter:
 	[0] to annotate the locus as a 'hypothetical protein'
 	[m] to manually annotate the locus, e.g. DUFxxx domain-containing protein
 	[n] to manually annotate the locus with annotation notes, e.g. structural homolog
-	[?] to mark this annotation for review and add annotation notes (optional)
+	[?] to mark this annotation for review and add annotation notes
 
 	[x] to exit
 ```
@@ -665,7 +665,7 @@ Please enter:
 	[0] to annotate the locus as a 'hypothetical protein'
 	[m] to manually annotate the locus, e.g. DUFxxx domain-containing protein
 	[n] to manually annotate the locus with annotation notes, e.g. structural homolog
-	[?] to mark this annotation for review and add annotation notes (optional)
+	[?] to mark this annotation for review and add annotation notes
 
 	[x] to exit.
 

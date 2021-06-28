@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
-my $version = '1.6';
+my $version = '1.6a';
 my $updated = '2021-06-28';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
@@ -12,9 +12,10 @@ VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	This script parses the output of annotators to help assign putative functions to predicted proteins.
 		Annotators are:
-		- BLASTP/DIAMOND searches against SwissProt/trEMBL databases
 		- InterProScan 5 searches
-		- BLASTP/DIAMOND searches against reference organism (optional)
+		- BLASTP/DIAMOND searches against SwissProt/trEMBL databases
+		- BLASTP/DIAMOND searches against reference organism(s)
+		- KofamKOALA/GhostKOALA/BlastKOALA searches against KEGG
 
 USAGE	${name} \\
 		  -q BEOM2.proteins.queries \\
@@ -25,7 +26,7 @@ USAGE	${name} \\
 		  -tl trembl.list \\
 		  -tb BEOM2.trembl.blastp.6 \\
 		  -rl reference.list \\
-		  -rb reference.blastp.6 ## Searches against reference organism(s) (Optional)
+		  -rb reference.blastp.6
 
 OPTIONS:
 -q	List of proteins queried against annotators
