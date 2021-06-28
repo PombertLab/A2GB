@@ -23,6 +23,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
         *	[Parsing the result of InterProScan 5 and DIAMOND searches](#Parsing-the-result-of-InterProScan-5-and-DIAMOND-searches)
+        *	[Searching the KEGG databases for orthologs](#Searching-the-KEGG-databases-for-orthologs)
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
@@ -598,6 +599,9 @@ Options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master
 -bk	BlastKOALA output file
 ```
 
+#### Searching the KEGG databases for orthologs
+The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried to search for orthologs; proteins with matches against KEGG assigned KO numbers (for KEGG ortholog). These can be useful during the annotation process. KEGG orthologs can be identified by [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
+
 #### Curating the protein annotations
 The script [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) was designed to faciliate comparisons between function prediction tools. It requires as input the file generated with [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl). At minimum, this file should include the result of DIAMOND (or NCBI BLAST+) BLASTP homology searches against the SwissProt/TrEMBL databases and the result of InterProScan 5 searches. [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) will generate a user-curated tab-delimited list of locus_tags and their predicted functions. This list will be stored in a file with the .curated file extension. 
 
@@ -606,33 +610,23 @@ To start curating annotations with [curate_annotations.pl](https://github.com/Po
 ```
 curate_annotations.pl -sq $ANNOT/proteins.annotations
 
-[....................................................................................................]	0002/8631
+## Putative annotation(s) found for protein HOP50_01g00020:
+	1.	SwissProt	2.5e-50		Hybrid signal transduction histidine kinase J
+	2.	trEMBL		0.0e+00		Signal transduction histidine kinase
+	3.	PFAM		5.5E-30		Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
+	4.	TIGR		NA		hypothetical protein
+	5.	HAMAP		NA		hypothetical protein
+	6.	CDD		1.8907E-11	HisKA
 
-Putative annotation(s) found for protein HOP50_01g00020:
-1.	SwissProt	2.5e-50		Hybrid signal transduction histidine kinase J
-2.	trEMBL		0.0e+00		Signal transduction histidine kinase
-3.	PFAM		5.5E-30		Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
-4.	TIGR		NA		hypothetical protein
-5.	HAMAP		NA		hypothetical protein
-6.	CDD		1.8907E-11	HisKA
+Please enter:
 
-Please enter [1-6] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
-Selection: m
-Enter desired annotation: signal transduction histidine kinase
+	[1-6] to assign annotation
+	[0] to annotate the locus as a 'hypothetical protein'
+	[m] to manually annotate the locus, e.g. DUFxxx domain-containing protein
+	[n] to manually annotate the locus with annotation notes, e.g. structural homolog
+	[?] to mark this annotation for review and add annotation notes (optional)
 
-
-[....................................................................................................]	3/8631
-
-Putative annotation(s) found for protein HOP50_01g00030:
-1.	SwissProt	NA		hypothetical protein
-2.	trEMBL		1.0e-07		Insulin-like growth factor binding, N-terminal
-3.	PFAM		1.0E-6		Putative ephrin-receptor like
-4.	TIGR		NA		hypothetical protein
-5.	HAMAP		NA		hypothetical protein
-6.	CDD		6.31891E-8	TNFRSF
-
-Please enter [1-6] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
-Selection: x
+	[x] to exit
 ```
 
 To speed up the manual annotation process, proteins without any homology/significant hit in any of the predictors used will be annotated automatically as 'hypothetical protein'. Proteins with one or more matches identified by the predictors will show a menu like the one above. Users can enter the desired selection from the menu to annotate the  proteins accordingly. The option [m] for manual annotation will likely be useful to fix typos and/or lower/uppercase character issues in the corresponding matches. To option [x] will enable the user to quit and resume at a later stage. If the option entered is not recognized, the script will exit automatically to prevent potential problems.
@@ -642,18 +636,28 @@ To resume annotations from the last annotated proteins, simply add -r (resume) t
 ```
 curate_annotations.pl -r -sq $ANNOT/proteins.annotations
 
-[....................................................................................................]	0007/8631
+[....................................................................................................]	7/8631
 
-Putative annotation(s) found for protein HOP50_01g00070:
-1.	SwissProt	4.3e-186	Eukaryotic translation initiation factor 3 subunit A
-2.	trEMBL		0.0e+00		Eukaryotic translation initiation factor 3 subunit A
-3.	PFAM		4.4E-9		PCI domain
-4.	TIGR		NA		hypothetical protein
-5.	HAMAP		24.645		Eukaryotic translation initiation factor 3 subunit A [EIF3A].
-6.	CDD		NA		no motif found
+## Putative annotation(s) found for protein HOP50_01g00070:
+	1.	SwissProt	4.3e-186	Eukaryotic translation initiation factor 3 subunit A
+	2.	trEMBL		0.0e+00		Eukaryotic translation initiation factor 3 subunit A
+	3.	PFAM		4.4E-9		PCI domain
+	4.	TIGR		NA		hypothetical protein
+	5.	HAMAP		24.645		Eukaryotic translation initiation factor 3 subunit A [EIF3A].
+	6.	CDD		NA		no motif found
 
-Please enter [1-6] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
+Please enter:
+
+	[1-6] to assign annotation
+	[0] to annotate the locus as a 'hypothetical protein'
+	[m] to manually annotate the locus, e.g. DUFxxx domain-containing protein
+	[n] to manually annotate the locus with annotation notes, e.g. structural homolog
+	[?] to mark this annotation for review and add annotation notes (optional)
+
+	[x] to exit.
+
 Selection: 
+
 ```
 
 The  tab-delimited list of locus_tags and their predicted functions generated by [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/curate_annotations.pl) should look like this:
@@ -675,16 +679,25 @@ curate_annotations.pl -sq $ANNOT/proteins.annotations
 
 [....................................................................................................]	0002/8631
 
-Putative annotation(s) found for protein HOP50_01g00020:
-1.	SwissProt	2.5e-50		Hybrid signal transduction histidine kinase J
-2.	trEMBL		0.0e+00		Signal transduction histidine kinase
-3.	PFAM		5.5E-30		Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
-4.	TIGR		NA		hypothetical protein
-5.	HAMAP		NA		hypothetical protein
-6.	CDD		1.8907E-11	HisKA
-7.	Ref_organism	0.0e+00		signal transduction histidine kinase
+## Putative annotation(s) found for protein HOP50_01g00020:
+	1.	SwissProt	2.5e-50		Hybrid signal transduction histidine kinase J
+	2.	trEMBL		0.0e+00		Signal transduction histidine kinase
+	3.	PFAM		5.5E-30		Histidine kinase-, DNA gyrase B-, and HSP90-like ATPase
+	4.	TIGR		NA		hypothetical protein
+	5.	HAMAP		NA		hypothetical protein
+	6.	CDD		1.8907E-11	HisKA
+	7.	Ref_organism	0.0e+00		signal transduction histidine kinase
 
-Please enter [1-7] to assign annotation, [0] to annotate the locus as a 'hypothetical protein', [m] to manually annotate the locus, [?] to mark this annotation for review, or [x] to exit.
+Please enter:
+
+	[1-7] to assign annotation
+	[0] to annotate the locus as a 'hypothetical protein'
+	[m] to manually annotate the locus, e.g. DUFxxx domain-containing protein
+	[n] to manually annotate the locus with annotation notes, e.g. structural homolog
+	[?] to mark this annotation for review and add annotation notes (optional)
+
+	[x] to exit.
+
 Selection: m
 Enter desired annotation: signal transduction histidine kinase
 ```
