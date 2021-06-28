@@ -22,7 +22,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
-        *	[Searching the KEGG databases for orthologs](#Searching-the-KEGG-databases-for-orthologs)
+        *	[Searching KEGG databases for orthologs](#Searching-KEGG-databases-for-orthologs)
         *	[Parsing the result of InterProScan5 DIAMOND and KEGG searches](#Parsing-the-result-of-InterProScan5-DIAMOND-and-KEGG-searches)
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
@@ -483,7 +483,6 @@ HOP50_01g00020  tr|A0A5B8MTR1|A0A5B8MTR1_9CHLO  65.7    895     299     3       
 ```
 
 #### Performing homology searches against reference datasets
-
 If desired, reference datasets (custom or downloaded from NCBI) can also be used as databases in homology searches to help with annotations. NCBI datasets can be accessed from the [NCBI genome](https://www.ncbi.nlm.nih.gov/genome) database or directly from their new [dataset](https://www.ncbi.nlm.nih.gov/datasets/genomes/) repository.
 
 For example, using two datasets downloaded from NCBI:
@@ -524,7 +523,7 @@ QDZ17486.1      coiled-coil domain-containing protein
 QDZ17487.1      putative transmembrane protein
 ```
 
-#### Searching the KEGG databases for orthologs
+#### Searching KEGG databases for orthologs
 The [Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/) (KEGG) database is a useful resource to identify which metabolic pathways are present in an organism. The KEGG databases can be queried for orthologs; proteins with matches against KEGG proteins will assigned KO numbers (for KEGG orthologs). These can be useful during the annotation process. KEGG orthologs can be identified with [BlastKOALA](https://www.kegg.jp/blastkoala/), [GhostKOALA](https://www.kegg.jp/ghostkoala/) and/or [KofamKOALA](https://www.genome.jp/tools/kofamkoala/) using the KEGG web portal.
 
 #### Parsing the result of InterProScan 5 DIAMOND and KEGG searches
