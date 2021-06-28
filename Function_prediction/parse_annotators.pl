@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
-my $version = '1.5';
-my $updated = '2021-04-07';
+my $version = '1.6';
+my $updated = '2021-06-28';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -19,41 +19,53 @@ SYNOPSIS	This script parses the output of annotators to help assign putative fun
 USAGE	${name} \\
 		  -q BEOM2.proteins.queries \\
 		  -o BEOM2.annotations \\
+		  -ip BEOM2.interpro.tsv \\
 		  -sl sprot.list \\
 		  -sb BEOM2.sprot.blastp.6 \\
 		  -tl trembl.list \\
 		  -tb BEOM2.trembl.blastp.6 \\
-		  -ip BEOM2.interpro.tsv \\
 		  -rl reference.list \\
-		  -rb reference.blastp.6 ## Searches against reference organism (Optional)
+		  -rb reference.blastp.6 ## Searches against reference organism(s) (Optional)
 
 OPTIONS:
 -q	List of proteins queried against annotators
 -o	Output file
-
-## BLAST/DIAMOND searches
--sl	List of proteins and their products in SwissProt
--sb	BLAST/DIAMOND outfmt 6; proteins queried against SwissProt
--tl	List of proteins and their products in TREMBL
--tb	BLAST/DIAMOND outfmt 6; proteins queried against TREMBL
--rl	List of proteins and their products in a reference genome
--rb	BLAST/DIAMOND outfmt 6; proteins queried against the reference set
+-v	Verbose
 
 ## InterProScan5
 -ip	TSV output from InterProScan
 
-NOTE: The trembl.list file is large and will eat up at least 5 Gb of RAM
+## BLAST/DIAMOND searches
+-sl	SwissProt list of proteins and their products
+-sb	SwissProt BLAST/DIAMOND outfmt 6 results
+-tl	TREMBL list of proteins and their products
+-tb	TREMBL BLAST/DIAMOND outfmt 6 results
+-rl	Reference genome(s) list(s) of proteins and their products
+-rb	Reference(s) BLAST/DIAMOND outfmt 6 results
+
+## KEGG searches
+-ko	KofamKOALA output file
+-gk	GhostKOALA output file
+-bk	BlastKOALA output file
+
 OPTIONS
 die "\n$usage\n" unless @ARGV;
 
-my $queries; my $output;
+## GetOptions
+my $queries;
+my $output;
+my $verbose;
 my $splist; my $spblast;
 my $tblist; my $tbblast;
 my @rblist; my @rbblast;
 my $ipro;
+my $kofamkoala;
+my $ghostkoala;
+my $blastkoala;
 GetOptions(
 	'q=s' => \$queries,
 	'o=s' => \$output,
+	'v' => \$verbose,
 	'sl=s' => \$splist,
 	'sb=s' => \$spblast,
 	'tl=s' => \$tblist,
@@ -61,12 +73,15 @@ GetOptions(
 	'rl=s@{1,}' => \@rblist,
 	'rb=s@{1,}' => \@rbblast,
 	'ip=s' => \$ipro,
+	'ko=s' => \$kofamkoala,
+	'gk=s' => \$ghostkoala,
+	'bk=s' => \$blastkoala,
 );
 
 ## Connecting reference feature lists to its corresponding blast file, and storing it in a database to reference during
 ## parsing step
 my %references;
-unless(scalar(@rblist) == scalar(@rbblast)){
+unless (scalar(@rblist) == scalar(@rbblast)){
 	die "[E] the number of reference feature lists do not equal the number of reference blast files\n";
 }
 else {
@@ -82,9 +97,9 @@ print "$time: Obtaining annotations for DIAMOND blastp hits in $spblast and $tbb
 ## Parsing SwissProt blast.6
 ## Using a double pass for memory optimization and reduce the size of the hash
 my %sprot; 
-open SB, "<", "$spblast"; 
+open SB, "<", "$spblast" or die "Can't open $spblast: $!\n"; 
 my %sphits;
-while(my $line = <SB>){
+while (my $line = <SB>){
 	chomp $line;
 	my @cols = split("\t", $line);
 	my $hit = $cols[1];
@@ -92,8 +107,8 @@ while(my $line = <SB>){
 }
 close SB;
 
-open SP, "<", "$splist";
-while(my $line = <SP>){
+open SP, "<", "$splist" or die "Can't open $splist: $!\n";
+while (my $line = <SP>){
 	chomp $line;
 	my @cols = split("\t", $line);
 	my $locus = $cols[0];
@@ -102,11 +117,11 @@ while(my $line = <SP>){
 }
 close SP; 
 
-open SB, "<", "$spblast";
-while(my $line = <SB>){
+open SB, "<", "$spblast" or die "Can't open $spblast: $!\n";
+while (my $line = <SB>){
 	chomp $line;
 	my @cols = split("\t", $line);
-	my $query =$cols[0]; 
+	my $query = $cols[0]; 
 	my $hit = $cols[1]; 
 	my $evalue = $cols[10];
 	if ( exists $sphits{$query} ) { next; }
@@ -124,7 +139,7 @@ close SB;
 ## Using a double pass for memory optimization and reduce the size of the hash
 my %trembl;
 my %tbhits;
-open TBB, "<", "$tbblast"; 
+open TBB, "<", "$tbblast" or die "Can't open $tbblast: $!\n"; 
 while(my $line = <TBB>){
 	chomp $line;
 	my @cols = split("\t", $line);
@@ -133,7 +148,7 @@ while(my $line = <TBB>){
 }
 close TBB;
 
-open TB, "<", "$tblist";
+open TB, "<", "$tblist" or die "Can't open $tblist: $!\n";
 while(my $line = <TB>){
 	chomp $line;
 	my @cols = split("\t", $line);
@@ -143,18 +158,18 @@ while(my $line = <TB>){
 }
 close TB;
 
-open TBB, "<", "$tbblast";
+open TBB, "<", "$tbblast" or die "Can't open $tbblast: $!\n";
 while (my $line = <TBB>){
 	chomp $line;
 	my @cols = split("\t", $line);
-	my $query =$cols[0];
+	my $query = $cols[0];
 	my $hit = $cols[1];
 	my $evalue = $cols[10];
-	if (exists $tbhits{$query}){next;}
+	if (exists $tbhits{$query}){ next; }
 	elsif ( $trembl{$hit} =~ /uncharacterized/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 	elsif ( $trembl{$hit} =~ /hypothetical/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 	elsif ( $trembl{$hit} =~ /predicted protein/i ){ next; } ## Discarding uninformative BLAST/DIAMOND hits
-	else{
+	else {
 		$tbhits{$query}[0] = $trembl{$hit};
 		$tbhits{$query}[1] = $evalue;
 	}
@@ -168,14 +183,15 @@ print "$time: Finished obtaining annotations for $splist and $tblist in $time_ta
 $time = localtime(); 
 print "$time: Parsing InterProScan5 $ipro...\n";
 $time = time;
-open IP, "<", "$ipro";
+open IP, "<", "$ipro" or die "Can't open $ipro: $!\n";
 my %pfam = ();
 my %hamap = ();
 my %tigr = ();
 my %cdd = ();
-while(my $line = <IP>){
+while (my $line = <IP>){
 	chomp $line;
-	my @cols = split("\t", $line); ## Columns info from https://github.com/ebi-pf-team/interproscan/wiki/OutputFormats
+	my @cols = split("\t", $line);
+	## Columns info from https://github.com/ebi-pf-team/interproscan/wiki/OutputFormats
 	## $cols[0] Protein Accession (e.g. P51587)
 	## $cols[1] Sequence MD5 digest (e.g. 14086411a2cdf1c4cba63020e1622579)
 	## $cols[2] Sequence Length (e.g. 3418)
@@ -191,50 +207,51 @@ while(my $line = <IP>){
 	## $cols[12] (InterPro annotations - description (e.g. BRCA2 repeat) - optional column; only displayed if -iprlookup option is switched on)
 	## $cols[13] (GO annotations (e.g. GO:0005515) - optional column; only displayed if --goterms option is switched on)
 	## $cols[14] (Pathways annotations (e.g. REACT_71) - optional column; only displayed if --pathways option is switched on)
-	if($cols[3] eq 'Pfam'){
-		if(exists $pfam{$cols[0]}){
-			if($cols[8] < $pfam{$cols[0]}[1]){
+
+	if ($cols[3] eq 'Pfam'){
+		if (exists $pfam{$cols[0]}){
+			if ($cols[8] < $pfam{$cols[0]}[1]){
 				$pfam{$cols[0]}[0] = $cols[5];
 				$pfam{$cols[0]}[1] = $cols[8];
 			}
 		}
-		else{
+		else {
 			$pfam{$cols[0]}[0] = $cols[5];
 			$pfam{$cols[0]}[1] = $cols[8];
 		}
 	}
-	elsif($cols[3] eq 'TIGRFAM'){
-		if(exists $tigr{$cols[0]}){
-			if($cols[8] < $tigr{$cols[0]}[1]){
+	elsif ($cols[3] eq 'TIGRFAM'){
+		if (exists $tigr{$cols[0]}){
+			if ($cols[8] < $tigr{$cols[0]}[1]){
 				$tigr{$cols[0]}[0] = $cols[5]; 
 				$tigr{$cols[0]}[1] = $cols[8];
 			}
 		}
-		else{
+		else {
 			$tigr{$cols[0]}[0] = $cols[5];
 			$tigr{$cols[0]}[1] = $cols[8];
 		}
 	}
-	elsif($cols[3] eq 'Hamap'){
-		if(exists $hamap{$cols[0]}){
+	elsif ($cols[3] eq 'Hamap'){
+		if (exists $hamap{$cols[0]}){
 			if ($cols[8] > $hamap{$cols[0]}[1]){
 				$hamap{$cols[0]}[0] = $cols[5];
 				$hamap{$cols[0]}[1] = $cols[8];
 			}
 		}
-		else{
+		else {
 			$hamap{$cols[0]}[0] = $cols[5];
 			$hamap{$cols[0]}[1] = $cols[8];
 		}
 	}
-	elsif($cols[3] eq 'CDD'){
+	elsif ($cols[3] eq 'CDD'){
 		if (exists $cdd{$cols[0]}){
 			if ($cols[8] > $cdd{$cols[0]}[1]){
 				$cdd{$cols[0]}[0] = $cols[5];
 				$cdd{$cols[0]}[1] = $cols[8];
 			}
 		}
-		else{
+		else {
 			$cdd{$cols[0]}[0] = $cols[5]; 
 			$cdd{$cols[0]}[1] = $cols[8];
 		}
@@ -242,21 +259,93 @@ while(my $line = <IP>){
 }
 close IP;
 $time_taken = time - $time;
-print "$time: Finished parsing InterProScan5 $ipro in $time seconds...\n";
+$time = localtime();
+print "$time: Finished parsing InterProScan5 $ipro in $time_taken seconds...\n";
 
-### Reference organism
+## KofamKOALA results, if any
+my %kofam;
+open KOFAM, "<", "$kofamkoala" or die "Can't open $kofamkoala: $!\n";
+while (my $line = <KOFAM>){
+	chomp $line;
+	if ($line =~ /^#/) { next; }
+	elsif ($line =~ /^\* /){
+		my @columns = split (/\s+/, $line);
+		my $query = $columns[1];
+		my $ko = $columns[2];
+		my $evalue = $columns[5];
+		my $definition;
+		for my $num (6..$#columns){
+			$definition .= "$columns[$num] ";
+		}
+		$definition =~ s/ $//;
+
+		## Adding to %kofam db
+		$kofam{$query}{'ko'} = $ko;
+		$kofam{$query}{'evalue'} = $evalue;
+		$kofam{$query}{'def'} = $definition;
+	}
+}
+close KOFAM;
+
+## GhostKOALA results, if any
+my %ghost;
+open GHOST, "<", "$ghostkoala" or die "Can't open $ghostkoala: $!\n";
+while (my $line = <GHOST>){
+	chomp $line;
+	if ($line =~ /^#/) { next; }
+	else {
+		my @columns = split ("\t", $line);
+		my $query = $columns[0];
+		my $ko = $columns[1];
+		my $definition = $columns[2];
+		my $score = $columns[3];
+
+		## Adding to %ghost db
+		if ($ko){
+			$ghost{$query}{'ko'} = $ko;
+			$ghost{$query}{'score'} = $score;
+			$ghost{$query}{'def'} = $definition;
+		}
+	}
+}
+close GHOST;
+
+## BlastKOALA results, if any
+my %blastko;
+open BLASTKO, "<", "$blastkoala" or die "Can't open $blastkoala: $!\n";
+while (my $line = <BLASTKO>){
+	chomp $line;
+	if ($line =~ /^#/) { next; }
+	else {
+		my @columns = split ("\t", $line);
+		my $query = $columns[0];
+		my $ko = $columns[1];
+		my $definition = $columns[2];
+		my $score = $columns[3];
+
+		## Adding to %blastko db
+		if ($ko){
+			$blastko{$query}{'ko'} = $ko;
+			$blastko{$query}{'score'} = $score;
+			$blastko{$query}{'def'} = $definition;
+		}
+	}
+}
+close BLASTKO;
+
+### Reference organism, if any
 my %refhits;
-if($rblist[0]){
+if ($rblist[0]){
 	foreach my $ref (keys(%references)){
 		## Parsing product list
 		my $time = localtime();
 		print "$time: Parsing the product list $ref...\n";
 		my $tstart = time;
 		my %reforg;
-		open REFL,"<","$ref"; 
-		while(my $line = <REFL>){
+		open REFL, "<", "$ref" or die "Can't open $ref: $!\n"; 
+		while (my $line = <REFL>){
 			chomp $line; my @cols = split("\t", $line); 
-			$reforg{$cols[0]}=$cols[1];
+			$reforg{$cols[0]} = $cols[1];
 		}
 		my $time_taken = time - $tstart;
 		$time = localtime(); 
@@ -266,18 +355,22 @@ if($rblist[0]){
 		$time = localtime(); 
 		print "$time: Parsing DIAMOND blastp file $references{$ref}...\n";
 		$tstart = time;
-		open REFB,"<","$references{$ref}";
-		while(my $line = <REFB>){
+		open REFB, "<", "$references{$ref}" or die "Can't open $references{$ref}: $!\n";
+		while (my $line = <REFB>){
 			chomp $line;
-			my @cols = split("\t", $line);	
-			my $query =$cols[0];
+			my @cols = split("\t", $line);
+			my $query = $cols[0];
 			my $hit = $cols[1];
 			my $evalue = $cols[10];
 			if ( exists $refhits{$query} ) { next; }
+			elsif (!exists $reforg{$hit}) { ## Checking if hit is missing from reference file
+				if ($verbose) { print "Description for $hit (BLAST hit) not found in $ref. Skipping...\n"; }
+				next;
+			}
 			elsif ( $reforg{$hit} =~ /uncharacterized/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
-			elsif ( $reforg{$hit} =~ /hypothetical/i ) {next; } ## Discarding uninformative BLAST/DIAMOND hits
+			elsif ( $reforg{$hit} =~ /hypothetical/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 			elsif ( $reforg{$hit} =~ /predicted protein/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
-			else{
+			else {
 				$refhits{$ref}{$query}[0] = $reforg{$hit}; 
 				$refhits{$ref}{$query}[1] = $evalue;
 			}
@@ -290,20 +383,27 @@ if($rblist[0]){
 }
 
 ## Creating the parsed annotations file
-open QUE, "<", "$queries";
+open QUE, "<", "$queries" or die "Can't open $queries: $!\n";
 $time = localtime(); 
 print "$time: Writing annotations to $output...\n";
 $time = time;
-open OUT, ">", "$output";
+open OUT, ">", "$output" or die "Can't create $output: $!\n";
+
+### Writing header
 print OUT '#'."Locus_tag"."\tEvalue\tSwissProt"."\tEvalue\ttrEMBL"."\tEvalue\tPFAM"."\tEvalue\tTIGR"."\tScore\tHAMAP"."\tEvalue\tCDD";
-if($rblist[0]){
+if ($kofamkoala){ print OUT "\tEvalue\tKofamKOALA"; }
+if ($ghostkoala){ print OUT "\tEvalue\tGhostKOALA"; }
+if ($blastkoala){ print OUT "\tEvalue\tBlastKOALA"; }
+if ($rblist[0]){
 	foreach my $ref (sort(keys(%references))){
 		$ref =~ s/\.list//;
 		print OUT "\tEvalue\t$ref";
 	}
 }
 print OUT "\n";
-while(my $line = <QUE>){
+
+### Writing data
+while (my $line = <QUE>){
 	chomp $line;
 	print OUT "$line\t";
 	if ( exists $sphits{$line} ) { print OUT "$sphits{$line}[1]\t$sphits{$line}[0]\t"; }
@@ -318,12 +418,39 @@ while(my $line = <QUE>){
 	else { print OUT "NA\thypothetical protein\t"; }
 	if ( exists $cdd{$line} ){ print OUT "$cdd{$line}[1]\t$cdd{$line}[0]"; }
 	else { print OUT "NA\tno motif found"; }
-	if($rblist[0]){
+
+	## Printing KofamKOALA results, if any
+	if ($kofamkoala){
+		if (exists $kofam{$line}){
+			print OUT "\t$kofam{$line}{'evalue'}\t$kofam{$line}{'ko'}; $kofam{$line}{'def'}";
+		}
+		else { print OUT "\tNA\tno match found"; }
+	}
+
+	## Printing GhostKOALA results, if any
+	if ($ghostkoala){
+		if (exists $ghost{$line}){
+			print OUT "\t$ghost{$line}{'score'}\t$ghost{$line}{'ko'}; $ghost{$line}{'def'}";
+		}
+		else { print OUT "\tNA\tno match found"; }
+	}
+
+	## Printing blastKOALA results, if any
+	if ($blastkoala){
+		if (exists $blastko{$line}){
+			print OUT "\t$blastko{$line}{'score'}\t$blastko{$line}{'ko'}; $blastko{$line}{'def'}";
+		}
+		else { print OUT "\tNA\tno match found"; }
+	}
+
+	## Printing reference(s) results, if any
+	if ($rblist[0]){
 		foreach my $ref (sort(keys(%references))){
 			if ( exists $refhits{$ref}{$line} ) { print OUT "\t$refhits{$ref}{$line}[1]\t$refhits{$ref}{$line}[0]"; }
 			else { print OUT "\tNA\tno match found"; }
 		}
 	}
+
 	print OUT "\n";
 }
 close QUE; 

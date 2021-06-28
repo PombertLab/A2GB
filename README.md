@@ -453,28 +453,28 @@ Second, let's perform protein-protein homology searches against the UniProt data
 diamond blastp \
    -d $ANNOT/DIAMOND/DB/sprot \
    -q $ANNOT/proteins.fasta \
-   -o $ANNOT/DIAMOND/diamond.sprot.6 \
+   -o $ANNOT/DIAMOND/sprot.diamond.6 \
    -f 6
    
 diamond blastp \
    -d $ANNOT/DIAMOND/DB/trembl \
    -q $ANNOT/proteins.fasta \
-   -o $ANNOT/DIAMOND/diamond.trembl.6 \
+   -o $ANNOT/DIAMOND/trembl.diamond.6 \
    -f 6
 ```
 
 The result of the DIAMOND homology searches should look like this:
 
 ```Bash
-head -n 4 $ANNOT/DIAMOND/diamond.*.6
+head -n 4 $ANNOT/DIAMOND/*.diamond.6
 
-==> /media/FatCat/user/raw_data/DIAMOND/diamond.sprot.6 <==
+==> /media/FatCat/user/raw_data/DIAMOND/sprot.diamond.6 <==
 HOP50_01g00020  sp|Q54YZ9|DHKJ_DICDI    29.8    514     224     6       543     924     1340    1848    2.5e-50 202.2
 HOP50_01g00020  sp|Q8D5Z6|LUXQ_VIBVU    33.3    381     234     6       542     916     476     842     6.3e-49 197.6
 HOP50_01g00020  sp|Q7MD16|LUXQ_VIBVY    33.3    381     234     6       542     916     476     842     8.2e-49 197.2
 HOP50_01g00020  sp|Q5A599|NIK1_CANAL    29.2    520     224     9       543     925     494     1006    2.4e-48 195.7
 
-==> /media/FatCat/user/raw_data/DIAMOND/diamond.trembl.6 <==
+==> /media/FatCat/user/raw_data/DIAMOND/trembl.diamond.6 <==
 HOP50_01g00010  tr|A0A5B8MBL8|A0A5B8MBL8_9CHLO  100.0   48      0       0       1       48      244     291     3.2e-19 102.8
 HOP50_01g00010  tr|A0A5B8MD09|A0A5B8MD09_9CHLO  93.3    45      3       0       1       45      231     275     3.3e-16 92.8
 HOP50_01g00020  tr|A0A5B8MDW7|A0A5B8MDW7_9CHLO  100.0   890     0       0       45      934     1       890     0.0e+00 1426.8
@@ -500,7 +500,7 @@ zcat $ANNOT/REFERENCES/*.gz | diamond makedb -d $ANNOT/DIAMOND/DB/reference
 diamond blastp \
    -d $ANNOT/DIAMOND/DB/reference \
    -q $ANNOT/proteins.fasta \
-   -o $ANNOT/DIAMOND/diamond.reference.6 \
+   -o $ANNOT/REFERENCES/reference.diamond.6 \
    -f 6
 ```
 
@@ -542,11 +542,11 @@ Then, let's parse the output of the InterProScan 5 and DIAMOND searches using th
 parse_annotators.pl \
    -q $ANNOT/proteins.queries \
    -o $ANNOT/proteins.annotations \
+   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv \
    -sl $ANNOT/UNIPROT/uniprot_sprot.list \
    -tl $ANNOT/UNIPROT/uniprot_trembl.list \
-   -sb $ANNOT/DIAMOND/diamond.sprot.6 \
-   -tb $ANNOT/DIAMOND/diamond.trembl.6 \
-   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv
+   -sb $ANNOT/DIAMOND/sprot.diamond.6 \
+   -tb $ANNOT/DIAMOND/trembl.diamond.6
 ```
 
 The parsed output should look like this:
@@ -560,19 +560,42 @@ HOP50_01g00020  2.5e-50 Hybrid signal transduction histidine kinase J   0.0e+00 
 HOP50_01g00030  NA      hypothetical protein    1.0e-07 Insulin-like growth factor binding, N-terminal  1.0E-6  Putative ephrin-receptor like   NA      hypothetical protein    NA      hypothetical protein    6.31891E-8      TNFRSF
 ```
 
-To use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) with a reference dataset, type:
+To use [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) with reference(s) dataset(s), type:
 
 ```Bash
 parse_annotators.pl \
    -q $ANNOT/proteins.queries \
    -o $ANNOT/proteins.annotations \
+   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv \
    -sl $ANNOT/UNIPROT/uniprot_sprot.list \
    -tl $ANNOT/UNIPROT/uniprot_trembl.list \
-   -sb $ANNOT/DIAMOND/diamond.sprot.6 \
-   -tb $ANNOT/DIAMOND/diamond.trembl.6 \
-   -ip $ANNOT/Interproscan/proteins.fasta.interpro.tsv \
+   -sb $ANNOT/DIAMOND/sprot.diamond.6 \
+   -tb $ANNOT/DIAMOND/trembl.diamond.6 \
    -rl $ANNOT/REFERENCES/reference.list \
-   -rb $ANNOT/DIAMOND/diamond.reference.6
+   -rb $ANNOT/REFERENCES/reference.diamond.6
+```
+
+Options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
+```
+-q	List of proteins queried against annotators
+-o	Output file
+-v	Verbose
+
+## InterProScan5
+-ip	TSV output from InterProScan
+
+## BLAST/DIAMOND searches
+-sl	SwissProt list of proteins and their products
+-sb	SwissProt BLAST/DIAMOND outfmt 6 results
+-tl	TREMBL list of proteins and their products
+-tb	TREMBL BLAST/DIAMOND outfmt 6 results
+-rl	Reference genome(s) list(s) of proteins and their products
+-rb	Reference(s) BLAST/DIAMOND outfmt 6 results
+
+## KEGG searches
+-ko	KofamKOALA output file
+-gk	GhostKOALA output file
+-bk	BlastKOALA output file
 ```
 
 #### Curating the protein annotations
