@@ -16,14 +16,14 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
         *	[Checking for internal stop codons and missing start methionines](#Checking-for-internal-stop-codons-and-missing-start-methionines)
         *	[Creating tab-delimited lists of RNA locus tags and their products](#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products)
    *	[Protein function prediction](#Protein-function-prediction)
-        *	[Predicting functions with InterProScan 5](#Predicting-functions-with-InterProScan-5)
+        *	[Predicting functions with InterProScan5](#Predicting-functions-with-InterProScan5)
         *	[Performing homology searches against UniProt databases](#Performing-homology-searches-against-UniProt-databases)
 	        *	[Downloading the SwissProt and TrEMBL databases](#Downloading-the-SwissProt-and-TrEMBL-databases)
        		*	[Creating tab-delimited product lists from UniProt databases](#Creating-tab-delimited-product-lists-from-UniProt-databases)
       		*	[Running DIAMOND or BLAST searches against UniProt databases](#Running-DIAMOND-or-BLAST-searches-against-UniProt-databases)
         *	[Performing homology searches against reference datasets](#Performing-homology-searches-against-reference-datasets)
         *	[Searching the KEGG databases for orthologs](#Searching-the-KEGG-databases-for-orthologs)
-        *	[Parsing the result of InterProScan 5 DIAMOND and KEGG searches](#Parsing-the-result-of-InterProScan-5-DIAMOND-and-KEGG-searches)
+        *	[Parsing the result of InterProScan5 DIAMOND and KEGG searches](#Parsing-the-result-of-InterProScan5-DIAMOND-and-KEGG-searches)
         *	[Curating the protein annotations](#Curating-the-protein-annotations)
    *	[Converting EMBL files to ASN format](#Converting-EMBL-files-to-ASN-format)
         *	[Converting EMBL files to TBL format](#Converting-EMBL-files-to-TBL-format)
@@ -343,7 +343,7 @@ First, let's generate a single multifasta file containing all of the predicted p
 cat $ANNOT/splitGFF3/*.prot > proteins.fasta
 ```
 
-#### Predicting functions with InterProScan 5
+#### Predicting functions with InterProScan5
 [InterPro](https://www.ebi.ac.uk/interpro/) is a free, widely used database which functionally characterizes unknown protein sequences by classifying them into families and predicts the presence of domains, repeats, and various functional sites. Unknown sequences are queried against predictive models built from identified domains and families. These models, or diagnostic signatures, are provided by InterPro’s diverse set of member databases. The result of pooling distinct signatures from member databases into a single searchable database makes InterPro a robust tool for protein functional prediction.
 
 [InterProScan 5](https://github.com/ebi-pf-team/interproscan) can be run using the interproscan.sh script provided with its distribution or with the [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl) Perl wrapper. To run InterProScan 5 using [run_InterProScan.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/run_InterProScan.pl):
