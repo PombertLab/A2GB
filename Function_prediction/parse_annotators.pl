@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
-my $version = '1.7';
+my $version = '1.7a';
 my $updated = '2021-06-29';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
@@ -16,6 +16,7 @@ SYNOPSIS	This script parses the output of annotators to help assign putative fun
 		- BLASTP/DIAMOND searches against SwissProt/trEMBL databases
 		- BLASTP/DIAMOND searches against reference organism(s)
 		- KofamKOALA/GhostKOALA/BlastKOALA searches against KEGG
+		- dbCAN2 searches against CAZy
 
 USAGE	${name} \\
 		  -q BEOM2.proteins.queries \\
@@ -90,7 +91,7 @@ GetOptions(
 ## parsing step
 my %references;
 unless (scalar(@rblist) == scalar(@rbblast)){
-	die "[E] the number of reference feature lists do not equal the number of reference blast files\n";
+	die "ERROR: the number of reference feature lists does not equal the number of reference blast files\n";
 }
 else {
 	for (my $i = 0; $i < scalar(@rblist); $i++){
@@ -106,7 +107,6 @@ print "\n$time: Obtaining annotations for DIAMOND blastp hits in $spblast and $t
 ## Using a double pass for memory optimization and reduce the size of the hash
 my %sprot; 
 open SB, "<", "$spblast" or die "Can't open $spblast: $!\n"; 
-my %sphits;
 while (my $line = <SB>){
 	chomp $line;
 	my @cols = split("\t", $line);
@@ -126,6 +126,7 @@ while (my $line = <SP>){
 close SP; 
 
 open SB, "<", "$spblast" or die "Can't open $spblast: $!\n";
+my %sphits;
 while (my $line = <SB>){
 	chomp $line;
 	my @cols = split("\t", $line);
@@ -136,17 +137,29 @@ while (my $line = <SB>){
 	elsif ( $sprot{$hit} =~ /uncharacterized/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 	elsif ( $sprot{$hit} =~ /hypothetical/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 	elsif ( $sprot{$hit} =~ /predicted protein/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
-	else{
+	elsif ( $sprot{$hit} eq '1'){ next; } ## Checking if entry is missing from $spblast, if so move to next hit
+	else {
 		$sphits{$query}[0] = $sprot{$hit};
 		$sphits{$query}[1] = $evalue;
 	}
 }
 close SB;
 
+## Checking for discrepancies
+my $num = scalar (keys %sprot);
+my $match = 0;
+foreach (keys %sprot){
+	if ($sprot{$_} eq '1'){
+		if ($verbose) { print "$_ is missing from $splist\n"; }
+		$match++;
+	}
+}
+print "\nSwissProt hits = $num\n";
+print "SwissProt hits missing from $splist = $match\n";
+
 ## Parsing TREMBL blast.6
 ## Using a double pass for memory optimization and reduce the size of the hash
 my %trembl;
-my %tbhits;
 open TBB, "<", "$tbblast" or die "Can't open $tbblast: $!\n"; 
 while(my $line = <TBB>){
 	chomp $line;
@@ -167,6 +180,7 @@ while(my $line = <TB>){
 close TB;
 
 open TBB, "<", "$tbblast" or die "Can't open $tbblast: $!\n";
+my %tbhits;
 while (my $line = <TBB>){
 	chomp $line;
 	my @cols = split("\t", $line);
@@ -177,12 +191,25 @@ while (my $line = <TBB>){
 	elsif ( $trembl{$hit} =~ /uncharacterized/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 	elsif ( $trembl{$hit} =~ /hypothetical/i ) { next; } ## Discarding uninformative BLAST/DIAMOND hits
 	elsif ( $trembl{$hit} =~ /predicted protein/i ){ next; } ## Discarding uninformative BLAST/DIAMOND hits
+	elsif ( $trembl{$hit} eq '1'){ next; } ## Checking if entry is missing from $tblist, if so move to next hit
 	else {
 		$tbhits{$query}[0] = $trembl{$hit};
 		$tbhits{$query}[1] = $evalue;
 	}
 }
 close TBB;
+
+## Checking for discrepancies
+my $num2 = scalar (keys %trembl);
+my $match2 = 0;
+foreach (keys %trembl){
+	if ($trembl{$_} eq '1'){
+		if ($verbose) { print "$_ is missing from $tblist\n"; }
+		$match2++;
+	}
+}
+print "\nTrEMBL hits = $num2\n";
+print "TrEMBL hits missing from $tblist = $match2\n\n";
 
 my $time_taken = time - $tstart; 
 print "$time: Finished obtaining annotations for $splist and $tblist in $time_taken seconds.\n";
