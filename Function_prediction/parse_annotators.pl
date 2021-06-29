@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
-my $version = '1.6a';
-my $updated = '2021-06-28';
+my $version = '1.7';
+my $updated = '2021-06-29';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -49,6 +49,9 @@ OPTIONS:
 -gk	GhostKOALA output file
 -bk	BlastKOALA output file
 
+## dbCAN2 CAZy searches: http://bcb.unl.edu/dbCAN2/
+-ca	dbCAN2 output file
+-cl	CAZy families list ## http://bcb.unl.edu/dbCAN2/download/Databases/CAZyDB.07302020.fam-activities.txt
 OPTIONS
 die "\n$usage\n" unless @ARGV;
 
@@ -63,6 +66,8 @@ my $ipro;
 my $kofamkoala;
 my $ghostkoala;
 my $blastkoala;
+my $dbcan2;
+my $cazy_list;
 GetOptions(
 	'q=s' => \$queries,
 	'o=s' => \$output,
@@ -77,6 +82,8 @@ GetOptions(
 	'ko=s' => \$kofamkoala,
 	'gk=s' => \$ghostkoala,
 	'bk=s' => \$blastkoala,
+	'ca=s' => \$dbcan2,
+	'cl=s' => \$cazy_list
 );
 
 ## Connecting reference feature lists to its corresponding blast file, and storing it in a database to reference during
@@ -93,7 +100,7 @@ else {
 
 my $time = localtime(); 
 my $tstart = time;
-print "$time: Obtaining annotations for DIAMOND blastp hits in $spblast and $tbblast...\n";
+print "\n$time: Obtaining annotations for DIAMOND blastp hits in $spblast and $tbblast...\n";
 
 ## Parsing SwissProt blast.6
 ## Using a double pass for memory optimization and reduce the size of the hash
@@ -263,76 +270,126 @@ $time_taken = time - $time;
 $time = localtime();
 print "$time: Finished parsing InterProScan5 $ipro in $time_taken seconds...\n";
 
-## KofamKOALA results, if any
+### KofamKOALA results, if any
 my %kofam;
-open KOFAM, "<", "$kofamkoala" or die "Can't open $kofamkoala: $!\n";
-while (my $line = <KOFAM>){
-	chomp $line;
-	if ($line =~ /^#/) { next; }
-	elsif ($line =~ /^\* /){
-		my @columns = split (/\s+/, $line);
-		my $query = $columns[1];
-		my $ko = $columns[2];
-		my $evalue = $columns[5];
-		my $definition;
-		for my $num (6..$#columns){
-			$definition .= "$columns[$num] ";
+if ($kofamkoala){
+	open KOFAM, "<", "$kofamkoala" or die "Can't open $kofamkoala: $!\n";
+	while (my $line = <KOFAM>){
+		chomp $line;
+		if ($line =~ /^#/) { next; }
+		elsif ($line =~ /^\* /){
+			my @columns = split (/\s+/, $line);
+			my $query = $columns[1];
+			my $ko = $columns[2];
+			my $evalue = $columns[5];
+			my $definition;
+			for my $num (6..$#columns){
+				$definition .= "$columns[$num] ";
+			}
+			$definition =~ s/ $//;
+
+			## Adding to %kofam db
+			$kofam{$query}{'ko'} = $ko;
+			$kofam{$query}{'evalue'} = $evalue;
+			$kofam{$query}{'def'} = $definition;
 		}
-		$definition =~ s/ $//;
-
-		## Adding to %kofam db
-		$kofam{$query}{'ko'} = $ko;
-		$kofam{$query}{'evalue'} = $evalue;
-		$kofam{$query}{'def'} = $definition;
 	}
+	close KOFAM;
 }
-close KOFAM;
 
-## GhostKOALA results, if any
+### GhostKOALA results, if any
 my %ghost;
-open GHOST, "<", "$ghostkoala" or die "Can't open $ghostkoala: $!\n";
-while (my $line = <GHOST>){
-	chomp $line;
-	if ($line =~ /^#/) { next; }
-	else {
-		my @columns = split ("\t", $line);
-		my $query = $columns[0];
-		my $ko = $columns[1];
-		my $definition = $columns[2];
-		my $score = $columns[3];
+if ($ghostkoala){
+	open GHOST, "<", "$ghostkoala" or die "Can't open $ghostkoala: $!\n";
+	while (my $line = <GHOST>){
+		chomp $line;
+		if ($line =~ /^#/) { next; }
+		else {
+			my @columns = split ("\t", $line);
+			my $query = $columns[0];
+			my $ko = $columns[1];
+			my $definition = $columns[2];
+			my $score = $columns[3];
 
-		## Adding to %ghost db
-		if ($ko){
-			$ghost{$query}{'ko'} = $ko;
-			$ghost{$query}{'score'} = $score;
-			$ghost{$query}{'def'} = $definition;
+			## Adding to %ghost db
+			if ($ko){
+				$ghost{$query}{'ko'} = $ko;
+				$ghost{$query}{'score'} = $score;
+				$ghost{$query}{'def'} = $definition;
+			}
 		}
 	}
+	close GHOST;
 }
-close GHOST;
 
-## BlastKOALA results, if any
+### BlastKOALA results, if any
 my %blastko;
-open BLASTKO, "<", "$blastkoala" or die "Can't open $blastkoala: $!\n";
-while (my $line = <BLASTKO>){
-	chomp $line;
-	if ($line =~ /^#/) { next; }
-	else {
-		my @columns = split ("\t", $line);
-		my $query = $columns[0];
-		my $ko = $columns[1];
-		my $definition = $columns[2];
-		my $score = $columns[3];
+if ($blastkoala){
+	open BLASTKO, "<", "$blastkoala" or die "Can't open $blastkoala: $!\n";
+	while (my $line = <BLASTKO>){
+		chomp $line;
+		if ($line =~ /^#/) { next; }
+		else {
+			my @columns = split ("\t", $line);
+			my $query = $columns[0];
+			my $ko = $columns[1];
+			my $definition = $columns[2];
+			my $score = $columns[3];
 
-		## Adding to %blastko db
-		if ($ko){
-			$blastko{$query}{'ko'} = $ko;
-			$blastko{$query}{'score'} = $score;
-			$blastko{$query}{'def'} = $definition;
+			## Adding to %blastko db
+			if ($ko){
+				$blastko{$query}{'ko'} = $ko;
+				$blastko{$query}{'score'} = $score;
+				$blastko{$query}{'def'} = $definition;
+			}
 		}
 	}
+	close BLASTKO;
 }
-close BLASTKO;
+
+### dbCAN2 results, if any
+my %cazy_ids;
+my %dbcan;
+if ($dbcan2){
+	# Creating database of CAZymes IDs and their corresponding products
+	open CAZY, "<", "$cazy_list" or die "Can't open $cazy_list: $!\n";
+	while (my $line = <CAZY>){
+		chomp $line;
+		if ($line =~ /^#/){ next; }
+		else {
+			my ($id, $def) = $line =~ /^(\S+)\s+(.*)$/;
+			$def =~ s/;(\s+)?$//; ## discarding trailing semicolons
+			$def =~ s/\.$//; ## discarding trailing periods
+			my @deflines = split (";", $def);
+			for my $num (0..$#deflines){
+				my $definition = $deflines[$num]; 
+				$definition =~ s/^\s+//;
+				if ($definition eq '') { next; } ## discarding blank entries (e.g. ; ; )
+				else {
+					push (@{$cazy_ids{$id}}, $definition);
+				}
+			}
+		}
+	}
+	close CAZY;
+	# Working on dbCAN2 results
+	open DBCAN2, "<", "$dbcan2" or die "Can't open $dbcan2: $!\n";
+	while (my $line = <DBCAN2>){
+		chomp $line;
+		if ($line =~ /^HMM_Profile/){ next; }
+		else {
+			my @columns = split ("\t", $line);
+			my $model = $columns[0];
+			$model =~ s/.hmm$//;
+			$model =~ s/_.*$//; ## Discarding fluff not part of database ID (if present)
+			my $locus = $columns[2];
+			my $evalue = $columns[4];
+			$dbcan{$locus}{'model'} = $model;
+			$dbcan{$locus}{'evalue'} = $evalue;
+		}
+	}
+	close DBCAN2;
+}
 
 ### Reference organism, if any
 my %refhits;
@@ -395,6 +452,7 @@ print OUT '#'."Locus_tag"."\tEvalue\tSwissProt"."\tEvalue\ttrEMBL"."\tEvalue\tPF
 if ($kofamkoala){ print OUT "\tEvalue\tKofamKOALA"; }
 if ($ghostkoala){ print OUT "\tEvalue\tGhostKOALA"; }
 if ($blastkoala){ print OUT "\tEvalue\tBlastKOALA"; }
+if ($dbcan2){ print OUT "\tEvalue\tdbCAN2"; }
 if ($rblist[0]){
 	foreach my $ref (sort(keys(%references))){
 		$ref =~ s/\.list//;
@@ -444,6 +502,19 @@ while (my $line = <QUE>){
 		else { print OUT "\tNA\tno match found"; }
 	}
 
+	## Printing dbCAN2 results, if any
+	if ($dbcan2){
+		if (exists $dbcan{$line}){
+			my $model = $dbcan{$line}{'model'};
+			my $size = scalar @{$cazy_ids{$model}};
+			my $leftovers = $size - 1;
+			my $note = '';
+			if ($leftovers > 0){ $note = " + $leftovers similar enzyme(s)"; }
+			print OUT "\t$dbcan{$line}{'evalue'}\t$dbcan{$line}{'model'}; $cazy_ids{$model}[0]"."$note";
+		}
+		else { print OUT "\tNA\tno match found"; }
+	}
+
 	## Printing reference(s) results, if any
 	if ($rblist[0]){
 		foreach my $ref (sort(keys(%references))){
@@ -461,5 +532,5 @@ my $ttime = time - $tstart;
 $time = localtime(); 
 print "$time: Done writing annotations in $time_taken seconds...\n";
 $time = localtime();
-print "$time: Task completed in $ttime seconds. Exiting...\n";
+print "$time: Task completed in $ttime seconds. Exiting...\n\n";
 exit();

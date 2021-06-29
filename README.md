@@ -592,7 +592,7 @@ parse_annotators.pl \
    -rb $ANNOT/REFERENCES/*.diamond.6
 ```
 
-If desired, results from KEGG searches can also be parsed accordingly by invoking the -ko, -gk and/or -bk command line options. Current options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
+If desired, results from [KEGG](https://www.genome.jp/kegg/) and [dbCAN2](http://bcb.unl.edu/dbCAN2/) searches can also be parsed accordingly by invoking the corresponding command line options. Current options for [parse_annotators.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/parse_annotators.pl) are:
 ```
 -q	List of proteins queried against annotators
 -o	Output file
@@ -613,6 +613,10 @@ If desired, results from KEGG searches can also be parsed accordingly by invokin
 -ko	KofamKOALA output file
 -gk	GhostKOALA output file
 -bk	BlastKOALA output file
+
+## dbCAN2 CAZy searches: http://bcb.unl.edu/dbCAN2/
+-ca	dbCAN2 output file
+-cl	CAZy families list ## http://bcb.unl.edu/dbCAN2/download/Databases/CAZyDB.07302020.fam-activities.txt
 ```
 
 #### Curating the protein annotations
@@ -1127,3 +1131,5 @@ Kanehisa M, Sato Y, Morishima K. **BlastKOALA and GhostKOALA: KEGG tools for fun
 Suzuki S, Kakuta M, Ishida T, Akiyama Y. **GHOSTX: An improved sequence homology search algorithm using a query suffix array and a database suffix array.** *PLoS One.* 2014;9(8):e103833 PMID: 25099887 PMCID: [PMC4123905](http://www.ncbi.nlm.nih.gov/pmc/articles/pmc4123905/) DOI: [10.1371/journal.pone.0103833](https://doi.org/10.1371/journal.pone.0103833)
 
 Aramaki T, Blanc‐Mathieu R, Endo H, et al. **KofamKOALA: KEGG ortholog assignment based on profile HMM and adaptive score threshold.** *Bioinformatics.* 2020 Apr 1;36(7):2251-2252. PMID: 31742321 PMCID: [PMC7141845](http://www.ncbi.nlm.nih.gov/pmc/articles/pmc7141845/) DOI: [10.1093/bioinformatics/btz859](https://doi.org/10.1093/bioinformatics/btz859)
+
+Zhang H, Yohe T, Huang L, Entwistle S, Wu P, Yang Z, Busk PK, Xu Y, Yin Y. **dbCAN2: a meta server for automated carbohydrate-active enzyme annotation.** *Nucleic Acids Res.* 2018 Jul 2;46(W1):W95-W101. PMID: 29771380 PMCID: [PMC6031026](http://www.ncbi.nlm.nih.gov/pmc/articles/pmc6031026/) DOI: [10.1093/nar/gky418](https://doi.org/10.1093/nar/gky418)
