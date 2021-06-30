@@ -2,22 +2,21 @@
 
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
-my $name = 'Create_ChimeraX_Session.pl';
-my $version = '0.1a';
-my $updated = '2021-05-11';
+my $name = 'run_Create_ChimeraX_Session.pl';
+my $version = '0.1b';
+my $updated = '2021-06-30';
 
 my $usage = <<"EXIT";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
 
-SYNOPSIS	The purpose of this script is to iterate thorugh all GESAMT match predictions,
-		run Create_ChimeraX_Session.pl to generate ChimeraX sessions for easy 3D comparison
-		during annotation creation.
+SYNOPSIS	Iterates through all GESAMT predictions and runs Create_ChimeraX_Session.pl
+		to generate ChimeraX sessions for easy 3D comparison during annotations.
 
 COMMAND		${name} \
-		-gr .../GESAMT/*.gesamt \
-		-r .../RCSB/PDB/
+		-gr ../GESAMT/*.gesamt \
+		-r ../RCSB/PDB/
 
 OPTIONS
 -i (--pred_pdb)		Path to predicted .pdb files
@@ -28,7 +27,7 @@ OPTIONS
 -o (--outdir)		Output directory [Default: ./CXS]
 EXIT
 
-die("\n$usage\n") unless(@ARGV);
+die "\n$usage\n" unless @ARGV;
 
 my $pdb;
 my $g_rcsb;
@@ -45,13 +44,13 @@ GetOptions(
 	"o|outdir=s" => \$outdir
 );
 
-unless(-d $outdir){
-	mkdir($outdir,0775) or die("Can't create $outdir: $!\n");
+unless (-d $outdir){
+	mkdir ($outdir,0775) or die "Can't create $outdir: $!\n";
 }
 
 ## Load predicted pdb filenames into database
 my %pred;
-opendir(DIR,$pdb) or die("Can't open $pdb: $!\n");
+opendir (DIR,$pdb) or die "Can't open $pdb: $!\n";
 while (my $file = readdir(DIR)){
 	if ($file =~ /^(\w+)/){
 		$pred{$1} = "$pdb/$file";
@@ -60,9 +59,9 @@ while (my $file = readdir(DIR)){
 ## Load RCSB file locations into database
 my %db;
 if ($rcsb){
-	opendir(DIR,$rcsb) or die("Can't open $rcsb: $!\n");
+	opendir (DIR,$rcsb) or die "Can't open $rcsb: $!\n";
 	while (my $dir = readdir(DIR)){
-		opendir(DIR2,"$rcsb/$dir") or die("Can't open $rcsb/$dir: $!\n");
+		opendir (DIR2,"$rcsb/$dir") or die "Can't open $rcsb/$dir: $!\n";
 		while (my $file = readdir(DIR2)){
 			if ($file =~ /^pdb/){
 				$db{$file} = "$rcsb/$dir/$file";
@@ -75,9 +74,9 @@ if ($rcsb){
 
 ## Load PFAM file locations into database
 if ($pfam){
-	opendir(DIR,$pfam) or die("Can't open $pfam: $!\n");
+	opendir (DIR,$pfam) or die "Can't open $pfam: $!\n";
 	while (my $file = readdir(DIR)){
-		if($file =~ /^PF/){
+		if ($file =~ /^PF/){
 			$db{$file} = "$pfam/$file";
 		}
 	}
@@ -86,8 +85,8 @@ if ($pfam){
 
 ## For each match, get the filename of the best match for PFAM
 my %sessions; ## ChimeraX session to be created
-if($g_pfam){
-	open IN, "<", "$g_pfam";
+if ($g_pfam){
+	open IN, "<", "$g_pfam" or die "Can't open $g_pfam: $!\n";
 	my $locus_tag;
 	my $match_found = 0;
 	while (my $line = <IN>){
@@ -105,11 +104,11 @@ if($g_pfam){
 
 ## For each match, get the filename of the best match for RCSB
 if ($g_rcsb){
-	open IN, "<", "$g_rcsb" or die("Can't open $g_rcsb: $!\n");
+	open IN, "<", "$g_rcsb" or die "Can't open $g_rcsb: $!\n";
 	my $locus_tag;
 	my $match_found = 0;
 	while (my $line = <IN>){
-		chomp($line);
+		chomp $line;
 		if ($line =~ /^###\s(.*)$/){
 			$locus_tag = $1;
 			$match_found = 1;
@@ -126,24 +125,26 @@ if ($g_rcsb){
 my ($filename,$dir) = fileparse($0);
 my $script = $dir."ChimeraX_helper_scripts/Create_ChimeraX_Session.py";
 foreach my $locus (keys(%sessions)){
-	if(scalar(@{$sessions{$locus}}) == 2){
+	if (scalar(@{$sessions{$locus}}) == 2){
 		my $pred_pdb_file = $pred{$locus};
 		my $pfam_pdb_file = $sessions{$locus}[0];
 		my $rcsb_pdb_file = $sessions{$locus}[1];
-		system("chimerax --nogui $script \\
+		system "chimerax \\
+			--nogui $script \\
 			-p_f $pred_pdb_file \\
 			-p_m $pfam_pdb_file \\
 			-r_m $rcsb_pdb_file \\
 			-o_d $outdir"
-		);
+		;
 	}
-	elsif(scalar(@{$sessions{$locus}}) == 1){
+	elsif (scalar(@{$sessions{$locus}}) == 1){
 		my $pred_pdb_file = $pred{$locus};
 		my $ref_pdb_file = $sessions{$locus}[0];
-		system("chimerax --nogui $script \\
+		system "chimerax \\
+			--nogui $script \\
 			-p_f $pred_pdb_file \\
 			-p_m $ref_pdb_file \\
 			-o_d $outdir"
-		);
+		;
 	}
 }
