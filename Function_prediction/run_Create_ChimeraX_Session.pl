@@ -11,7 +11,7 @@ NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
 
-SYNOPSIS	Iterates through all GESAMT predictions and runs Create_ChimeraX_Session.pl
+SYNOPSIS	Iterates through all GESAMT predictions and runs Create_ChimeraX_Session.py
 		to generate ChimeraX sessions for easy 3D comparison during annotations.
 
 COMMAND		${name} \
