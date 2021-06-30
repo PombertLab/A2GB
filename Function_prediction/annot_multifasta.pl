@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2017
 my $name = 'annot_multifasta.pl';
-my $version = '0.2';
-my $updated = '2021-04-07';
+my $version = '0.2a';
+my $updated = '2021-06-30';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -69,9 +69,7 @@ if (@keys){
 		$metadata_header .= $entry;
 	}
 }
-else{
-	$metadata_header = '';
-}
+else { $metadata_header = ''; }
 
 ## Working on FASTA file
 open FASTA, "<", "$fasta" or die "Can't open $fasta: $!\n";
@@ -80,30 +78,23 @@ open ANNOT, ">", "$output" or die "Can't write to $output: $!\n";
 
 while (my $line = <FASTA>){
 	chomp $line;
-
 	## Working on header
 	my $product;
 	if ($line =~ /^>(\S+)\s+(.*)$/){
 		my $locus = $1;
 		my $remains = $2;
-
 		if ($annots){
 			if (exists $prod{$locus}){
 				$product = '[product='."$prod{$locus}".']';
 			}
-			else{
+			else {
 				$product = '';
 				print "product for $locus is missing!...\n";
 			}
 		}
-		else {
-			$product = '';
-		}
-
-		print ANNOT ">$locus ${product}${metadata_header}\n";}
-	
-	## Print sequence
-	else {
-		print ANNOT "$line\n";
+		else { $product = ''; }
+		print ANNOT ">$locus ${product}${metadata_header}\n";
 	}
+	## Print sequence
+	else { print ANNOT "$line\n"; }
 }
