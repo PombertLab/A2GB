@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_UniProt_BLASTs.pl';
-my $version = '0.3a';
-my $updated = '2021-03-27';
+my $version = '0.3b';
+my $updated = '2021-06-30';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -44,10 +44,10 @@ GetOptions(
 	'o|output=s' => \$output
 );
 
-open QUERIES, "<$query";
-open PRODUCTS, "<$uniprot";
-open BLAST, "<$blast";
-open OUT, ">$output";
+open QUERIES, "<", "$query" or die "Can't open $query: $!\n";
+open PRODUCTS, "<", "$uniprot" or die "Can't open $uniprot: $!\n";
+open BLAST, "<", "$blast" or die "Can't open $blast: $!\n";
+open OUT, ">", "$output" or die "Can't create $output: $!\n";
 
 my %products = (); ## Empty product hash; WARNING will take a decent chunk of RAM for 
 my %hits = (); ## Keeping track of BLAST hits
@@ -58,7 +58,7 @@ print "\nLoading the products from $uniprot. I/O limited step; this might take a
 my $stime = time;
 while (my $line = <PRODUCTS>){
 	chomp $line;
-	if ($line =~ /^(\S+)\t(.*)$/){$products{$1}=$2;}
+	if ($line =~ /^(\S+)\t(.*)$/){ $products{$1} = $2; }
 }
 my $runtime = time - $stime;
 print "Time to load $uniprot: $runtime seconds\n";
@@ -73,14 +73,14 @@ while (my $line = <BLAST>){
 	my $query = $columns[0];
 	my $hit = $columns[1];
 	my $evalue = $columns[10];
-	if (exists $hits{$query}){next;}
-	elsif ($products{$hit} =~ /uncharacterized/i){next;} ## Discarding uninformative BLAST hists
-	elsif ($products{$hit} =~ /hypothetical/i){next;} ## Discarding uninformative BLAST hists
-	elsif ($products{$hit} =~ /predicted protein/i){next;} ## Discarding uninformative BLAST hists
-	else{
+	if (exists $hits{$query}){ next; }
+	elsif ($products{$hit} =~ /uncharacterized/i){ next; } ## Discarding uninformative BLAST hists
+	elsif ($products{$hit} =~ /hypothetical/i){ next; } ## Discarding uninformative BLAST hists
+	elsif ($products{$hit} =~ /predicted protein/i){ next; } ## Discarding uninformative BLAST hists
+	else {
 		if ($evalue <= $eval){ ## Checking against desired E-value cutoff
-			$hits{$query}=$products{$hit};
-			$evalues{$query}=$evalue;
+			$hits{$query} = $products{$hit};
+			$evalues{$query} = $evalue;
 		}
 	}
 }
@@ -92,8 +92,8 @@ while (my $line = <QUERIES>){
 	chomp $line;
 	if ($line =~ /^(\S+)/){
 		my $query = $1;
-		if (exists $hits{$query}){print OUT "$query\t$evalues{$query}\t$hits{$query}\n";}
-		else{print OUT "$query\tN\/A\thypothetical protein\n";}
+		if (exists $hits{$query}){ print OUT "$query\t$evalues{$query}\t$hits{$query}\n"; }
+		else { print OUT "$query\tN\/A\thypothetical protein\n"; }
 	}
 }
 my $pruntime = time - $stime;
