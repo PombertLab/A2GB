@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'parse_annotators.pl';
-my $version = '1.7a';
-my $updated = '2021-06-29';
+my $version = '1.7b';
+my $updated = '2021-07-06';
 
 use strict; use warnings; use Getopt::Long qw(GetOptions);
 
@@ -105,6 +105,7 @@ print "\n$time: Obtaining annotations for DIAMOND blastp hits in $spblast and $t
 
 ## Parsing SwissProt blast.6
 ## Using a double pass for memory optimization and reduce the size of the hash
+## Pass #1
 my %sprot; 
 open SB, "<", "$spblast" or die "Can't open $spblast: $!\n"; 
 while (my $line = <SB>){
@@ -115,16 +116,33 @@ while (my $line = <SB>){
 }
 close SB;
 
+## Loading only needed SwissProt hits in db to limit memory usage
 open SP, "<", "$splist" or die "Can't open $splist: $!\n";
+my $sprot_time = time;
+my $sprot_lines = `wc -l < $splist`;
+chomp $sprot_lines;
+my $sprot_lines_com = commify($sprot_lines);
+my $sprot_lines_count = 0;
+$time = localtime();
+print "$time: Loading SwissProt data from $splist\n";
 while (my $line = <SP>){
 	chomp $line;
+	$sprot_lines_count++;
 	my @cols = split("\t", $line);
 	my $locus = $cols[0];
 	my $desc = $cols[1];
 	if ( exists $sprot{$locus} ) { $sprot{$locus} = $desc; }
+	## Progess verbosity
+	if ( ($sprot_lines_count % 100000) == 0){
+		my $sp_count_com = commify($sprot_lines_count);
+		print "$sp_count_com / $sprot_lines_com\n";
+	}
 }
-close SP; 
+close SP;
+my $sp_endtime = time - $sprot_time;
+print "Time used to parse $splist: $sp_endtime seconds\n\n";
 
+## Pass #2
 open SB, "<", "$spblast" or die "Can't open $spblast: $!\n";
 my %sphits;
 while (my $line = <SB>){
@@ -154,14 +172,15 @@ foreach (keys %sprot){
 		$match++;
 	}
 }
-print "\nSwissProt hits = $num\n";
+print "SwissProt hits = $num\n";
 print "SwissProt hits missing from $splist = $match\n";
 
 ## Parsing TREMBL blast.6
 ## Using a double pass for memory optimization and reduce the size of the hash
+## Pass #1
 my %trembl;
 open TBB, "<", "$tbblast" or die "Can't open $tbblast: $!\n"; 
-while(my $line = <TBB>){
+while (my $line = <TBB>){
 	chomp $line;
 	my @cols = split("\t", $line);
 	my $hit = $cols[1];
@@ -169,16 +188,33 @@ while(my $line = <TBB>){
 }
 close TBB;
 
+## Loading only needed TrEMBL hits in db to limit memory usage
 open TB, "<", "$tblist" or die "Can't open $tblist: $!\n";
-while(my $line = <TB>){
+my $trembl_time = time;
+my $trembl_lines = `wc -l < $tblist`;
+chomp $trembl_lines;
+my $trembl_lines_com = commify($trembl_lines);
+my $trembl_lines_count = 0;
+$time = localtime();
+print "\n$time: Loading TrEMBL data from $tblist. Might take a while...\n";
+while (my $line = <TB>){
 	chomp $line;
+	$trembl_lines_count++;
 	my @cols = split("\t", $line);
 	my $locus = $cols[0];
 	my $desc = $cols[1];
 	if ( exists $trembl{$locus} ) { $trembl{$locus} = $desc; }
+	## Progess verbosity
+	if ( ($trembl_lines_count % 10000000) == 0){
+		my $tb_lines_com = commify($trembl_lines_count);
+		print "$tb_lines_com / $trembl_lines_com\n";
+	}
 }
 close TB;
+my $tb_endtime = time - $trembl_time;
+print "Time used to parse $tblist: $tb_endtime seconds\n\n";
 
+## Pass #2
 open TBB, "<", "$tbblast" or die "Can't open $tbblast: $!\n";
 my %tbhits;
 while (my $line = <TBB>){
@@ -208,7 +244,7 @@ foreach (keys %trembl){
 		$match2++;
 	}
 }
-print "\nTrEMBL hits = $num2\n";
+print "TrEMBL hits = $num2\n";
 print "TrEMBL hits missing from $tblist = $match2\n\n";
 
 my $time_taken = time - $tstart; 
@@ -561,3 +597,10 @@ print "$time: Done writing annotations in $time_taken seconds...\n";
 $time = localtime();
 print "$time: Task completed in $ttime seconds. Exiting...\n\n";
 exit();
+
+### Subroutine(s)
+sub commify {
+	my $text = reverse $_[0];
+	$text =~ s/(\d\d\d)(?=\d)(?!\d*\.)/$1,/g;
+	return scalar reverse $text;
+}
