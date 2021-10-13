@@ -43,6 +43,9 @@ if ($out){
 	open OUT, ">", "$out" or die "Can't create $out: $!\n";
 }
 
+my ($script_name,$script_dir) = fileparse($0);
+my $script = $script_dir."/EMBLtoFeatures.pl"; 
+
 ## Runs EMBLtoFeatures.pl if flag update is on
 if ($update){
 	foreach my $file (@prot_files){
@@ -50,12 +53,12 @@ if ($update){
 		my $name = basename($file,".prot");
 		if (-f "$name.embl"){
 			if ($verb){
-				system "EMBLtoFeatures.pl \\
+				system "$script \\
 				  -e $name.embl \\
 				  -v";
 			}
 			else{
-				system "EMBLtoFeatures.pl \\
+				system "$script \\
 				  -e $name.embl";
 			}
 		}
