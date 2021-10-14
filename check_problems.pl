@@ -3,8 +3,8 @@
 use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename;
 
 my $name = "check_problems.pl";
-my $version = "0.4";
-my $updated = '2021-04-05';
+my $version = "0.4.1";
+my $updated = '2021-10-14';
 
 my $usage = <<"EXIT";
 NAME		${name}
