@@ -434,7 +434,7 @@ tr|C0LL04|C0LL04_9EURY  Methyl-coenzyme M reductase I alpha subunit (Fragment)
 ```
 
 ##### Running DIAMOND or BLAST searches against UniProt databases
-We can use [DIAMOND](https://github.com/bbuchfink/diamond) to perform homology searches against the [UniProt](https://www.uniprot.org/) databases. Documentation on how to use DIAMOND can be found [here](http://www.diamondsearch.org/index.php).
+We can use [DIAMOND](https://github.com/bbuchfink/diamond) to perform homology searches against the [UniProt](https://www.uniprot.org/) databases. Documentation on how to use DIAMOND can be found [here](https://github.com/bbuchfink/diamond/wiki).
 
 First, let's create DIAMOND-formatted databases:
 
