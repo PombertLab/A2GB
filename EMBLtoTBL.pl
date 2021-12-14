@@ -100,8 +100,9 @@ while (my $file = shift@embl){
 		if ($line =~ /^FT\s+\/locus_tag="(\S+)"/){ $locus_tag = $1; }
 		## If a pseudogene is present, it is assumed that the start and stop, as well as
 		## pseudogene note, is provided in the "" of the feature. The start and stop are
-		## seperated by ".." and the range is seperated from the note by ";". If the
+		## seperated by ".." and the range is separated from the note by ";". If the
 		## pseudogene is present on the complementary strand, reverse the start and stop.
+		## e.g.: /pseudogene="21011..19202; similar to ECU_06_0080"
 		elsif($line =~ /^FT\s+\/pseudogene/){
 			my $start;
 			my $stop;
