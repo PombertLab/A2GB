@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoTBL.pl';
-my $version = '1.6';
-my $updated = '2021-04-03';
+my $version = '1.6a';
+my $updated = '2021-12-14';
 
 use strict; use warnings; use Bio::SeqIO; use File::Basename; use Getopt::Long qw(GetOptions);
 
@@ -116,7 +116,7 @@ while (my $file = shift@embl){
 				$stop = $2;
 				$note = $3;
 			}
-			print TBL print TBL "$start\t$stop\tgene\n";
+			print TBL "$start\t$stop\tgene\n";
 			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 			print TBL "\t\t\tpseudo\n";
 			print TBL "\t\t\tnote\t$note\n";
