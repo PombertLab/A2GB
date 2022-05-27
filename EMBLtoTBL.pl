@@ -385,7 +385,7 @@ sub numSort {
 	elsif ($a > $b) { return 1; }
 }
 
-sub mRNA{
+sub mRNA {
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
 	else{ print TBL "\t\t\tproduct\thypothetical protein\n"; }
@@ -395,7 +395,7 @@ sub mRNA{
 	}
 }
 
-sub CDS{
+sub CDS {
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
 	else{
@@ -411,7 +411,7 @@ sub CDS{
 	}
 }
 
-sub RNA{
+sub RNA {
 	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
 	else{
