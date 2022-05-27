@@ -335,12 +335,12 @@ close IN;
 close PROT;
 
 ## subroutines
-sub reverse_complement{
+sub reverse_complement {
 	$_[0] = reverse($_[0]);
 	$_[0] =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
 }
 
-sub translate{
+sub translate {
 	my $seq = $_[0];
 
 	### Adjusting codon_start feature, if required
@@ -364,7 +364,7 @@ sub translate{
 	}
 }
 
-sub sequence{
+sub sequence {
 	my ($sequence, $fh) = @_;
 	my $length = length $sequence;
 	my $header = $locus;
@@ -390,7 +390,7 @@ sub sequence{
 	}
 }
 
-sub gcodes{ ## NCBI Genetic codes
+sub gcodes { ## NCBI Genetic codes
 	%gcodes = (
 		1 => { ## The Standard Code (transl_table=1)
 			'TTT' => 'F', 'TCT' => 'S', 'TAT' => 'Y', 'TGT' => 'C',
