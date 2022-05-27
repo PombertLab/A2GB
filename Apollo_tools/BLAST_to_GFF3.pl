@@ -109,7 +109,7 @@ while (my $blast = shift@blast){
 	}
 }
 ## Subroutines
-sub data_print{
+sub data_print {
 	my $start;
 	my $end;
 	my $strand;
