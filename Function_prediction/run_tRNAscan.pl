@@ -1,10 +1,13 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'run_tRNAscan.pl';
-my $version = '0.2a';
-my $updated = '2021-03-27';
+my $version = '0.2b';
+my $updated = '2022-05-27';
 
-use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
+use strict;
+use warnings;
+use File::Basename;
+use Getopt::Long qw(GetOptions);
 
 ## Defining options
 my $usage = <<"OPTIONS";
@@ -46,9 +49,28 @@ print "\nOutput files will be located in directory $odir\n";
 while (my $file = shift@fasta){
 	my ($fasta, $dir) = fileparse($file);
 	print "Working on file $fasta located in $dir\n";
-	system "tRNAscan-SE \\
+	system ("tRNAscan-SE \\
 	   -$type $file \\
 	   -o ${odir}/$fasta.tRNAs \\
 	   -f ${odir}/$fasta.struct \\
-	   -m ${odir}/$fasta.stats";
+	   -m ${odir}/$fasta.stats") == 0 or checksig();
+}
+
+### Subroutine(s)
+sub checksig {
+
+	my $exit_code = $?;
+	my $modulo = $exit_code % 255;
+
+	print "\nExit code = $exit_code; modulo = $modulo \n";
+
+	if ($modulo == 2) {
+		print "\nSIGINT detected: Ctrl+C => exiting...\n";
+		exit(2);
+	}
+	elsif ($modulo == 131) {
+		print "\nSIGTERM detected: Ctrl+\\ => exiting...\n";
+		exit(131);
+	}
+
 }
