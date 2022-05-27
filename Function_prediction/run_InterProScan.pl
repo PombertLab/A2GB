@@ -1,10 +1,13 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'run_InterProScan.pl';
-my $version = '0.1';
-my $updated = '2021-03-27';
+my $version = '0.1a';
+my $updated = '2022-05-27';
 
-use strict; use warnings; use File::Basename; use Getopt::Long qw(GetOptions);
+use strict;
+use warnings;
+use File::Basename;
+use Getopt::Long qw(GetOptions);
 
 ## Defining options
 my $usage = <<"OPTIONS";
@@ -71,14 +74,33 @@ while (my $file = shift@fasta){
 	my $sdate = `date`;
 	print LOG "InterProScan search on $fasta started on: $sdate\n";
 	
-	system "interproscan.sh \\
+	system ("interproscan.sh \\
 	   -cpu $cpu \\
 	   -i $file \\
 	   $iprlookup \\
 	   $goterms \\
 	   $pathways \\
-	   -b ${odir}/$fasta.interpro";
+	   -b ${odir}/$fasta.interpro") == 0 or checksig();
 	
 	my $edate = `date`;
 	print LOG "InterProScan search on $fasta completed on: $edate\n";
+}
+
+### Subroutine(s)
+sub checksig {
+
+	my $exit_code = $?;
+	my $modulo = $exit_code % 255;
+
+	print "\nExit code = $exit_code; modulo = $modulo \n";
+
+	if ($modulo == 2) {
+		print "\nSIGINT detected: Ctrl+C => exiting...\n";
+		exit(2);
+	}
+	elsif ($modulo == 131) {
+		print "\nSIGTERM detected: Ctrl+\\ => exiting...\n";
+		exit(131);
+	}
+
 }
