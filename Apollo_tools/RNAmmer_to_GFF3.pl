@@ -81,7 +81,7 @@ while (my $file = shift@gff2){
 }
 
 ## Subroutines
-sub data_print{
+sub data_print {
 	my ($type, $strand, $fh) = @_;
 	print $fh "$location"."\t"."RNAMMER"."\t"."$type"."\t"."$start"."\t"."$end"."\t"."$score"."\t";
 	print $fh "$strand"."\t".'.'."\t"."ID=rRNA$rRNA".';'."Name=rRNA$rRNA".';'."Note=$gene"."\n";
