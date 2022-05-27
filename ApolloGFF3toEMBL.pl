@@ -1,10 +1,14 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
-my $version = '4.1d';
-my $updated = '2021-04-03';
+my $version = '4.1e';
+my $updated = '2021-05-27';
 
-use strict; use warnings; use File::Basename; use Bio::SeqIO; use Getopt::Long qw(GetOptions);
+use strict;
+use warnings;
+use File::Basename;
+use Bio::SeqIO;
+use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 NAME		${name}
@@ -512,12 +516,12 @@ close EMBL;
 system "rm ${dir}/*.tmp1";
 
 ## Subroutines
-sub reverse_complement{
+sub reverse_complement {
 	$_[0] = reverse($_[0]);
 	$_[0] =~ tr/ATGCRYSWKMBDHVatgcryswkmbdhv/TACGYRWSMKVHDBtacgyrwsmkvhdb/;
 }
 
-sub translate{
+sub translate {
 	my $seq = $_[0];
 	$protein = undef;
 	for(my $i = 0; $i < (length($seq) - 5); $i += 3){ ## -2 if stop codon (*) desired, -5 if not
@@ -526,7 +530,7 @@ sub translate{
 	}
 }
 
-sub sequence{
+sub sequence {
 	my ($sequence, $fh) = @_;
 	my $length = length $sequence;
 	my $header = $locus_tag;
@@ -552,7 +556,7 @@ sub sequence{
 	}
 }
 
-sub colour_features{
+sub colour_features {
 	my $feature = $_[0];
 	my $feat_color = $feature_colours{$feature};
 	my $rgb_range = $RGB_colours{$feat_color};
@@ -561,7 +565,7 @@ sub colour_features{
 	print EMBL "\n";
 }
 
-sub fill_RGB_colors{
+sub fill_RGB_colors {
 	%RGB_colours = ( ## https://www.rapidtables.com/web/color/RGB_Color.html
 		'alice blue' => '240 248 255',
 		'antique white' => '250 235 215',
@@ -710,7 +714,7 @@ sub fill_RGB_colors{
 	)
 }
 
-sub gcodes{ ## NCBI Genetic codes
+sub gcodes { ## NCBI Genetic codes
 	%gcodes = (
 		1 => { ## The Standard Code (transl_table=1)
 			'TTT' => 'F', 'TCT' => 'S', 'TAT' => 'Y', 'TGT' => 'C',
