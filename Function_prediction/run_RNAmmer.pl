@@ -14,7 +14,7 @@ my $usage = <<"OPTIONS";
 NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
-SYNOPSIS	Finds ribosomal RNAs using RNAmmer 1.2+
+SYNOPSIS	Finds ribosomal RNAs using RNAmmer 1.2+ (requires hmmer 2.3.2)
 
 USAGE		${name} \\
 		  -k kingdom \\
