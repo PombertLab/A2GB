@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'ApolloGFF3toEMBL.pl';
-my $version = '4.1e';
-my $updated = '2021-05-27';
+my $version = '4.2.0';
+my $updated = '2023-07-14';
 
 use strict;
 use warnings;
@@ -197,7 +197,9 @@ while (my $file = shift@gff3){
 		open INTRON, ">", "$intron_file" or die "Can't create $intron_file: $!\n";
 	}
 
-	if ($file =~ /(\d+)$/){ $contig_number = $1; }
+	# if ($file =~ /(\d+)$/){ $contig_number = $1; }
+
+	$contig_number ++;
 	
 	### Creating a single DNA string for protein translation
 	my $DNAseq = undef;
