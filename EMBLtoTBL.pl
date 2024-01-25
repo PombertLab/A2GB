@@ -1,10 +1,14 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'EMBLtoTBL.pl';
-my $version = '1.6a';
-my $updated = '2021-12-14';
+my $version = '1.7';
+my $updated = '2024-01-15';
 
-use strict; use warnings; use Bio::SeqIO; use File::Basename; use Getopt::Long qw(GetOptions);
+use strict;
+use warnings;
+use Bio::SeqIO;
+use File::Basename;
+use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 NAME		${name}
@@ -33,6 +37,7 @@ OPTIONS:
 			11 - The Bacterial, Archaeal and Plant Plastid Code
 			# For complete list; see https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
 -o (--organelle)	Organelle mode; turns off protein_id / transcript_id
+-t (--partial)		Add partials flags (< and >) to all gene/mRNA features [Default: off]
 OPTIONS
 die "\n$usage\n" unless @ARGV;
 
@@ -41,12 +46,14 @@ my $products; ## protein_list.txt
 my @embl;
 my $gcode = 1;
 my $organelle;
+my $partial;
 GetOptions(
 	'id=s' => \$instID,
 	'p|prod=s' => \$products,
 	'e|embl=s@{1,}' => \@embl,
 	'c|gcode=i' => \$gcode,
-	'o|organelle' => \$organelle
+	'o|organelle' => \$organelle,
+	't|partial' => \$partial
 );
 
 ## Checking for input files
@@ -57,7 +64,7 @@ unless (@embl){
 
 ### Filling the products database
 my %hash = ();
-open HASH, "<", "$products" or die "Can't open $products: $!\n";
+open HASH, "<", $products or die "Can't open $products: $!\n";
 while (my $dbkey = <HASH>){
 	chomp $dbkey;
 	if ($dbkey =~ /^(\S+)\t(.*)$/){
@@ -70,9 +77,11 @@ while (my $dbkey = <HASH>){
 ### Working on EMBL files
 my $locus_tag;
 while (my $file = shift@embl){
-	open IN, "<", "$file" or die "Can't open EMBL file file: $file\n";
+
+	open IN, "<", $file or die "Can't open EMBL file file: $file\n";
 	$file =~ s/.embl$//;
 	my ($head, $dir) = fileparse($file);
+
 	open DNA, "<", "$file.fsa" or die "Can't open FASTA file file: $file.fsa\n";
 	open TBL, ">", "$file.tbl" or die "Can't create TBL output file: $file.tbl\n";
 	print TBL ">Feature $head\n"; ## Generate TBL header
@@ -117,8 +126,8 @@ while (my $file = shift@embl){
 				$stop = $2;
 				$note = $3;
 			}
-			print TBL "$start\t$stop\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+			print TBL $start."\t".$stop."\tgene\n";
+			print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
 			print TBL "\t\t\tpseudo\n";
 			print TBL "\t\t\tnote\t$note\n";
 		}
@@ -127,9 +136,9 @@ while (my $file = shift@embl){
 			my $type = $1;
 			my $start = $2;
 			my $stop = $3;
-			print TBL "$start\t$stop\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-			print TBL "$start\t$stop\t$type\n";
+			print TBL $start."\t".$stop."\tgene\n";
+			print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
+			print TBL $start."\t".$stop."\t".$type."\n";
 			RNA();
 		}
 		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+join\((.*)\)/){ ## Forward, multiple exons
@@ -150,15 +159,19 @@ while (my $file = shift@embl){
 			$dum = ($asize -2);
 
 			### Printing gene info
-			print TBL "$start[0]\t$stop[$num]\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+			print TBL $start[0]."\t".$stop[$num]."\tgene\n";
+			print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
 			
 			### Printing tRNA/rRNA info
-			print TBL "$start[0]\t$stop[0]\t$feat\n"; ## printing the 1st exon
-			if ($asize == 2){ print TBL "$start[$num]\t$stop[$num]\n"; } ## printing the last exon
+			print TBL $start[0]."\t".$stop[0]."\t".$feat."\n"; ## printing the 1st exon
+			if ($asize == 2){
+				print TBL $start[$num]."\t".$stop[$num]."\n";
+			}
 			elsif ($asize >= 3){
-				foreach my $subs (1..$dum){ print TBL "$start[$subs]\t$stop[$subs]\n"; }
-				print TBL "$start[$num]\t$stop[$num]\n"; ## printing the last exon	
+				foreach my $subs (1..$dum){
+					print TBL $start[$subs]."\t".$stop[$subs]."\n";
+				}
+				print TBL $start[$num]."\t".$stop[$num]."\n"; ## printing the last exon	
 			}
 			RNA();
 		}
@@ -166,9 +179,9 @@ while (my $file = shift@embl){
 			my $type = $1;
 			my $start = $3;
 			my $stop = $2;
-			print TBL "$start\t$stop\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-			print TBL "$start\t$stop\t$type\n";
+			print TBL $start."\t".$stop."\tgene\n";
+			print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
+			print TBL $start."\t".$stop."\t".$type."\n";
 			RNA();
 		}
 		elsif ($line =~ /^FT\s+(tRNA|rRNA)\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
@@ -191,77 +204,109 @@ while (my $file = shift@embl){
 			my @sstop = sort numSort @stop;
 			
 			### Printing gene info
-			print TBL "$start[0]\t$stop[$num]\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+			print TBL $start[0]."\t".$stop[$num]."\tgene\n";
+			print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
 			
 			### Printing tRNA/rRNA info
-			print TBL "$start[0]\t$stop[0]\t$feat\n"; ## printing the 1st exon
-			if ($asize == 2){ print TBL "$start[$num]\t$stop[$num]\n"; }
+			print TBL $start[0]."\t".$stop[0]."\t".$feat."\n"; ## printing the 1st exon
+			if ($asize == 2){
+				print TBL $start[$num]."\t".$stop[$num]."\n";
+			}
 			elsif ($asize >= 3){
-				foreach my $subs (1..$dum){ print TBL "$start[$subs]\t$stop[$subs]\n"; }
-				print TBL "$start[$num]\t$stop[$num]\n"; ## printing the last exon
+				foreach my $subs (1..$dum){
+					print TBL $start[$subs]."\t".$stop[$subs]."\n";
+				}
+				print TBL $start[$num]."\t".$stop[$num]."\n"; ## printing the last exon
 			}
 			RNA();
 		}
 		
 		### Working on CDS
-		elsif ($line =~ /^FT\s+\/codon_start=(\d)/){ print TBL "\t\t\tcodon_start\t$1\n"; } ## Looking for phased codons
+		elsif ($line =~ /^FT\s+\/codon_start=(\d)/){ ## Looking for phased codons
+			print TBL "\t\t\tcodon_start\t$1\n";
+		}
 		elsif ($line =~ /^FT\s+CDS\s+(\d+)..(\d+)/){ ## Forward, single exon
+
 			my $start = $1;
 			my $stop = $2;
 			my $startcodon = substr($DNAsequence, $start-1, 3);
 			my $stopcodon = substr($DNAsequence, $stop-3, 3);
-			print TBL "<$start\t>$stop\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-			## Defining mRNA
-			print TBL "<$start\t>$stop\tmRNA\n";
+
+			my $left_b = '';
+			my $right_b = '';
+			
+			if (($startcodon ne 'atg') || ($start == 1)){
+				$left_b = '<'
+			}
+
+			unless (($stopcodon eq 'taa') || ($stopcodon eq 'tag') || ($stopcodon eq 'tga')){
+				$right_b = '>';
+			}
+			else {
+				if ($stop == $contig_length){
+					$right_b = '>';
+				}
+			}
+
+			## Gene + mRNA tag
+			if ($partial){
+				print TBL '<'.$start."\t".'>'.$stop."\tgene\n";
+				print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+				print TBL '<'.$start."\t".'>'.$stop."\tmRNA\n";
+			}
+			else{
+				print TBL $left_b.$start."\t".$right_b.$stop."\tgene\n";
+				print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+				print TBL $left_b.$start."\t".$right_b.$stop."\tmRNA\n";
+			}
 			mRNA();
-			if (($startcodon eq 'atg') && (($stopcodon eq 'taa') || ($stopcodon eq'tag') || ($stopcodon eq'tga'))){ ## =, =
-				# print "$file\t$start\t$stop\t$contig_length\n"; Debugging line
-				if (($start == 1) && ($stop == $contig_length)){ print TBL "<$start\t>$stop\tCDS\n"; }
-				elsif (($start == 1) && ($stop < $contig_length)){ print TBL "<$start\t$stop\tCDS\n"; }
-				elsif (($start > 1) && ($stop == $contig_length)){ print TBL "$start\t>$stop\tCDS\n"; }
-				else{print TBL "$start\t$stop\tCDS\n";}
-			}
-			elsif (($startcodon ne 'atg') && (($stopcodon eq 'taa') || ($stopcodon eq'tag') || ($stopcodon eq'tga'))){## !=, =
-				if ($stop == $contig_length){print TBL "<$start\t>$stop\tCDS\n";}
-				else{ print TBL "<$start\t$stop\tCDS\n"; } 
-			}
-			elsif ($startcodon eq 'atg'){ ## =, !=
-				if ($start == 1){print TBL "<$start\t>$stop\tCDS\n";}
-				else{print TBL "$start\t>$stop\tCDS\n";}
-			}
-			else{print TBL "<$start\t>$stop\tCDS\n";}## !=, !=
+
+			## CDS tag
+			print TBL $left_b.$start."\t".$right_b.$stop."\tCDS\n";
 			CDS();
 		}
-		elsif ($line =~ /^FT\s+CDS\s+complement\((\d+)..(\d+)\)/){ ## Reverse, single exon
+
+		## Reverse, single exon
+		elsif ($line =~ /^FT\s+CDS\s+complement\((\d+)..(\d+)\)/){
+
 			my $start = $2;
 			my $stop = $1;
 			my $startcodon = substr($DNAsequence, $start-3, 3);
 			my $stopcodon = substr($DNAsequence, $stop-1, 3);
-			print TBL "<$start\t>$stop\tgene\n";
-			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-			## defining mRNA
-			print TBL "<$start\t>$stop\tmRNA\n";
+
+			my $left_b = '';
+			my $right_b = '';
+			
+			if (($start == $contig_length) or ($startcodon ne 'cat')){
+				$left_b = '<';
+			}
+			if ($stop == 1){
+				$right_b = '>';
+			}
+			unless (($stopcodon eq 'tta') || ($stopcodon eq 'cta') || ($stopcodon eq 'tca')){
+				$right_b = '>';
+			}
+
+			## Gene + mRNA tag
+			if ($partial){
+				print TBL '<'.$start."\t".'>'.$stop."\tgene\n";
+				print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+				print TBL '<'.$start."\t".'>'.$stop."\tmRNA\n";
+			}
+			else{
+				print TBL $left_b.$start."\t".$right_b.$stop."\tgene\n";
+				print TBL "\t\t\tlocus_tag\t$locus_tag\n";
+				print TBL $left_b.$start."\t".$right_b.$stop."\tmRNA\n";
+			}
 			mRNA();
-			if (($startcodon eq 'cat') && (($stopcodon eq 'tta') || ($stopcodon eq'cta') || ($stopcodon eq'tca'))){ ## =, =
-				if (($start == $contig_length) && ($stop == 1)){ print TBL "<$start\t>$stop\tCDS\n"; }
-				elsif (($start == $contig_length) && ($stop > 1)){ print TBL "<$start\t$stop\tCDS\n"; }
-				elsif (($start < $contig_length) && ($stop == 1)){ print TBL "$start\t>$stop\tCDS\n"; }
-				else{ print TBL "$start\t$stop\tCDS\n"; }
-			}
-			elsif (($startcodon ne 'cat') && (($stopcodon eq 'tta') || ($stopcodon eq'cta') || ($stopcodon eq'tca'))){## !=, =
-				if ($stop == 1){ print TBL "<$start\t>$stop\tCDS\n"; }
-				else{ print TBL "<$start\t$stop\tCDS\n"; }
-			}
-			elsif ($startcodon eq 'cat'){ ## =, !=
-				if ($start == $contig_length){ print TBL "<$start\t>$stop\tCDS\n"; }
-				else{ print TBL "$start\t>$stop\tCDS\n"; }
-			}
-			else{ print TBL "<$start\t>$stop\tCDS\n"; } ## !=, !=
+
+			## CDS tag
+			print TBL $left_b.$start."\t".$right_b.$stop."\tCDS\n";
 			CDS();
-		}	
-		elsif ($line =~ /^FT\s+CDS\s+join\((.*)\)/){ ## Forward, multiple exons
+		}
+
+		## Forward, multiple exons
+		elsif ($line =~ /^FT\s+CDS\s+join\((.*)\)/){
 			my @array = split(',',$1);
 			my $mRNA = undef;
 			while (my $segment = shift@array){
@@ -277,46 +322,74 @@ while (my $file = shift@embl){
 			$num = ($asize -1);
 			$dum = ($asize -2);
 
+			my $startcodon = substr($DNAsequence, $start[0]-1, 3);
+			my $stopcodon = substr($DNAsequence, $stop[$num]-3, 3);
+
+			my $left_b = '';
+			my $right_b = '';
+
+			if (($startcodon ne 'atg') || ($start[0] == 1)){
+				$left_b = '<';
+			}
+			if ($stop[$num] == $contig_length){
+				$right_b = '>';
+			}
+			unless (($stopcodon eq 'taa') || ($stopcodon eq 'tag') || ($stopcodon eq 'tga')){
+				$right_b = '>';
+			}
+
+			## Gene + mRNA info
+			my $lb = '';
+			my $rb = '';
+
+			if ($partial){
+				$lb = '<';
+				$rb = '>';
+			}
+			else{
+				$lb = $left_b;
+				$rb = $right_b;
+			}
+
 			### Printing gene info
-			print TBL "<$start[0]\t>$stop[$num]\tgene\n";
+			print TBL $lb.$start[0]."\t".$rb.$stop[$num]."\tgene\n";
 			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 			
 			### Printing mRNA info
-			if ($asize == 1){ print TBL "<$start[0]\t>$stop[0]\tmRNA\n"; }
-			elsif ($asize == 2){ print TBL "<$start[0]\t$stop[0]\tmRNA\n"; print TBL "$start[1]\t>$stop[1]\n"; }
+			if ($asize == 1){ 
+				print TBL $lb.$start[0]."\t".$rb.$stop[0]."\tmRNA\n";
+			}
+			elsif ($asize == 2){ 
+				print TBL $lb.$start[0]."\t".$stop[0]."\tmRNA\n";
+				print TBL $start[1]."\t".$rb.$stop[1]."\n";
+			}
 			elsif ($asize >= 3){
-				print TBL "<$start[0]\t$stop[0]\tmRNA\n";
-				foreach my $subs (1..$dum){ print TBL "$start[$subs]\t$stop[$subs]\n"; }
-				print TBL "$start[$num]\t>$stop[$num]\n";	
+				print TBL $lb.$start[0]."\t".$stop[0]."\tmRNA\n";
+				foreach my $subs (1..$dum){
+					print TBL $start[$subs]."\t".$stop[$subs]."\n";
+				}
+				print TBL $start[$num]."\t".$rb.$stop[$num]."\n";
 			}
 			mRNA();
-			
+
 			### Printing CDS info
-			my $startcodon = substr($DNAsequence, $start[0]-1, 3);
-			my $stopcodon = substr($DNAsequence, $stop[$num]-3, 3);
-			if ($startcodon eq 'atg'){
-				if ($start[0] == 1){ print TBL "<$start[0]\t$stop[0]\tCDS\n"; }
-				else{ print TBL "$start[0]\t$stop[0]\tCDS\n"; }
-			} ## printing the 1st exon
-			else{print TBL "<$start[0]\t$stop[0]\tCDS\n";} ## printing the 1st exon
-			if ($asize == 2){ ## Do we have only two exons?
-				if (($stopcodon eq 'taa') || ($stopcodon eq'tag') || ($stopcodon eq'tga')){
-					if ($stop[$num] == $contig_length){ print TBL "$start[$num]\t>$stop[$num]\n"; }
-					else{ print TBL "$start[$num]\t$stop[$num]\n"; } ## printing the last exon
-				}
-				else{ print TBL "$start[$num]\t>$stop[$num]\n"; } ## printing the last exon	
+			print TBL $left_b.$start[0]."\t".$stop[0]."\tCDS\n";
+
+			if ($asize == 2){
+				print TBL $start[$num]."\t".$right_b.$stop[$num]."\n";
 			}
+
 			elsif ($asize >= 3){
-				foreach my $subs (1..$dum){print TBL "$start[$subs]\t$stop[$subs]\n";}
-				if (($stopcodon eq 'taa') || ($stopcodon eq'tag') || ($stopcodon eq'tga')){
-					if ($stop[$num] == $contig_length){ print TBL "$start[$num]\t>$stop[$num]\n"; }
-					else{ print TBL "$start[$num]\t$stop[$num]\n"; }
-				} ## printing the last exon
-				else{ print TBL "$start[$num]\t>$stop[$num]\n"; } ## printing the last exon	
+				foreach my $subs (1..$dum){
+					print TBL $start[$subs]."\t".$stop[$subs]."\n";
+				}
+				print TBL $start[$num]."\t".$right_b.$stop[$num]."\n";
 			}
 			CDS();
 		}
-		elsif ($line =~ /^FT\s+CDS\s+complement\(join\((.*)/){ ## Reverse, mutiple exons
+
+		## Reverse, mutiple exons
+		elsif ($line =~ /^FT\s+CDS\s+complement\(join\((.*)/){ 
 			my @array = split(',',$1);
 			my $mRNA = undef;
 			while (my $segment = shift@array){
@@ -333,45 +406,71 @@ while (my $file = shift@embl){
 			$dum = ($asize -2);
 			my @sstart = sort numSort @start;
 			my @sstop = sort numSort @stop;
-			
+
+			my $startcodon = substr($DNAsequence, $start[0]-3, 3);
+			my $stopcodon = substr($DNAsequence, $stop[$num]-1, 3);
+
+			my $left_b = '';
+			my $right_b = '';
+
+			if (($startcodon ne 'cat') || ($start[0] == $contig_length)){
+				$left_b = '<';
+			}
+			if ($stop[$num] == 1){
+				$right_b = '>';
+			}
+			unless (($stopcodon eq 'tta') || ($stopcodon eq 'cta') || ($stopcodon eq 'tca')){
+				$right_b = '>';
+			}
+
+			## Gene + mRNA info
+			my $lb = '';
+			my $rb = '';
+
+			if ($partial){
+				$lb = '<';
+				$rb = '>';
+			}
+			else{
+				$lb = $left_b;
+				$rb = $right_b;
+			}
+
 			### Printing gene info
-			print TBL "<$start[0]\t>$stop[$num]\tgene\n";
+			print TBL $lb.$start[0]."\t".$rb.$stop[$num]."\tgene\n";
 			print TBL "\t\t\tlocus_tag\t$locus_tag\n";
 			
 			### Printing mRNA info
-			if ($asize == 1){ print TBL "<$start[0]\t>$stop[0]\tmRNA\n"; }
-			elsif ($asize == 2){ print TBL "<$start[0]\t$stop[0]\tmRNA\n"; print TBL "$start[1]\t>$stop[1]\n"; }
+			if ($asize == 1){
+				print TBL $lb.$start[0]."\t".$rb.$stop[0]."\tmRNA\n";
+			}
+			elsif ($asize == 2){
+				print TBL $lb.$start[0]."\t".$stop[0]."\tmRNA\n";
+				print TBL $start[1]."\t".$rb.$stop[1]."\n";
+			}
 			elsif ($asize >= 3){
-				print TBL "<$start[0]\t$stop[0]\tmRNA\n";
-				foreach my $subs (1..$dum){ print TBL "$start[$subs]\t$stop[$subs]\n"; }
-				print TBL "$start[$num]\t>$stop[$num]\n";	
+				print TBL $lb.$start[0]."\t".$stop[0]."\tmRNA\n";
+				foreach my $subs (1..$dum){
+					print TBL $start[$subs]."\t".$stop[$subs]."\n";
+				}
+				print TBL $start[$num]."\t".$rb.$stop[$num]."\n";
 			}
 			mRNA();
 
 			### Printing CDS info
-			my $startcodon = substr($DNAsequence, $start[0]-3, 3);
-			my $stopcodon = substr($DNAsequence, $stop[$num]-1, 3);
-			if ($startcodon eq 'cat'){
-				if ($start[0] == $contig_length){ print TBL "<$start[0]\t$stop[0]\tCDS\n"; }
-				else{ print TBL "$start[0]\t$stop[0]\tCDS\n"; }
-			} ## printing the 1st exon
-			else{print TBL "<$start[0]\t$stop[0]\tCDS\n";} ## printing the 1st exon
-			if ($asize == 2){ ## Do we have only two exons?
-				if (($stopcodon eq 'tta') || ($stopcodon eq'cta') || ($stopcodon eq'tca')){
-					if ($stop[$num] == 1){ print TBL "$start[$num]\t>$stop[$num]\n"; }
-					else{ print TBL "$start[$num]\t$stop[$num]\n"; }
-				} ## printing the last exon
-				else{ print TBL "$start[$num]\t>$stop[$num]\n"; } ## printing the last exon	
+			print TBL $left_b.$start[0]."\t".$stop[0]."\tCDS\n";
+			if ($asize == 2){
+				print TBL $start[$num]."\t".$right_b.$stop[$num]."\n";
 			}
 			elsif ($asize >= 3){
-				foreach my $subs (1..$dum){ print TBL "$start[$subs]\t$stop[$subs]\n"; }
-				if (($stopcodon eq 'tta') || ($stopcodon eq'cta') || ($stopcodon eq'tca')){
-					if ($stop[$num] == 1){ print TBL "$start[$num]\t>$stop[$num]\n"; }
-					else{ print TBL "$start[$num]\t$stop[$num]\n"; }
-				} ## printing the last exon
-				else{ print TBL "$start[$num]\t>$stop[$num]\n"; } ## printing the last exon	
+				foreach my $subs (1..$dum){
+					print TBL $start[$subs]."\t".$stop[$subs]."\n";
+				}
+				print TBL $start[$num]."\t".$right_b.$stop[$num]."\n";
 			}
+
 			CDS();
+
 		}
 	}
 }
@@ -386,9 +485,13 @@ sub numSort {
 }
 
 sub mRNA {
-	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
-	else{ print TBL "\t\t\tproduct\thypothetical protein\n"; }
+	print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
+	if (exists $hash{$locus_tag}){
+		print TBL "\t\t\tproduct\t".$hash{$locus_tag}."\n";
+	}
+	else{
+		print TBL "\t\t\tproduct\thypothetical protein\n";
+	}
 	unless ($organelle){
 		print TBL "\t\t\tprotein_id\tgnl|$instID|$locus_tag\n";
 		print TBL "\t\t\ttranscript_id\tgnl|$instID|$locus_tag"."_mRNA\n";
@@ -396,8 +499,10 @@ sub mRNA {
 }
 
 sub CDS {
-	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
+	print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
+	if (exists $hash{$locus_tag}){
+		print TBL "\t\t\tproduct\t".$hash{$locus_tag}."\n";
+	}
 	else{
 		print STDERR "Cannot find database entry for locus_tag: $locus_tag\n";
 		print TBL "\t\t\tproduct\thypothetical protein\n";
@@ -412,8 +517,10 @@ sub CDS {
 }
 
 sub RNA {
-	print TBL "\t\t\tlocus_tag\t$locus_tag\n";
-	if (exists $hash{$locus_tag}){ print TBL "\t\t\tproduct\t$hash{$locus_tag}\n"; }
+	print TBL "\t\t\tlocus_tag\t".$locus_tag."\n";
+	if (exists $hash{$locus_tag}){
+		print TBL "\t\t\tproduct\t".$hash{$locus_tag}."\n";
+	}
 	else{
 		print STDERR "Cannot find database entry for locus_tag: $locus_tag\n";
 		print TBL "\t\t\tproduct\thypothetical RNA\n";
