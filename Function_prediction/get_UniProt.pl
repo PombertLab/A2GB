@@ -1,8 +1,9 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 ## Pombert Lab, 2020
+
 my $name = 'get_UniProt.pl';
-my $version = '0.2e';
-my $updated = '2022-05-27';
+my $version = '0.3a';
+my $updated = '2024-03-03';
 
 use strict;
 use warnings;
@@ -13,6 +14,10 @@ NAME		${name}
 VERSION		${version}
 UPDATED		${updated}
 SYNOPSIS	Downloads the SwissProt and/or trEMBL databases from UniProt
+
+REQS		Aria2 - https://aria2.github.io/
+		# sudo apt install aria2 (Ubuntu/Debian)
+		# sudo dnf install aria2 (Fedora/RedHat)
 
 EXAMPLE		${name} \\
 		  -s \\
@@ -25,25 +30,25 @@ OPTIONS:
 -s (--swiss)		Download Swiss-Prot
 -t (--trembl)		Download trEMBL
 -f (--folder)		Download folder [Default: ./]
--n (--nice)		Linux Process Priority [Default: 20] ## Runs downloads in the background
 -l (--log)		Print download information to log file
--d (--decompress)	Decompresss downloaded files with gunzip ## trEMBL files will be huge, off by default
+-d (--decompress)	Decompress downloaded files with gunzip ## trEMBL files will be huge, off by default
+-x (--connex)		Number of aria connections [Default: 10]
 OPTIONS
 die "\n$usage\n" unless @ARGV;
 
-my $nice = 20;
 my $swiss;
 my $trembl;
 my $folder = './';
 my $log;
 my $decomp;
+my $aria_connections = 10;
 GetOptions(
-	'n|nice=i' => \$nice,
 	's|swiss' => \$swiss,
 	't|trembl' => \$trembl,
 	'f|folder=s' => \$folder,
 	'l|log=s' => \$log,
-	'd|decompress' => \$decomp
+	'd|decompress' => \$decomp,
+	'x|connex=i' => \$aria_connections
 );
 
 ## Checking output directory + creating download log
@@ -55,6 +60,16 @@ if ($log){ open LOG, ">", "${folder}/${log}"; }
 
 my $url = "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete";
 
+# Aria2
+my $aria2 = `echo \$(command -v aria2c)`;
+chomp $aria2;
+if ($aria2 eq ''){
+	print "[E] aria2c not found in the \$PATH. Please check if aria2 is installed\n";
+	print "[E] To install aria2 on Fedora, type: sudo dnf install aria2\n";
+	print "Exiting...\n";
+	exit;
+}
+
 ## Downloading SwissProt
 if ($swiss){
 	print "\nDownloading SwissProt...\n\n";
@@ -63,12 +78,10 @@ if ($swiss){
 		print LOG "Downloading SwissProt on $date";
 	}
 
-	system ("nice \\
-	  -n $nice \\
-	  wget \\
-	  -c \\
-	  -P $folder \\
-	  $url/uniprot_sprot.fasta.gz") == 0 or checksig();
+	system ("aria2c \\
+		-x$aria_connections \\
+		$url/uniprot_sprot.fasta.gz \\
+		--dir=$folder") == 0 or checksig();
 
 	if ($log){
 		my $size = `du -h $folder/uniprot_sprot.fasta.gz`;
@@ -84,13 +97,11 @@ if ($trembl){
 		print LOG "Downloading trEMBL on $date";
 	}
 
-	system ("nice \\
-	  -n $nice \\
-	  wget \\
-	  -c \\
-	  -P $folder \\
-	  $url/uniprot_trembl.fasta.gz") == 0 or checksig();
-	
+	system ("aria2c \\
+	-x$aria_connections \\
+	$url/uniprot_trembl.fasta.gz \\
+	--dir=$folder") == 0 or checksig();
+
 	if ($log){
 		my $size = `du -h $folder/uniprot_trembl.fasta.gz`;
 		print LOG "$size";
