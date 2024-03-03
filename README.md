@@ -967,7 +967,7 @@ ls -lh $ANNOT/splitGFF3/*.val
 
 In the above example, a few .val files exist (and their sizes are not zero), which means that errors have been detected. Errors will vary per file, obviously, but the content of a .val file should look like:
 
-```Bash
+```
 cat $ANNOT/splitGFF3/chromosome_01.val
 
 WARNING: valid [SEQ_FEAT.PartialProblem] PartialLocation: 5' partial is not at start AND is not at consensus splice site FEATURE: CDS: hypothetical protein [lcl|chromosome_01:<2-148] [lcl|chromosome_01: raw, dna len= 1855637] -> [gnl|ITTBIO|HOP50_01g00010]
