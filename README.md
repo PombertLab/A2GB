@@ -63,10 +63,11 @@ The A2GB pipeline will:
 - [RNAmmer](https://services.healthtech.dtu.dk/software.php) (1.2+)
 - [tRNAscan-SE](http://lowelab.ucsc.edu/tRNAscan-SE/) (2.0+)
 - [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) (18.0.0+)
+- [aria2](https://aria2.github.io/)
 - [InterProScan 5](https://github.com/ebi-pf-team/interproscan) (latest version)
 - [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+) or [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
-- [ChimeraX](https://www.cgl.ucsf.edu/chimerax/download.html)
 - [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/)
+- [ChimeraX](https://www.cgl.ucsf.edu/chimerax/download.html)
 
 ## A2GB workflow
 ### Exporting annotations from Apollo
@@ -337,7 +338,7 @@ HOP50_17g79280  28s ribosomal RNA
 ```
 
 ### Protein function prediction
-In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UnitProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
+In this step, individual protein sequences will be characterized using [InterProScan 5](https://github.com/ebi-pf-team/interproscan) searches, [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against [UniProt](https://www.uniprot.org/)'s SwissProt/TrEMBL databases, and [BLASTP](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)/[DIAMOND](https://github.com/bbuchfink/diamond) searches against reference genome(s), if available. These annotators will help assign putative functions to predicted proteins.
 
 First, let's generate a single multifasta file containing all of the predicted protein sequences. Ideally, internal stop codons and missing methionines should have been corrected prior to this point:
 
