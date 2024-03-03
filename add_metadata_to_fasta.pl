@@ -100,15 +100,15 @@ while (my $file = shift@fasta){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
 			my $contig = $1;
-			print OUT ">$contig";
+			print OUT ">$contig ";
 			for my $key (keys %meta){
 				if ($meta{$key}){
-					print OUT " [$key=$meta{$key}]";
+					print OUT "[$key=$meta{$key}]";
 				}
 			}
 			if ($chromosomes){
 				if (exists $chromo{$contig}){
-					print OUT " [location=chromosome] [chromosome=$chromo{$contig}]";
+					print OUT "[location=chromosome][chromosome=$chromo{$contig}]";
 				}
 			}
 			print OUT "\n";
