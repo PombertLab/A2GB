@@ -387,7 +387,7 @@ The [UniProt](https://www.uniprot.org/) Knowledgebase (UniProtKB) is a wide-rang
 Homology searches against the SwissProt and TrEMBL databases can be performed with [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) or [DIAMOND](https://github.com/bbuchfink/diamond). We recommend using [DIAMOND](https://github.com/bbuchfink/diamond) due to its significantly decreased computation time.
 
 #####  Downloading the SwissProt and TrEMBL databases
-We can use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) to [download](https://www.uniprot.org/downloads) the SwissProt and/or TrEMBL databases from UniProt:
+We can use [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) to [download](https://www.uniprot.org/downloads) the SwissProt and/or TrEMBL databases from UniProt by leveraging [aria2](https://aria2.github.io/):
 
 ```Bash
 get_UniProt.pl \
@@ -786,7 +786,7 @@ Cannot find database entry for locus_tag: HOP50_01g00040
 Cannot find database entry for locus_tag: HOP50_01g00040
 ```
 
-The TBL files created should look like this:
+The TBL files created should look like below. In this example, the first gene is incomplete in 5'; this is indicated in the table by the presence of smaller than signs (<). The codon start entry is also added to ensure proper translation of the open reading frame. 
 ```
 head -n 25 `ls $ANNOT/splitGFF3/*.tbl | head -n 1`
 
@@ -943,7 +943,7 @@ Options for [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/) used ab
 -t	Template file (.sbt).
 -w	File (.cmt) containing Genome Assembly structured comments.
 -indir	Path to the directory. If files are in the current directory -indir ./ should be used.
--outdir  Path for the resulting .sqn file(s) (if the -outdir argument is not used, the .sqn files will be saved in the source directory).
+-outdir	Path for the resulting .sqn file(s) (if the -outdir argument is not used, the .sqn files will be saved in the source directory).
 -o	Can be used with -i to override the default name of the output .sqn file. Sets the basename for all output files.
 -euk	Asserts eukaryotic lineage for the discrepancy report tests.
 -M n	Master Genome Flags: n: Normal. Combines flags for genomes submissions (invokes FATAL calls when -Z discrep is included).
@@ -961,12 +961,11 @@ ls -lh $ANNOT/splitGFF3/*.val
 -rw-rw-r--. 1 jpombert jpombert 5.6K Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
 -rw-rw-r--. 1 jpombert jpombert 4.7K Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
 -rw-rw-r--. 1 jpombert jpombert 1.8K Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
-...
--rw-rw-r--. 1 jpombert jpombert  409 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
 
+...
 ```
 
-In the above example, the file exists (and their sizes are not zero), which means that errors have been detected. Errors will vary per file, obviously, but the content of a .val file should look like:
+In the above example, a few .val files exist (and their sizes are not zero), which means that errors have been detected. Errors will vary per file, obviously, but the content of a .val file should look like:
 
 ```Bash
 cat $ANNOT/splitGFF3/chromosome_01.val
@@ -1066,7 +1065,8 @@ EMBLtoTBL.pl \
    2> $ANNOT/ERROR.log
 
 
-## Removing previous files
+## Removing previous table2asn-generated files
+OUTDIR=$ANNOT/RCC138_SQN
 rm $OUTDIR/*
 
 ## Running table2asn again
@@ -1087,7 +1087,11 @@ ls: cannot access 'RCC138_SQN/*.val': No such file or directory
 ```
 
 ### Submitting ASN files to GenBank
-Once the errors have been corrected, the file(s) should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
+Once the errors have been corrected, the file(s) should be ready to deposit in the <b><i>Submit assembled eukaryotic and prokaryotic genomes (WGS or Complete)</b></i> segment of the [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/). This step will require the corresponding [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample) information as part of the submission process.
+
+#### <b><i>Note</b></i>
+NCBI now requests the submission of haplotigs generated as part of diploid/polyploid genome assemblies in addition to the consensus genome sequence. Instructions on how to do so are available at 
+[Submitting Multiple Haplotype Assemblies](https://www.ncbi.nlm.nih.gov/genbank/diploid_haps/). These pseudohaplotypes can be submitted via the "Pseudohaplotypes of a diploid/polyploid assembly" option in the genome submission portal (each require their own BioProject however). They should also be named distincitvely (<i>e.g.</i> genome.primary_haplotype.sqn / genome.alternate_haplotype.sqn)
 
 ## Funding and acknowledgments
 This work was supported in part by the National Institute of Allergy and Infectious Diseases of the National Institutes of Health (award number R15AI128627) to Jean-Francois Pombert. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
