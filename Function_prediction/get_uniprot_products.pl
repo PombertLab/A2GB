@@ -1,10 +1,14 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'get_uniprot_products.pl';
-my $version = '0.2b';
-my $updated = '2021-04-08';
+my $version = '0.2c';
+my $updated = '2024-03-03';
 
-use strict; use warnings; use Getopt::Long qw(GetOptions); use File::Basename; use PerlIO::gzip;
+use strict;
+use warnings;
+use Getopt::Long qw(GetOptions);
+use File::Basename;
+use PerlIO::gzip;
 
 my $usage = <<"OPTIONS";
 NAME		${name}
@@ -43,21 +47,24 @@ while (my $file = shift@fasta){
 	my $basename;
 
 	if ($file =~ /.gz$/){ ## Autodetecting if file is gzipped from the file extension
-		open $fh, "<:gzip", "$file" or die "Can't open $file: $!\n";
+		open $fh, "<:gzip", $file or die "Can't open $file: $!\n";
 		$format = 'gzip';
 		$file =~ s/.fasta.gz$//;
 		$basename = fileparse($file);
 	}
 	else{
-		open $fh, "<", "$file" or die "Can't open $file: $!\n"; 
+		open $fh, "<", $file or die "Can't open $file: $!\n"; 
 		$format = 'fasta';
 		$file =~ s/.\w+$//;
 		$basename = fileparse($file);
 	}
-	
-	open OUT, ">", "$odir/$basename.list" or die "Can't create $odir/$basename.list: $!\n";
+
+	my $outfile = "$odir/$basename.list";
+	open OUT, ">", $outfile or die "Can't create $outfile: $!\n";
+
 	print "\nOutput directory = $odir\n";
 	print "Extracting information from $file. This might take a while...\n\n";
+
 	while (my $line = <$fh>){
 		chomp $line;
 		if ($line =~ /^>(\S+)\s(.*)\sOS/){
@@ -70,4 +77,5 @@ while (my $file = shift@fasta){
 	if ($format eq 'gzip'){ binmode $fh, ":gzip(none)"; }
 	my $runtime = time - $stime;
 	print "Time to extract products from file $file: $runtime seconds.\n";
+
 }
