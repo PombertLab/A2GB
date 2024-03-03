@@ -1091,7 +1091,7 @@ Once the errors have been corrected, the file(s) should be ready to deposit in t
 
 #### <b><i>Note</b></i>
 NCBI now requests the submission of haplotigs generated as part of diploid/polyploid genome assemblies in addition to the consensus genome sequence. Instructions on how to do so are available at 
-[Submitting Multiple Haplotype Assemblies](https://www.ncbi.nlm.nih.gov/genbank/diploid_haps/). These pseudohaplotypes can be submitted via the "Pseudohaplotypes of a diploid/polyploid assembly" option in the genome submission portal (each require their own BioProject however). They should also be named distincitvely (<i>e.g.</i> genome.primary_haplotype.sqn / genome.alternate_haplotype.sqn)
+[Submitting Multiple Haplotype Assemblies](https://www.ncbi.nlm.nih.gov/genbank/diploid_haps/). These pseudohaplotypes can be submitted via the "Pseudohaplotypes of a diploid/polyploid assembly" option in the genome submission portal (each require their own BioProject however). Each file should also be named distinctively (<i>e.g.</i> genome.principal_haplotype.sqn / genome.alternate_haplotype.sqn) based on their relationships for greater clarity.
 
 ## Funding and acknowledgments
 This work was supported in part by the National Institute of Allergy and Infectious Diseases of the National Institutes of Health (award number R15AI128627) to Jean-Francois Pombert. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
