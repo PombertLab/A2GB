@@ -1,10 +1,12 @@
 #!/usr/bin/perl
 ## Pombert Lab, IIT, 2020
 my $name = 'add_metadata_to_fasta.pl';
-my $version = '0.4a';
-my $updated = '2021-04-09';
+my $version = '0.4b';
+my $updated = '2024-03-03';
 
-use strict; use warnings; use Getopt::Long qw(GetOptions);
+use strict;
+use warnings;
+use Getopt::Long qw(GetOptions);
 
 my $usage = <<"OPTIONS";
 
