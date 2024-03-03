@@ -23,7 +23,6 @@ OPTIONS:
 -o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
 -s (--strain)		Strain definition; e.g. RCC138
 -i (--isolate)		Isolate name; e.g. 'Pacific Isolate'
--l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
 -g (--gcode)		NCBI genetic code ## https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
 -m (--moltype)		NCBI moltype descriptor (e.g. genomic)
 
@@ -42,7 +41,6 @@ my %meta = (
 	"organism" => undef,
 	"strain" => undef,
 	"isolate" => undef,
-	"lineage" => undef,
 	"gcode" => undef,
 	"moltype" => undef,
 );
@@ -54,7 +52,6 @@ GetOptions(
 	'o|organism=s' => \$meta{"organism"},
 	's|strain=s' => \$meta{"strain"},
 	'i|isolate=s' => \$meta{"isolate"},
-	'l|lineage=s' => \$meta{"lineage"},
 	'g|gcode=i' => \$meta{"gcode"},
 	'm|moltype=s' => \$meta{"moltype"},
 );
@@ -62,7 +59,7 @@ die "[E] Fasta files required.\n" unless @fasta;
 
 ## Populating database of metadata keys and their values, if desired
 if ($metakeys){
-	open META, "<", "$metakeys" or die "Can't open metadata file $metakeys\n";
+	open META, '<', $metakeys or die "Can't open metadata file $metakeys\n";
 	while (my $line = <META>){
 		chomp $line;
 		if ($line =~ /^#/){ next; } ## Ignoring comments
@@ -78,7 +75,7 @@ if ($metakeys){
 ## Populating database of contigs and their assigned chromosomes, if desired
 my %chromo;
 if ($chromosomes){
-	open CHR, "<", "$chromosomes" or die "Can't open chromosome file $chromosomes\n";
+	open CHR, '<', $chromosomes or die "Can't open chromosome file $chromosomes\n";
 	while (my $line = <CHR>){
 		chomp $line;
 		if ($line =~ /^#/){ next; } ## Ignoring comments
@@ -93,8 +90,10 @@ if ($chromosomes){
 
 ## Working on FASTA files
 while (my $file = shift@fasta){
-	open IN, "<", "$file" or die "Can't open $file: $!\n";
-	open OUT, ">", "$file.headers" or die "Can't create $file.headers: $!\n";
+
+	open IN, '<', $file or die "Can't open $file: $!\n";
+	open OUT, '>', "$file.headers" or die "Can't create $file.headers: $!\n";
+
 	while (my $line = <IN>){
 		chomp $line;
 		if ($line =~ /^>(\S+)/){
@@ -107,13 +106,16 @@ while (my $file = shift@fasta){
 			}
 			if ($chromosomes){
 				if (exists $chromo{$contig}){
-					print OUT " [chromosome=$chromo{$contig}]";
+					print OUT " [location=chromosome] [chromosome=$chromo{$contig}]";
 				}
 			}
 			print OUT "\n";
 		}
 		else { print OUT "$line\n"; }
 	}
+
 	close OUT;
+
 	system "mv $file.headers $file"; ## Overwrites original file 
+
 }
