@@ -33,7 +33,7 @@ Furthermore, A2GB acts as a guide to prepare sequence submissions according to [
 	        *	[Adding metadata to FASTA files](#Adding-metadata-to-FASTA-files)
       		*	[Generating a GenBank submission template](#Generating-a-GenBank-submission-template)
         	*	[Creating structured comments](#Creating-structured-comments)
-        	*	[Using TBL2ASN](#Using-TBL2ASN)
+        	*	[Using table2asn](#Using-table2asn)
         *	[Checking for errors and fixing them](#Checking-for-errors-and-fixing-them)
         	*	[Partial genes](#Partial-genes)
         	*	[Missing stop codons and GT-AG splice sites](#Missing-stop-codons-and-GT-AG-splice-sites)
@@ -66,7 +66,7 @@ The A2GB pipeline will:
 - [InterProScan 5](https://github.com/ebi-pf-team/interproscan) (latest version)
 - [DIAMOND](https://github.com/bbuchfink/diamond) (2.0+) or [NCBI BLAST+](https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) (2.10+)
 - [ChimeraX](https://www.cgl.ucsf.edu/chimerax/download.html)
-- [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)
+- [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/)
 
 ## A2GB workflow
 ### Exporting annotations from Apollo
@@ -733,7 +733,7 @@ Options for [curate_annotations.pl](https://github.com/PombertLab/A2GB/blob/mast
 ```
 
 ### Converting EMBL files to ASN format
-The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertLab/A2GB) is a two step process. EMBL files are first converted to TBL format with [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl), then NCBI's [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) converts the later format to ASN.
+The conversion of EMBL files to TBL format in [A2GB](https://github.com/PombertLab/A2GB) is a two step process. EMBL files are first converted to TBL format with [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl), then NCBI's [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/) converts the later format to ASN.
 
 #### Converting EMBL files to TBL format
 [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) converts EMBL files to TBL format. This script requires a single tab-limited list of the locus tags and their predicted annotations. We can create this list by concatenating the tRNAs.annotations and rRNAs.annotations files generated [previously](https://github.com/PombertLab/A2GB#Creating-tab-delimited-lists-of-RNA-locus-tags-and-their-products) together with the curated list of proteins annotations (see [above](https://github.com/PombertLab/A2GB#curating-the-protein-annotations)). Alternatively, any tab-delimited list of locus_tags and their products can be used. 
@@ -770,6 +770,7 @@ Options for [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLto
 			11 - The Bacterial, Archaeal and Plant Plastid Code
 			# For complete list; see https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
 -o (--organelle)	Organelle mode; turns off protein_id / transcript_id
+-t (--partial)		Add partials flags (< and >) to all gene/mRNA features [Default: off]
 ```
 
 Locus tag entries missing from the tab-delimited list of annotations will be reported in the $ANNOT/ERROR.log file. Missing entries will be annotated automatically as 'hypothetical protein', 'hypothetical tRNA' or as 'hypothetical RNA' for CDS, tRNA and rRNA features, respectively. If any entry is missing, the $ANNOT/ERROR.log file will look like this:
@@ -789,41 +790,37 @@ The TBL files created should look like this:
 head -n 25 `ls $ANNOT/splitGFF3/*.tbl | head -n 1`
 
 >Feature chromosome_01
-<2      >148    gene
+<1      148     gene
                         locus_tag       HOP50_01g00010
-<2      >148    mRNA
-                        locus_tag       HOP50_01g00010
-                        product hypothetical protein
-                        protein_id      gnl|ITTBIO|HOP50_01g00010
-                        transcript_id   gnl|ITTBIO|HOP50_01g00010_mRNA
-<2      148     CDS
+<1      148     mRNA
                         locus_tag       HOP50_01g00010
                         product hypothetical protein
-                        protein_id      gnl|ITTBIO|HOP50_01g00010
-                        transcript_id   gnl|ITTBIO|HOP50_01g00010_mRNA
-<3043   >239    gene
+                        protein_id      gnl|IITBIO|HOP50_01g00010
+                        transcript_id   gnl|IITBIO|HOP50_01g00010_mRNA
+<1      148     CDS
+                        locus_tag       HOP50_01g00010
+                        product hypothetical protein
+                        protein_id      gnl|IITBIO|HOP50_01g00010
+                        transcript_id   gnl|IITBIO|HOP50_01g00010_mRNA
+                        codon_start     2
+3043    239     gene
                         locus_tag       HOP50_01g00020
-<3043   >239    mRNA
+3043    239     mRNA
                         locus_tag       HOP50_01g00020
                         product signal transduction histidine kinase
-                        protein_id      gnl|ITTBIO|HOP50_01g00020
-                        transcript_id   gnl|ITTBIO|HOP50_01g00020_mRNA
+                        protein_id      gnl|IITBIO|HOP50_01g00020
+                        transcript_id   gnl|IITBIO|HOP50_01g00020_mRNA
 3043    239     CDS
                         locus_tag       HOP50_01g00020
                         product signal transduction histidine kinase
-                        protein_id      gnl|ITTBIO|HOP50_01g00020
-                        transcript_id   gnl|ITTBIO|HOP50_01g00020_mRNA
+                        protein_id      gnl|IITBIO|HOP50_01g00020
 ```
 
 #### Converting TBL files to ASN format
 Metadata must be included together with genome sequences during the submission process to NCBI. Although some of this metadata can be entered from the online submission form(s), it is often easier to add it beforehand while generating the ASN files. Metadata for genome submission includes taxonomic information about the source of the data being submitted, details about the sequencing experiments/computational analyses performed, and general information about the author(s) and institution(s) submitting the genomes.
 
 ##### Adding metadata to FASTA files
-Taxonomic metadata can be added directly to the FASTA files. The list of modifiers that can be added directly to the FASTA definition lines can be found [here](https://www.ncbi.nlm.nih.gov/Sequin/modifiers.html). Mandatory modifiers include the organism name [organism=XXX] and its taxonomic lineage [lineage=XXX]. The latter can be found from the NCBI taxonomy database (see figure below).
-
-<p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/lineage.png" alt="Lineage information from the NCBI Taxonomy database" width="1000"></p>
-
-The script [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) can be used to add some of the most common modifiers to the FASTA definition lines. Alternatively, source qualifiers can also be entered directly from the [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) command line when creating the ASN files with the -j switch; e.g. -j '[organism=Chloropicon primus RCC138][strain=RCC138]'
+Taxonomic metadata can be added directly to the FASTA files. The list of modifiers that can be added directly to the FASTA definition lines can be found [here](https://www.ncbi.nlm.nih.gov/genbank/mods_fastadefline/). Mandatory modifiers include the organism name [organism=XXX].
 
 To add metadata with [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/master/add_metadata_to_fasta.pl) using single metadata keys, type:
 
@@ -832,7 +829,6 @@ add_metadata_to_fasta.pl \
    -f $ANNOT/splitGFF3/*.fsa \
    -o 'Chloropicon primus RCC138' \
    -s RCC138 \
-   -l 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;' \
    -g 1
 ```
 
@@ -853,7 +849,6 @@ Options for [add_metadata_to_fasta.pl](https://github.com/PombertLab/A2GB/blob/m
 -o (--organism)		Full organism name; e.g. 'Chloropicon primus RCC138'
 -s (--strain)		Strain definition; e.g. RCC138
 -i (--isolate)		Isolate name; e.g. 'Pacific Isolate'
--l (--lineage)		NCBI taxonomic lineage; e.g. 'cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;'
 -g (--gcode)		NCBI genetic code ## https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi
 -m (--moltype)		NCBI moltype descriptor (e.g. genomic)
 
@@ -867,7 +862,6 @@ The tab-delimited NCBI metadata key -> value file (e.g. [metakeys_NCBI.tsv](http
 ### metadata key	metadata value
 organism	Chloropicon primus
 strain	RCC138
-lineage cellular cellular organisms; Eukaryota; Viridiplantae; Chlorophyta; Chloropicophyceae; Chloropicales; Chloropicaceae; Chloropicon
 moltype	genomic
 gcode	1
 ```
@@ -885,17 +879,17 @@ Once modified, the FASTA definition lines should look like this:
 ```
 head -n 1 $ANNOT/splitGFF3/*.fsa
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_01.fsa <==
->chromosome_01 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=I]
+>chromosome_01 [organism=Chloropicon primus][moltype=genomic][gcode=1][strain=RCC138][location=chromosome][chromosome=I]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_02.fsa <==
->chromosome_02 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=II]
+>chromosome_02 [organism=Chloropicon primus][moltype=genomic][gcode=1][strain=RCC138][location=chromosome][chromosome=II]
 
 ==> /media/FatCat/user/raw_data/splitGFF3/chromosome_03.fsa <==
->chromosome_03 [organism=Chloropicon primus RCC138][strain=RCC138][lineage=cellular organisms; Eukaryota; Viridiplantae; Chlorophyta;][gcode=1][moltype=genomic][chromosome=III]
+>chromosome_03 [organism=Chloropicon primus][moltype=genomic][gcode=1][strain=RCC138][location=chromosome][chromosome=III]
 ```
 
 ##### Generating a GenBank submission template
-NCBI provides a simple web-based tool to generate the GenBank submission template file (template.sbt) required by TBL2ASN. To generate a template.sbt file, visit: https://submit.ncbi.nlm.nih.gov/genbank/template/submission/.
+NCBI provides a simple web-based tool to generate the GenBank submission template file (template.sbt) required by table2asn. To generate a template.sbt file, visit: https://submit.ncbi.nlm.nih.gov/genbank/template/submission/.
 
 ##### Creating structured comments
 More information about NCBI's stuctured comments can be found [here](https://www.ncbi.nlm.nih.gov/genbank/structuredcomment/). Files containing stuctured comments are tab-delimited; assembly-data structured comments for genomes usually looks like this:
@@ -908,36 +902,58 @@ Genome Coverage	345x
 Sequencing Technology	Illumina MiSeq; Oxford Nanopore
 ```
 
-##### Using TBL2ASN
-[TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) is a command-line program created by NCBI to automate the creation of sequence records for submission to [GenBank](https://www.ncbi.nlm.nih.gov/genbank/). TBL2ASN will generate .sqn files to be used for the submission. More information about the structure and content of the TBL files generated by [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) and required as input for TBL2ASN can be found in NCBI's [Eukaryotic Genome Annotation Guide](https://www.ncbi.nlm.nih.gov/genbank/eukaryotic_genome_submission_annotation/).
+##### Using table2asn
+[table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/) is a command-line program created by NCBI to automate the creation of sequence records for submission to [GenBank](https://www.ncbi.nlm.nih.gov/genbank/). The table2asn tool will generate .sqn files to be used for the submission. More information about the structure and content of the TBL files generated by [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) and required as input for table2asn can be found in NCBI's [Eukaryotic Genome Annotation Guide](https://www.ncbi.nlm.nih.gov/genbank/eukaryotic_genome_submission_annotation/).
 
-To run [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) on the TBL files generated by [A2GB](https://github.com/PombertLab/A2GB) using a submisssion template and structured comments, type:
+To run [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/) on the TBL files generated by [A2GB](https://github.com/PombertLab/A2GB) using a submisssion template and structured comments:
+
 ```Bash
+OUTDIR=$ANNOT/RCC138_SQN
+mkdir -p $OUTDIR
+
+## To generate single concatenated SQN/GBK files
 tbl2asn \
    -t $ANNOT/template.sbt \
    -w $ANNOT/genome.cmt \
-   -p $ANNOT/splitGFF3/ \
-   -g \
+   -indir $ANNOT/splitGFF3/ \
+   -o $OUTDIR/RCC138 \
+   -euk \
    -M n \
-   -Z $ANNOT/discrepancy.report \
-   -H 12/31/2021
+   -V vb \
+   -Z \
+   -H 12/31/2024
+
+## To generate separate SQN/GBK files per chromosome/contig
+## Useful when dealing with several issues to fix
+tbl2asn \
+   -t $ANNOT/template.sbt \
+   -w $ANNOT/genome.cmt \
+   -indir $ANNOT/splitGFF3/ \
+   -outdir $OUTDIR \
+   -euk \
+   -M n \
+   -V vb \
+   -Z \
+   -H 12/31/2024
 ```
 
-Options for [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) used above are:
+Options for [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/) used above are:
 ```
 -t	Template file (.sbt).
 -w	File (.cmt) containing Genome Assembly structured comments.
--p	Path to the directory. If files are in the current directory -p ./ should be used.
--g	Genomic Product Set [T/F] ## Should be used for eukaryote genomes
--M n 	Master Genome Flags: n: Normal. Combines flags for genomes submissions (invokes FATAL calls when -Z discrep is included).
--Z	Runs the Discrepancy Report. Must supply an output file name. Only for annotated genome submissions.
--H	Desired date for data release
+-indir	Path to the directory. If files are in the current directory -indir ./ should be used.
+-outdir  Path for the resulting .sqn file(s) (if the -outdir argument is not used, the .sqn files will be saved in the source directory).
+-o	Can be used with -i to override the default name of the output .sqn file. Sets the basename for all output files.
+-euk	Asserts eukaryotic lineage for the discrepancy report tests.
+-M n	Master Genome Flags: n: Normal. Combines flags for genomes submissions (invokes FATAL calls when -Z discrep is included).
+-Z	Runs the Discrepancy Report.
+-H	Desired date for data release.
 ```
 
 #### Checking for errors and fixing them
-[TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) generates two distinct types of error reports. The first consists of validation files with the file extension .val; one per FASTA file plus a summary titled errorsummary.val. The second report generated with -Z will be stored in the corresponding filename (discrepancy.report in the above command line).
+[table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/) generates two distinct types of error reports. The first consists of validation files with the file extension .val (generated if potential errors are found). The second report (.dr => discrepancy report) contains a detailed summary including metrics, warnings and fatal errors.
 
-Ideally, the .val files should be empty, indicating that no error has been found. We can check the size of our files easily with:
+Ideally, the .val files should be absent, indicating that no error has been found. We can check if errors were potentially found with:
 ```Bash
 ls -lh $ANNOT/splitGFF3/*.val
 
@@ -949,24 +965,9 @@ ls -lh $ANNOT/splitGFF3/*.val
 
 ```
 
-In the above example, the file sizes are not zero, which means that errors have been detected. In similar situations, the errorsummary.val file should look like this:
+In the above example, the file exists (and their sizes are not zero), which means that errors have been detected. Errors will vary per file, obviously, but the content of a .val file should look like:
+
 ```Bash
-cat $ANNOT/splitGFF3/errorsummary.val
-
-    34 ERROR:   SEQ_FEAT.GeneXrefStrandProblem
-    35 ERROR:   SEQ_FEAT.InternalStop
-     1 ERROR:   SEQ_FEAT.NoStop
-    40 ERROR:   SEQ_FEAT.SeqLocOrder
-    35 ERROR:   SEQ_INST.StopInProtein
-    70 WARNING: SEQ_FEAT.NotSpliceConsensusAcceptor
-    74 WARNING: SEQ_FEAT.NotSpliceConsensusDonor
-    54 WARNING: SEQ_FEAT.PartialProblem
-    15 WARNING: SEQ_FEAT.ShortExon
-     2 INFO:    SEQ_FEAT.PartialProblem
-```
-
-Errors will vary per file, obviously, but the content of a .val file should look like:
-```
 cat $ANNOT/splitGFF3/chromosome_01.val
 
 WARNING: valid [SEQ_FEAT.PartialProblem] PartialLocation: 5' partial is not at start AND is not at consensus splice site FEATURE: CDS: hypothetical protein [lcl|chromosome_01:<2-148] [lcl|chromosome_01: raw, dna len= 1855637] -> [gnl|ITTBIO|HOP50_01g00010]
@@ -990,72 +991,72 @@ WARNING: valid [SEQ_FEAT.NotSpliceConsensusAcceptor] Splice acceptor consensus (
 ERROR: valid [SEQ_INST.StopInProtein] [1] termination symbols in protein sequence (HOP50_01g07580 - hypothetical protein) BIOSEQ: gnl|ITTBIO|HOP50_01g07580: raw, aa len= 870
 ```
 
-The discrepancy report generated by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/)'s -Z command line switch is highly verbose, and includes many checks, warnings and error messages. It is composed of two sections; a summary and a detailed section. FATAL errors will prevent submissions to NCBI and should be corrected. An example of the first few lines is presented below. In this example, a fatal error was detected in a product name and should be corrected. Likewise, TBL2ASN found overlapping ribosomal rRNAs. This is because RNAmmer confused the start of 28S rRNAs with 5S ribosomal RNAs in the organism used (deleting the wrongly annonated 5S rRNAs fixes the issue).
+The discrepancy report generated by [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/)'s -Z command line switch is highly verbose, and includes many checks, warnings and error messages. It is composed of two sections; a summary and a detailed section. FATAL errors will prevent submissions to NCBI and should be corrected. Howewer, FATAL: BACTERIAL_ errors, like in the example below, can be safely ignored for eukaryote genomes.
 
 ```
-head -n 40 discrepancy.report
+head -n 40 $OUTDIR/*.dr
 
 Discrepancy Report Results
 
 Summary
-DISC_SOURCE_QUALS_ASNDISC:chromosome (all present, all unique)
-DISC_SOURCE_QUALS_ASNDISC:strain (all present, all same)
-DISC_SOURCE_QUALS_ASNDISC:taxname (all present, all same)
-DISC_FEATURE_COUNT:gene: 8663 present
-DISC_FEATURE_COUNT:CDS: 8605 present
-DISC_FEATURE_COUNT:mRNA: 8605 present
-DISC_FEATURE_COUNT:tRNA: 46 present
-DISC_FEATURE_COUNT:rRNA: 12 present
-DISC_COUNT_NUCLEOTIDES:20 nucleotide Bioseqs are present
-FEATURE_LOCATION_CONFLICT:19 features have inconsistent gene locations.
-OVERLAPPING_GENES:8 genes overlap another gene on the same strand.
-OVERLAPPING_CDS:2 coding regions overlap another coding region with a similar or identical name.
-SUSPECT_PRODUCT_NAMES:15 product_names contain suspect phrase or characters
-	May contain database identifier more appropriate in note; remove from product name
-		13 features contains three or more numbers together that may be identifiers more appropriate in note
-	Putative Typo
-		1 features May contain plural
-	FATAL: Remove organism from product name
-		1 features contains 'homo'
-DISC_QUALITY_SCORES:Quality scores are missing on all sequences.
-SHORT_PROT_SEQUENCES:1 protein sequences are shorter than 50 aa.
-FATAL: TEST_OVERLAPPING_RRNAS:4 rRNA features overlap another rRNA feature.
-FIND_OVERLAPPED_GENES:2 genes completely overlapped by other genes
-MOLTYPE_NOT_MRNA:20 molecule types are not set as mRNA.
-TECHNIQUE_NOT_TSA:20 technique are not set as TSA
-ONCALLER_BIOPROJECT_ID:8625 sequences contain BioProject IDs
-DISC_INCONSISTENT_STRUCTURED_COMMENTS:Structured Comment Report (all present, all same)
-DISC_INCONSISTENT_DBLINK:DBLink Report (all present, all same)
-DISC_INCONSISTENT_MOLINFO_TECH:Molinfo Technique Report (some missing, all same)
-
+COUNT_NUCLEOTIDES: 20 nucleotide Bioseqs are present
+SOURCE_QUALS: taxname (all present, all same)
+SOURCE_QUALS: 20 sources have taxname = Chloropicon primus
+SOURCE_QUALS: location (all present, all same)
+SOURCE_QUALS: 20 sources have location = chromosome
+SOURCE_QUALS: chromosome (all present, all unique)
+SOURCE_QUALS: strain (all present, all same)
+SOURCE_QUALS: 20 sources have strain = RCC138
+FEATURE_COUNT: CDS: 8627 present
+FEATURE_COUNT: gene: 8683 present
+FEATURE_COUNT: mRNA: 8627 present
+FEATURE_COUNT: rRNA: 10 present
+FEATURE_COUNT: tRNA: 46 present
+SUSPECT_PRODUCT_NAMES: 15 product_names contain suspect phrases or characters
+        Putative Typo
+                1 feature May contain plural
+        May contain database identifier more appropriate in note; remove from product name
+                14 features contains three or more numbers together that may be identifiers more appropriate in note
+FATAL: BACTERIAL_PARTIAL_NONEXTENDABLE_PROBLEMS: 2 features have partial ends that do not abut the end of the sequence or a gap, and cannot be extended by 3 or fewer nucleotides to do so
+FATAL: BACTERIAL_JOINED_FEATURES_NO_EXCEPTION: 3219 coding regions with joined locations have no exceptions
+JOINED_FEATURES: 6470 features have joined locations.
+CHROMOSOME_PRESENT: one or more chromosomes are present
+FEATURE_LIST: Feature List
+INCONSISTENT_BIOSOURCE: 20 inconsistent contig sources (subsource qualifiers differ)
+SUSPICIOUS_SEQUENCE_ID: 20 sequences have suspicious identifiers
 
 Detailed Report
 
-DiscRep_ALL:DISC_SOURCE_QUALS_ASNDISC::chromosome (all present, all unique)
-DiscRep_SUB:DISC_SOURCE_QUALS_ASNDISC::20 sources have unique values for chromosome
-DiscRep_ALL:DISC_SOURCE_QUALS_ASNDISC::strain (all present, all same)
-DiscRep_SUB:DISC_SOURCE_QUALS_ASNDISC::20 sources have 'RCC138' for strain
+COUNT_NUCLEOTIDES: 20 nucleotide Bioseqs are present
+RCC138_SQN.sqn:chromosome_01 (length 1855637)
+RCC138_SQN.sqn:chromosome_02 (length 1769006)
+RCC138_SQN.sqn:chromosome_03 (length 1503776)
+RCC138_SQN.sqn:chromosome_04 (length 1460551)
+RCC138_SQN.sqn:chromosome_05 (length 1118318)
+RCC138_SQN.sqn:chromosome_06 (length 1154373)
+RCC138_SQN.sqn:chromosome_07 (length 832941)
+RCC138_SQN.sqn:chromosome_08 (length 860321)
 ```
 
 ##### Partial genes
-A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). This can be done easily with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognize these tags automatically, and ajust the TBL files accordingly.
+A common issue, especially with fragmented assemblies, is the presence of partial genes that abut the edges of contigs or chromosomes. To fix this, we must extend the feature to the edge of the contig and then, for protein-coding genes, add a tag codon_start with the proper frame (e.g. /codon_start=2). This can be done easily with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/). [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) will recognize these tags automatically, and adjust the TBL files accordingly.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_1.png" alt="Issue with partial gene at the start of a contig" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Partial_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
 ##### Missing stop codons and GT-AG splice sites
-Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the proper stop codon. Note that this error is often mislabelled as a GT-AG rule issue by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/). Real issues with improper GT-AG intron/exon junctions can also be adjusted easily by drag and drop.
+Another issue with gene predictors is that they sometimes do not include proper stop codons for predicted protein-coding genes. This can be fixed easily with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) by selecting the features to modify (gene + CDS), then extending them by dragging the mouse to the proper stop codon. Note that this error is often mislabelled as a GT-AG rule issue by [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/). Real issues with improper GT-AG intron/exon junctions can also be adjusted easily by drag and drop.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Missing_sc_1.png" alt="Missing stop codon in a protein gene" width="1000"></p>
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/MIssing_sc_2.png" alt="Fixing the issue with Artemis" width="1000"></p>
 
 ##### Fixing errors
-Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option. Then, we can simply rerun [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) followed by [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/). As the errors are getting fixed, the .val files will gradually become empty.
+Errors fixed with [Artemis](http://sanger-pathogens.github.io/Artemis/Artemis/) can be saved easily from the graphical interface by selecting the 'File > Save All Entries' option. Then, we can simply rerun [EMBLtoTBL.pl](https://github.com/PombertLab/A2GB/blob/master/EMBLtoTBL.pl) followed by [table2asn](https://www.ncbi.nlm.nih.gov/genbank/table2asn/). As the errors are getting fixed, the .val files will gradually become empty.
 
 <p align="center"><img src="https://github.com/PombertLab/A2GB/blob/master/Misc/Saveas_artemis.png" alt="Missing stop codon in a protein gene" width="1000"></p>
 
 ```Bash
-## Running EMBLtoTBL.pl and TBL2ASN again on the updated EMBL files
+## Running EMBLtoTBL.pl and table2asn again on the updated EMBL files
 EMBLtoTBL.pl \
    -id ITTBIO \
    -p $ANNOT/verified_annotations.tsv \
@@ -1063,42 +1064,29 @@ EMBLtoTBL.pl \
    1> $ANNOT/STD.log \
    2> $ANNOT/ERROR.log
 
+
+## Removing previous files
+rm $OUTDIR/*
+
+## Running table2asn again
 tbl2asn \
    -t $ANNOT/template.sbt \
    -w $ANNOT/genome.cmt \
-   -p $ANNOT/splitGFF3/ \
-   -g \
+   -indir $ANNOT/splitGFF3/ \
+   -o $OUTDIR/RCC138 \
+   -euk \
    -M n \
-   -Z $ANNOT/discrepancy.report \
-   -H 12/31/2021
+   -V vb \
+   -Z \
+   -H 12/31/2024
 
-## Looking at the .val files again; empty files should take no disk space.
-ls -lh $ANNOT/splitGFF3/*.val
-
--rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_01.val
--rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_02.val
--rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/chromosome_03.val
-...
--rw-rw-r--. 1 jpombert jpombert 0 Dec  8 14:12 /media/FatCat/user/raw_data/splitGFF3/errorsummary.val
-
+## Looking at the .val files again; no such file should remain.
+ls $OUTDIR/*.val
+ls: cannot access 'RCC138_SQN/*.val': No such file or directory
 ```
 
 ### Submitting ASN files to GenBank
-Once the errors have been corrected, we must create a single SQN file (in ASN format) per genome for data deposition in NCBI. Again we can use [TBL2ASN](https://www.ncbi.nlm.nih.gov/genbank/tbl2asn2/) to do this, this time by specifying an output with the -o command line switch:
-
-```Bash
-tbl2asn \
-   -t $ANNOT/template.sbt \
-   -w $ANNOT/genome.cmt \
-   -p $ANNOT/splitGFF3/ \
-   -g \
-   -M n \
-   -Z $ANNOT/discrepancy.report \
-   -H 12/31/2021 \
-   -o $ANNOT/final_annotations.sqn
-```
-
-The file(s) should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
+Once the errors have been corrected, the file(s) should now be ready to submit to [NCBI's genome submission portal](https://submit.ncbi.nlm.nih.gov/subs/genome/). This step will require the corresponding information about the [BioProject](https://www.ncbi.nlm.nih.gov/bioproject) and [BioSample](https://www.ncbi.nlm.nih.gov/biosample). 
 
 ## Funding and acknowledgments
 This work was supported in part by the National Institute of Allergy and Infectious Diseases of the National Institutes of Health (award number R15AI128627) to Jean-Francois Pombert. The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
