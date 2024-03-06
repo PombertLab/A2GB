@@ -1,6 +1,6 @@
 # A2GB – Annotations to GenBank
 
-<a href="https://doi.org/10.5281/zenodo.5532811"><p align="right"><img src="https://zenodo.org/badge/300303510.svg" alt="DOI"></a>
+[![DOI](https://zenodo.org/badge/300303510.svg)](https://zenodo.org/doi/10.5281/zenodo.5532811)
 
 [A2GB](https://github.com/PombertLab/A2GB/) is a eukaryote genome annotation pipeline that will transform the annotation files exported from [Apollo](https://genomearchitect.readthedocs.io/en/latest/) (fomerly known as [WebApollo](http://gmod.org/wiki/WebApollo)) in preparation for sequence submission to NCBI’s [GenBank](https://www.ncbi.nlm.nih.gov/genbank/). While its primary goal is to submit annotations to GenBank for the generation of accession numbers, the conversion of file formats will permit the use of different tools in downstream analyses. 
 
