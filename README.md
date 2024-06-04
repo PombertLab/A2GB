@@ -400,12 +400,14 @@ get_UniProt.pl \
 Options for [get_UniProt.pl](https://github.com/PombertLab/A2GB/blob/master/Function_prediction/get_UniProt.pl) are:
 
 ```
--s (--swiss)		Download Swiss-Prot
--t (--trembl)		Download trEMBL
--f (--folder)		Download folder [Default: ./]
--n (--nice)		Linux Process Priority [Default: 20] ## Runs downloads in the background
--l (--log)		Print download information to log file
--d (--decompress)	Decompresss downloaded files with gunzip ## trEMBL files will be huge, off by default
+-s  (--swiss)         Download Swiss-Prot
+-t  (--trembl)        Download trEMBL
+-f  (--folder)        Download folder [Default: ./]
+-l  (--log)           Print download information to log file
+-dt (--dtool)         Specify download tool: aria2c, wget or curl ## Tries to autodetect otherwise
+-x  (--connex)        Number of aria connections [Default: 10]
+-d  (--decompress)    Decompress downloaded files with gunzip     ## trEMBL is huge, off by default
+-v  (--version)       Show script version
 ```
 
 ##### Creating tab-delimited product lists from UniProt databases
